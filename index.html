@@ -426,10 +426,9 @@ const userLiked = auth.currentUser && likes.includes(auth.currentUser.uid);
         <span>${likeCount}</span>
     </button>
 
-    <button>
-        💬 Comment
-    </button>
-
+   <button onclick="showCommentBox('${doc.id}')">
+    💬 Comment
+</button>
     <button>
         ↗️ Share
     </button>
@@ -480,6 +479,92 @@ function likePost(postId) {
         alert("Like করা যায়নি: " + error.message);
 
     });
+}
+function showCommentBox(postId) {
+
+    const oldBox = document.getElementById("commentBox-" + postId);
+
+    if (oldBox) {
+        oldBox.remove();
+        return;
+    }
+
+    const box = document.createElement("div");
+
+    box.id = "commentBox-" + postId;
+
+    box.innerHTML = `
+        <input
+            id="commentInput-${postId}"
+            type="text"
+            placeholder="আপনার Comment লিখুন..."
+            style="width:100%; padding:10px; margin-top:10px; border:1px solid #ddd; border-radius:8px;"
+        >
+
+        <button
+            onclick="addComment('${postId}')"
+            style="margin-top:8px; padding:8px 15px;"
+        >
+            Comment করুন
+        </button>
+    `;
+
+const post = document.querySelector(
+    `button[onclick="showCommentBox('${postId}')"]`
+).closest(".post");
+
+post.appendChild(box);
+}
+
+
+function addComment(postId) {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Comment করতে আগে Login করুন।");
+        return;
+    }
+
+    const input = document.getElementById("commentInput-" + postId);
+
+    const text = input.value.trim();
+
+    if (!text) {
+        alert("Comment লিখুন।");
+        return;
+    }
+
+    db.collection("Posts")
+        .doc(postId)
+        .collection("Comments")
+        .add({
+
+            text: text,
+
+            name: user.displayName || "NEXORA User",
+
+            uid: user.uid,
+
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+        })
+
+        .then(function() {
+
+            input.value = "";
+
+            alert("Comment সফলভাবে হয়েছে! 💬");
+
+        })
+
+        .catch(function(error) {
+
+            console.error(error);
+
+            alert("Comment করা যায়নি: " + error.message);
+
+        });
 }
 </script>
 
