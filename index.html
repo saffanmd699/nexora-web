@@ -207,10 +207,19 @@ body {
         </div>
 
         <!-- CREATE POST -->
-        <div class="create-post">
-            <div class="post-input">
-                What's on your mind?
-            </div>
+<div class="create-post">
+
+    <textarea
+        id="postText"
+        class="post-input"
+        placeholder="What's on your mind?"
+        rows="3"></textarea>
+
+    <button onclick="createPost()">
+        Post
+    </button>
+
+</div>
         </div>
 
         <!-- POST -->
@@ -257,7 +266,7 @@ body {
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 
 const firebaseConfig = {
@@ -270,7 +279,7 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
+const db = firebase.firestore();
 const auth = firebase.auth();
 
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -356,7 +365,44 @@ auth.onAuthStateChanged(function(user) {
     }
 
 });
+function createPost() {
 
+    const text = document.getElementById("postText").value.trim();
+
+    if (!text) {
+        alert("কিছু লিখে পোস্ট করুন।");
+        return;
+    }
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("আগে Login করুন।");
+        return;
+    }
+
+    db.collection("Posts").add({
+        text: text,
+        name: user.displayName || "NEXORA User",
+        email: user.email,
+        uid: user.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(function() {
+
+        document.getElementById("postText").value = "";
+
+        alert("Post সফলভাবে করা হয়েছে! 🎉");
+
+    })
+    .catch(function(error) {
+
+        console.error(error);
+
+        alert("Post করা যায়নি: " + error.message);
+
+    });
+}
 </script>
 
 </body>
