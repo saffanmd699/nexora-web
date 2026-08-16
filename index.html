@@ -898,9 +898,9 @@ function loadReels() {
                             <span>${likes.length}</span>
                         </button>
 
-                        <button onclick="showReelCommentBox('${doc.id}')">
-                            💬 Comment
-                        </button>
+ <button onclick="showReelCommentBox('${doc.id}')">
+    💬 Comment <span id="reelCommentCount-${doc.id}">0</span>
+</button>
 
                         <button onclick="shareReel('${doc.id}', '${(reel.name || "").replace(/'/g, "\\'")}')">
                             ↗️ Share
@@ -1106,6 +1106,15 @@ function loadReelComments(reelId) {
         .orderBy("createdAt", "asc")
         .onSnapshot(function(snapshot) {
 
+            const countElement =
+                document.getElementById(
+                    "reelCommentCount-" + reelId
+                );
+
+            if (countElement) {
+                countElement.innerText = snapshot.size;
+            }
+
             const commentsArea =
                 document.getElementById(
                     "reelComments-" + reelId
@@ -1147,8 +1156,6 @@ function loadReelComments(reelId) {
 
         });
 }
-
-
 
 // ================================
 // SHARE REEL
