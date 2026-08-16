@@ -430,10 +430,9 @@ const userLiked = auth.currentUser && likes.includes(auth.currentUser.uid);
         💬 Comment <span id="commentCount-${doc.id}">0</span>
     </button>
 
-    <button>
+        <button onclick="sharePost('${doc.id}', '${(post.text || "").replace(/'/g, "\\'")}')">
         ↗️ Share
     </button>
-
 </div>
          
             `;
@@ -449,7 +448,38 @@ postDiv);
     });
      
 
+function sharePost(postId, postText) {
 
+    const shareData = {
+        title: "NEXORA",
+        text: postText || "NEXORA-তে একটি পোস্ট দেখুন!",
+        url: window.location.href
+    };
+
+    if (navigator.share) {
+
+        navigator.share(shareData)
+            .then(function() {
+                console.log("Post shared successfully");
+            })
+            .catch(function(error) {
+                console.log("Share বন্ধ করা হয়েছে");
+            });
+
+    } else {
+
+        navigator.clipboard.writeText(
+            shareData.text + "\n" + shareData.url
+        )
+        .then(function() {
+            alert("Post-এর লিংক কপি হয়েছে! 📋");
+        })
+        .catch(function() {
+            alert("Share করা যাচ্ছে না।");
+        });
+
+    }
+}
 function likePost(postId) {
 
     const user = auth.currentUser;
