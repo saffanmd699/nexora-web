@@ -437,7 +437,12 @@ const userLiked = auth.currentUser && likes.includes(auth.currentUser.uid);
             `;
 
             postsFeed.appendChild(postDiv);
-        });
+
+           loadComments(doc.id, 
+
+postDiv); 
+
+         });
 
     });
      
@@ -564,6 +569,48 @@ function addComment(postId) {
 
             alert("Comment করা যায়নি: " + error.message);
 
+        });
+}
+function loadComments(postId, postElement) {
+
+    db.collection("Posts")
+        .doc(postId)
+        .collection("Comments")
+        .orderBy("createdAt", "asc")
+        .onSnapshot(function(snapshot) {
+
+            let commentsHTML = "";
+
+            snapshot.forEach(function(doc) {
+
+                const comment = doc.data();
+
+                commentsHTML += `
+                    <div style="
+                        background:#f0f2f5;
+                        padding:8px 12px;
+                        margin-top:8px;
+                        border-radius:10px;
+                    ">
+                        <b>👤 ${comment.name || "NEXORA User"}</b>
+                        <div>${comment.text || ""}</div>
+                    </div>
+                `;
+            });
+
+            let commentsArea =
+                postElement.querySelector(".comments-area");
+
+            if (!commentsArea) {
+
+                commentsArea = document.createElement("div");
+
+                commentsArea.className = "comments-area";
+
+                postElement.appendChild(commentsArea);
+            }
+
+            commentsArea.innerHTML = commentsHTML;
         });
 }
 </script>
