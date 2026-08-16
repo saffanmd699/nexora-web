@@ -672,52 +672,6 @@ function uploadReel() {
 }
 
 
-function loadReels() {
-
-    db.collection("Reels")
-        .orderBy("createdAt", "desc")
-        .onSnapshot(function(snapshot) {
-
-            const reelsFeed =
-                document.getElementById("reelsFeed");
-
-            reelsFeed.innerHTML = "";
-
-            snapshot.forEach(function(doc) {
-
-                const reel = doc.data();
-
-                const reelDiv =
-                    document.createElement("div");
-
-                reelDiv.className = "post";
-
-                reelDiv.innerHTML = `
-                    <div class="post-user">
-                        🎬 ${reel.name || "NEXORA User"}
-                    </div>
-
-                    <video
-                        src="${reel.videoUrl}"
-                        controls
-                        playsinline
-                        style="
-                            width:100%;
-                            max-height:500px;
-                            border-radius:12px;
-                            background:#000;
-                        "
-                    ></video>
-                `;
-
-                reelsFeed.appendChild(reelDiv);
-
-            });
-
-        });
-}
-
-loadReels();
 
 function likePost(postId) {
 
@@ -891,6 +845,376 @@ function loadComments(postId, postElement) {
 
             commentsArea.innerHTML = commentsHTML;
         });
+}
+function loadReels() {
+
+    db.collection("Reels")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(function(snapshot) {
+
+            const reelsFeed =
+                document.getElementById("reelsFeed");
+
+            reelsFeed.innerHTML = "";
+
+            snapshot.forEach(function(doc) {
+
+                const reel = doc.data();
+
+                const likes = reel.likes || [];
+
+                const user =
+                    auth.currentUser;
+
+                const userLiked =
+                    user && likes.includes(user.uid);
+
+                const reelDiv =
+                    document.createElement("div");
+
+                reelDiv.className = "post";
+
+                reelDiv.innerHTML = `
+                    <div class="post-user">
+                        🎬 ${reel.name || "NEXORA User"}
+                    </div>
+
+                    <video
+                        src="${reel.videoUrl}"
+                        controls
+                        playsinline
+                        style="
+                            width:100%;
+                            max-height:500px;
+                            border-radius:12px;
+                            background:#000;
+                        "
+                    ></video>
+
+                    <div class="post-actions">
+
+                        <button onclick="likeReel('${doc.id}')">
+                            ${userLiked ? "❤️ Liked" : "👍 Like"}
+                            <span>${likes.length}</span>
+                        </button>
+
+                        <button onclick="showReelCommentBox('${doc.id}')">
+                            💬 Comment
+                        </button>
+
+                        <button onclick="shareReel('${doc.id}', '${(reel.name || "").replace(/'/g, "\\'")}')">
+                            ↗️ Share
+                        </button>
+
+                    </div>
+                `;
+
+                reelsFeed.appendChild(reelDiv);
+
+            });
+
+        });
+}
+
+loadReels();
+
+
+
+// ================================
+// REEL LIKE
+// ================================
+
+function likeReel(reelId) {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Like করতে আগে Login করুন।");
+        return;
+    }
+
+    const reelRef = db.collection("Reels").doc(reelId);
+
+    reelRef.get().then(function(doc) {
+
+        if (!doc.exists) {
+            alert("Reel পাওয়া যায়নি।");
+            return;
+        }
+
+        const reel = doc.data();
+        const likes = reel.likes || [];
+
+        if (likes.includes(user.uid)) {
+
+            return reelRef.update({
+                likes: firebase.firestore.FieldValue.arrayRemove(user.uid)
+            });
+
+        } else {
+
+            return reelRef.update({
+                likes: firebase.firestore.FieldValue.arrayUnion(user.uid)
+            });
+
+        }
+
+    }).catch(function(error) {
+
+        console.error(error);
+
+        alert("Like করা যায়নি: " + error.message);
+
+    });
+}
+
+
+
+// ================================
+// REEL COMMENT BOX
+// ================================
+
+function showReelCommentBox(reelId) {
+
+    const oldBox =
+        document.getElementById("reelCommentBox-" + reelId);
+
+    if (oldBox) {
+        oldBox.remove();
+        return;
+    }
+
+    const box = document.createElement("div");
+
+    box.id = "reelCommentBox-" + reelId;
+
+    box.innerHTML = `
+        <input
+            id="reelCommentInput-${reelId}"
+            type="text"
+            placeholder="আপনার Comment লিখুন..."
+            style="
+                width:100%;
+                padding:10px;
+                margin-top:10px;
+                border:1px solid #ddd;
+                border-radius:8px;
+            "
+        >
+
+        <button
+            onclick="addReelComment('${reelId}')"
+            style="
+                margin-top:8px;
+                padding:8px 15px;
+            "
+        >
+            Comment করুন
+        </button>
+
+        <div id="reelComments-${reelId}"></div>
+    `;
+
+    const button = document.querySelector(
+        `button[onclick="showReelCommentBox('${reelId}')"]`
+    );
+
+    if (button) {
+
+        const reelPost =
+            button.closest(".post");
+
+        reelPost.appendChild(box);
+
+        loadReelComments(reelId);
+
+    }
+}
+
+
+
+// ================================
+// ADD REEL COMMENT
+// ================================
+
+function addReelComment(reelId) {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Comment করতে আগে Login করুন।");
+        return;
+    }
+
+    const input =
+        document.getElementById(
+            "reelCommentInput-" + reelId
+        );
+
+    const text = input.value.trim();
+
+    if (!text) {
+        alert("Comment লিখুন।");
+        return;
+    }
+
+    db.collection("Reels")
+        .doc(reelId)
+        .collection("Comments")
+        .add({
+
+            text: text,
+
+            name:
+                user.displayName ||
+                "NEXORA User",
+
+            uid: user.uid,
+
+            createdAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+
+        })
+        .then(function() {
+
+            input.value = "";
+
+        })
+        .catch(function(error) {
+
+            console.error(error);
+
+            alert(
+                "Comment করা যায়নি: " +
+                error.message
+            );
+
+        });
+}
+
+
+
+// ================================
+// LOAD REEL COMMENTS
+// ================================
+
+function loadReelComments(reelId) {
+
+    db.collection("Reels")
+        .doc(reelId)
+        .collection("Comments")
+        .orderBy("createdAt", "asc")
+        .onSnapshot(function(snapshot) {
+
+            const commentsArea =
+                document.getElementById(
+                    "reelComments-" + reelId
+                );
+
+            if (!commentsArea) {
+                return;
+            }
+
+            commentsArea.innerHTML = "";
+
+            snapshot.forEach(function(doc) {
+
+                const comment = doc.data();
+
+                const commentDiv =
+                    document.createElement("div");
+
+                commentDiv.style.cssText = `
+                    background:#f0f2f5;
+                    padding:8px 12px;
+                    margin-top:8px;
+                    border-radius:10px;
+                `;
+
+                commentDiv.innerHTML = `
+                    <b>
+                        👤 ${comment.name || "NEXORA User"}
+                    </b>
+
+                    <div>
+                        ${comment.text || ""}
+                    </div>
+                `;
+
+                commentsArea.appendChild(commentDiv);
+
+            });
+
+        });
+}
+
+
+
+// ================================
+// SHARE REEL
+// ================================
+
+function shareReel(reelId, reelName) {
+
+    const shareData = {
+
+        title: "NEXORA Reel",
+
+        text:
+            reelName +
+            " এর NEXORA Reel দেখুন! 🎬",
+
+        url: window.location.href
+
+    };
+
+
+    if (navigator.share) {
+
+        navigator.share(shareData)
+
+            .then(function() {
+
+                console.log(
+                    "Reel shared successfully"
+                );
+
+            })
+
+            .catch(function() {
+
+                console.log(
+                    "Share বন্ধ করা হয়েছে"
+                );
+
+            });
+
+    } else {
+
+        navigator.clipboard.writeText(
+            shareData.text +
+            "\n" +
+            shareData.url
+        )
+
+        .then(function() {
+
+            alert(
+                "Reel-এর লিংক কপি হয়েছে! 📋"
+            );
+
+        })
+
+        .catch(function() {
+
+            alert(
+                "Share করা যাচ্ছে না।"
+            );
+
+        });
+
+    }
+
 }
 </script>
 
