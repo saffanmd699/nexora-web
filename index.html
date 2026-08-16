@@ -1,1 +1,396 @@
 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f2f5;
+        }
+
+        .login-box {
+            width: 92%;
+            max-width: 400px;
+            background: white;
+            padding: 30px 22px;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px #ccc;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: bold;
+            color: #1877f2;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #1877f2;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #aaa;
+        }
+
+        #otpSection {
+            display: none;
+            margin-top: 15px;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #d00;
+        }
+
+        #recaptcha-container {
+            margin: 12px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #homeSection {
+            display: none;
+        }
+
+        .success {
+            color: green !important;
+        }
+
+        .logout {
+            margin-top: 15px;
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <!-- LOGIN -->
+    <div id="loginSection">
+
+        <div class="logo">NEXORA</div>
+
+        <h2>Login to NEXORA</h2>
+
+        <p class="subtitle">
+            মোবাইল নম্বর দিয়ে Login করুন
+        </p>
+
+        <input
+            type="tel"
+            id="phoneNumber"
+            placeholder="+8801XXXXXXXXX"
+        >
+
+        <div id="recaptcha-container"></div>
+
+        <button id="sendOtpBtn" onclick="sendOTP()">
+            Send OTP
+        </button>
+
+        <div id="otpSection">
+
+            <input
+                type="number"
+                id="otpCode"
+                placeholder="৬ সংখ্যার OTP দিন"
+            >
+
+            <button onclick="verifyOTP()">
+                Verify OTP
+            </button>
+
+        </div>
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <!-- HOME -->
+    <div id="homeSection">
+
+        <div class="logo">NEXORA</div>
+
+        <h2>Welcome! 🎉</h2>
+
+        <p class="subtitle">
+            আপনি সফলভাবে Login করেছেন।
+        </p>
+
+        <p id="userPhone"></p>
+
+        <button class="logout" onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBJ-HDSL70D_xMZCSjsN5ZEGz4X4BFs9jE",
+    authDomain: "nexora-b1945.firebaseapp.com",
+    projectId: "nexora-b1945",
+    storageBucket: "nexora-b1945.firebasestorage.app",
+    messagingSenderId: "443615979456",
+    appId: "1:443615979456:web:82f38923fa332df6094a25"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+let confirmationResult = null;
+let recaptchaVerifier = null;
+
+
+// reCAPTCHA তৈরি
+function setupRecaptcha() {
+
+    if (recaptchaVerifier) {
+        return;
+    }
+
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        "recaptcha-container",
+        {
+            size: "normal"
+        }
+    );
+
+    recaptchaVerifier.render();
+}
+
+
+// OTP পাঠানো
+function sendOTP() {
+
+    const phone = document
+        .getElementById("phoneNumber")
+        .value
+        .trim();
+
+    const message =
+        document.getElementById("message");
+
+    if (!phone) {
+
+        message.innerText =
+            "মোবাইল নম্বর দিন।";
+
+        return;
+    }
+
+    if (!phone.startsWith("+")) {
+
+        message.innerText =
+            "দেশের কোডসহ নম্বর দিন। যেমন: +8801XXXXXXXXX";
+
+        return;
+    }
+
+    message.innerText =
+        "OTP পাঠানো হচ্ছে...";
+
+    document
+        .getElementById("sendOtpBtn")
+        .disabled = true;
+
+    setupRecaptcha();
+
+    auth.signInWithPhoneNumber(
+        phone,
+        recaptchaVerifier
+    )
+    .then(function(result) {
+
+        confirmationResult = result;
+
+        document
+            .getElementById("otpSection")
+            .style.display = "block";
+
+        message.className = "success";
+
+        message.innerText =
+            "OTP আপনার মোবাইলে পাঠানো হয়েছে।";
+
+    })
+    .catch(function(error) {
+
+        console.error(error);
+
+        message.className = "";
+
+        message.innerText =
+            "OTP পাঠানো যায়নি: " + error.message;
+
+        document
+            .getElementById("sendOtpBtn")
+            .disabled = false;
+
+        if (recaptchaVerifier) {
+            recaptchaVerifier.clear();
+            recaptchaVerifier = null;
+        }
+
+    });
+
+}
+
+
+// OTP যাচাই
+function verifyOTP() {
+
+    const code =
+        document.getElementById("otpCode")
+        .value
+        .trim();
+
+    const message =
+        document.getElementById("message");
+
+    if (!code) {
+
+        message.innerText =
+            "OTP দিন।";
+
+        return;
+    }
+
+    if (!confirmationResult) {
+
+        message.innerText =
+            "আগে Send OTP চাপুন।";
+
+        return;
+    }
+
+    message.innerText =
+        "OTP যাচাই করা হচ্ছে...";
+
+    confirmationResult
+        .confirm(code)
+        .then(function(result) {
+
+            const user = result.user;
+
+            document
+                .getElementById("loginSection")
+                .style.display = "none";
+
+            document
+                .getElementById("homeSection")
+                .style.display = "block";
+
+            document
+                .getElementById("userPhone")
+                .innerText =
+                "মোবাইল: " + user.phoneNumber;
+
+        })
+        .catch(function(error) {
+
+            console.error(error);
+
+            message.innerText =
+                "OTP সঠিক নয় অথবা মেয়াদ শেষ হয়েছে।";
+
+        });
+
+}
+
+
+// Logout
+function logout() {
+
+    auth.signOut()
+        .then(function() {
+
+            document
+                .getElementById("homeSection")
+                .style.display = "none";
+
+            document
+                .getElementById("loginSection")
+                .style.display = "block";
+
+            document
+                .getElementById("phoneNumber")
+                .value = "";
+
+            document
+                .getElementById("otpCode")
+                .value = "";
+
+            document
+                .getElementById("message")
+                .innerText = "";
+
+        });
+
+}
+
+
+// পেজ চালু হলে reCAPTCHA প্রস্তুত
+window.onload = function() {
+    setupRecaptcha();
+};
+
+</script>
+
+</body>
+</html>
