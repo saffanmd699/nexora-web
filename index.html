@@ -209,7 +209,7 @@ body {
 
         <!-- STORIES -->
         <div class="stories">
-            <div class="story">➕<br>Create Story</div>
+           <div class="story" onclick="createStory()">➕<br>Create Story</div>
             <div class="story">👤<br>Story 1</div>
             <div class="story">👤<br>Story 2</div>
             <div class="story">👤<br>Story 3</div>
@@ -479,6 +479,45 @@ function sharePost(postId, postText) {
         });
 
     }
+}
+function createStory() {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Story দিতে আগে Login করুন।");
+        return;
+    }
+
+    const text = prompt("আপনার Story লিখুন:");
+
+    if (!text || !text.trim()) {
+        return;
+    }
+
+    db.collection("Stories").add({
+
+        text: text.trim(),
+
+        name: user.displayName || "NEXORA User",
+
+        uid: user.uid,
+
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+    })
+    .then(function() {
+
+        alert("Story সফলভাবে তৈরি হয়েছে! 🎉");
+
+    })
+    .catch(function(error) {
+
+        console.error(error);
+
+        alert("Story তৈরি করা যায়নি: " + error.message);
+
+    });
 }
 function likePost(postId) {
 
