@@ -233,8 +233,34 @@ body {
     </button>
 
 </div>
-        
-<div id="postsFeed"></div>
+    <!-- CREATE REEL -->
+<div class="create-post">
+
+    <h3>🎬 Create Reel</h3>
+
+    <input
+        type="file"
+        id="reelVideo"
+        accept="video/*"
+        style="margin-top:10px;"
+    >
+
+    <button
+        onclick="uploadReel()"
+        style="margin-top:10px;"
+    >
+        📤 Upload Reel
+    </button>
+
+    <div id="reelStatus" style="margin-top:10px;"></div>
+
+</div>
+
+<!-- REELS FEED -->
+<div id="reelsFeed"></div>
+
+<div id="postsFeed"></div>    
+
        
     </div>
 
@@ -558,6 +584,141 @@ function loadStories() {
 }
 
 loadStories();
+function uploadReel() {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Reel দিতে আগে Login করুন।");
+        return;
+    }
+
+    const fileInput = document.getElementById("reelVideo");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("আগে একটি ভিডিও নির্বাচন করুন।");
+        return;
+    }
+
+    if (!file.type.startsWith("video/")) {
+        alert("শুধু ভিডিও ফাইল নির্বাচন করুন।");
+        return;
+    }
+
+    const status = document.getElementById("reelStatus");
+
+    status.innerText = "ভিডিও Upload হচ্ছে... ⏳";
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    formData.append(
+        "upload_preset",
+        "NEXORA _Reels"
+    );
+
+    fetch(
+        "https://api.cloudinary.com/v1_1/xnpnqatf/video/upload",
+        {
+            method: "POST",
+            body: formData
+        }
+    )
+    .then(function(response) {
+
+        if (!response.ok) {
+            throw new Error("Cloudinary Upload ব্যর্থ হয়েছে।");
+        }
+
+        return response.json();
+
+    })
+    .then(function(data) {
+
+        console.log(data);
+
+        return db.collection("Reels").add({
+
+            videoUrl: data.secure_url,
+
+            name: user.displayName || "NEXORA User",
+
+            uid: user.uid,
+
+            createdAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
+    })
+    .then(function() {
+
+        status.innerText =
+            "Reel সফলভাবে Upload হয়েছে! 🎉";
+
+        fileInput.value = "";
+
+    })
+    .catch(function(error) {
+
+        console.error(error);
+
+        status.innerText =
+            "Reel Upload করা যায়নি: " + error.message;
+
+    });
+}
+
+
+function loadReels() {
+
+    db.collection("Reels")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(function(snapshot) {
+
+            const reelsFeed =
+                document.getElementById("reelsFeed");
+
+            reelsFeed.innerHTML = "";
+
+            snapshot.forEach(function(doc) {
+
+                const reel = doc.data();
+
+                const reelDiv =
+                    document.createElement("div");
+
+                reelDiv.className = "post";
+
+                reelDiv.innerHTML = `
+                    <div class="post-user">
+                        🎬 ${reel.name || "NEXORA User"}
+                    </div>
+
+                    <video
+                        src="${reel.videoUrl}"
+                        controls
+                        playsinline
+                        style="
+                            width:100%;
+                            max-height:500px;
+                            border-radius:12px;
+                            background:#000;
+                        "
+                    ></video>
+                `;
+
+                reelsFeed.appendChild(reelDiv);
+
+            });
+
+        });
+}
+
+loadReels();
+
 function likePost(postId) {
 
     const user = auth.currentUser;
