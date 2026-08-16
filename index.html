@@ -433,7 +433,14 @@ auth.onAuthStateChanged(function(user) {
 
         document.getElementById("homeSection")
             .style.display = "block";
+document.getElementById("profileName")
+    .innerText = user.displayName || "NEXORA User";
 
+document.getElementById("profileEmail")
+    .innerText = user.email || "";
+
+document.getElementById("profilePhoto")
+    .src = user.photoURL || "";
         document.getElementById("userName")
             .innerText = "নাম: " + (user.displayName || "");
 
