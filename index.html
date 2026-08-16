@@ -425,7 +425,9 @@ db.collection("Posts")
         snapshot.forEach(function(doc) {
 
             const post = doc.data();
-
+const likes = post.likes || [];
+const likeCount = likes.length;
+const userLiked = auth.currentUser && likes.includes(auth.currentUser.uid);
             const postDiv = document.createElement("div");
 
             postDiv.className = "post";
@@ -440,7 +442,8 @@ db.collection("Posts")
                 </div>
 <div class="post-actions">
     <button onclick="likePost('${doc.id}')">
-        👍 Like
+        ${userLiked ? "❤️ Liked" : "👍 Like"}
+        <span>${likeCount}</span>
     </button>
 
     <button>
@@ -458,6 +461,9 @@ db.collection("Posts")
         });
 
     });
+     
+}
+
 function likePost(postId) {
 
     const user = auth.currentUser;
@@ -469,15 +475,30 @@ function likePost(postId) {
 
     const postRef = db.collection("Posts").doc(postId);
 
-    postRef.update({
-        likes: firebase.firestore.FieldValue.arrayUnion(user.uid)
-    })
-    .then(function() {
-        alert("Like হয়েছে! 👍");
-    })
-    .catch(function(error) {
+    postRef.get().then(function(doc) {
+
+        const post = doc.data();
+        const likes = post.likes || [];
+
+        if (likes.includes(user.uid)) {
+
+            return postRef.update({
+                likes: firebase.firestore.FieldValue.arrayRemove(user.uid)
+            });
+
+        } else {
+
+            return postRef.update({
+                likes: firebase.firestore.FieldValue.arrayUnion(user.uid)
+            });
+
+        }
+
+    }).catch(function(error) {
+
         console.error(error);
         alert("Like করা যায়নি: " + error.message);
+
     });
 }
 </script>
