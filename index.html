@@ -208,12 +208,16 @@ body {
     <div class="feed">
 
         <!-- STORIES -->
-        <div class="stories">
-           <div class="story" onclick="createStory()">➕<br>Create Story</div>
-            <div class="story">👤<br>Story 1</div>
-            <div class="story">👤<br>Story 2</div>
-            <div class="story">👤<br>Story 3</div>
-        </div>
+<div class="stories">
+
+    <div class="story" onclick="createStory()">
+        ➕<br>Create Story
+    </div>
+
+    <div id="storiesFeed" style="display:flex; gap:10px;"></div>
+
+</div>
+        
 
         <!-- CREATE POST -->
 <div class="create-post">
@@ -519,6 +523,41 @@ function createStory() {
 
     });
 }
+function loadStories() {
+
+    db.collection("Stories")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(function(snapshot) {
+
+            const storiesFeed =
+                document.getElementById("storiesFeed");
+
+            storiesFeed.innerHTML = "";
+
+            snapshot.forEach(function(doc) {
+
+                const story = doc.data();
+
+                const storyDiv =
+                    document.createElement("div");
+
+                storyDiv.className = "story";
+
+                storyDiv.innerHTML = `
+                    👤<br>
+                    <b>${story.name || "NEXORA User"}</b>
+                    <br>
+                    ${story.text || ""}
+                `;
+
+                storiesFeed.appendChild(storyDiv);
+
+            });
+
+        });
+}
+
+loadStories();
 function likePost(postId) {
 
     const user = auth.currentUser;
