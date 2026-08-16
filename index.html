@@ -5,82 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXORA Login</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f0f2f5;
-        }
+body {
+    min-height: 100vh;
+    background: #f0f2f5;
+}
 
-        .login-box {
-            width: 92%;
-            max-width: 400px;
-            background: white;
-            padding: 30px 22px;
-            border-radius: 16px;
-            box-shadow: 0 4px 18px #ccc;
-            text-align: center;
-        }
+/* NEXORA HOME */
+#homeSection {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #f0f2f5;
+}
 
-        .logo {
-            font-size: 34px;
-            font-weight: bold;
-            color: #1877f2;
-            margin-bottom: 10px;
-        }
+/* TOP BAR */
+.top-bar {
+    height: 60px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    box-shadow: 0 1px 4px #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
 
-        h2 {
-            margin-bottom: 10px;
-        }
+.top-logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1877f2;
+}
 
-        .subtitle {
-            color: #666;
-            margin-bottom: 22px;
-        }
+.search-box {
+    margin-left: 15px;
+    background: #f0f2f5;
+    border-radius: 20px;
+    padding: 10px 16px;
+    color: #65676b;
+    flex: 1;
+    max-width: 350px;
+}
 
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 9px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            background: #1877f2;
-            color: white;
-        }
+/* FEED */
+.feed {
+    width: 95%;
+    max-width: 650px;
+    margin: 20px auto;
+}
 
-        .logout {
-            margin-top: 15px;
-            background: #555;
-        }
+/* CREATE POST */
+.create-post {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px #ddd;
+    margin-bottom: 15px;
+}
 
-        #homeSection {
-            display: none;
-        }
+.post-input {
+    background: #f0f2f5;
+    border-radius: 22px;
+    padding: 13px 18px;
+    color: #65676b;
+}
 
-        #message {
-            margin-top: 15px;
-            font-size: 14px;
-        }
+/* STORIES */
+.stories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
 
-        .success {
-            color: green;
-        }
+.story {
+    min-width: 105px;
+    height: 150px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 10px;
+    font-weight: bold;
+}
 
-        .error {
-            color: red;
-        }
-    </style>
+/* POST */
+.post {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 4px #ddd;
+}
+
+.post-user {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.post-text {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.post-actions {
+    display: flex;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    gap: 5px;
+}
+
+.post-actions button {
+    background: transparent;
+    color: #65676b;
+    padding: 10px;
+    font-size: 15px;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -1px 5px #ccc;
+}
+
+.bottom-nav button {
+    background: transparent;
+    color: #65676b;
+    padding: 5px;
+    font-size: 13px;
+}
+
+@media (min-width: 700px) {
+    .bottom-nav {
+        max-width: 650px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+</style>
 </head>
 
 <body>
@@ -107,23 +186,70 @@
     </div>
 
 
-   <!-- HOME / DASHBOARD -->
+ <!-- HOME / NEXORA SOCIAL FEED -->
 <div id="homeSection">
 
-    <div class="logo">NEXORA</div>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="top-logo">NEXORA</div>
+        <div class="search-box">🔍 Search NEXORA</div>
+    </div>
 
-    <h2>Welcome! 🎉</h2>
+    <!-- FEED -->
+    <div class="feed">
 
-    <p class="subtitle">
-        আপনি সফলভাবে Login করেছেন।
-    </p>
+        <!-- STORIES -->
+        <div class="stories">
+            <div class="story">➕<br>Create Story</div>
+            <div class="story">👤<br>Story 1</div>
+            <div class="story">👤<br>Story 2</div>
+            <div class="story">👤<br>Story 3</div>
+        </div>
 
-    <p id="userName"></p>
-    <p id="userEmail"></p>
+        <!-- CREATE POST -->
+        <div class="create-post">
+            <div class="post-input">
+                What's on your mind?
+            </div>
+        </div>
 
-    <button class="logout" onclick="logout()">
-        Logout
-    </button>
+        <!-- POST -->
+        <div class="post">
+
+            <div class="post-user">
+                👤 <span id="userName">NEXORA User</span>
+            </div>
+
+            <div class="post-text">
+                NEXORA-এ আপনাকে স্বাগতম! 🎉
+                <br>
+                আপনার বন্ধুদের সাথে যুক্ত হন এবং আপনার মুহূর্ত শেয়ার করুন।
+            </div>
+
+            <div class="post-actions">
+                <button>👍 Like</button>
+                <button>💬 Comment</button>
+                <button>↗️ Share</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+
+        <button>🏠<br>Home</button>
+
+        <button>👥<br>Friends</button>
+
+        <button>💬<br>Messages</button>
+
+        <button>🔔<br>Notifications</button>
+
+        <button onclick="logout()">🚪<br>Logout</button>
+
+    </div>
 
 </div>
 
