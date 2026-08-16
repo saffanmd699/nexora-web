@@ -438,19 +438,48 @@ db.collection("Posts")
                 <div class="post-text">
                     ${post.text || ""}
                 </div>
+<div class="post-actions">
+    <button onclick="likePost('${doc.id}')">
+        👍 Like
+    </button>
 
-                <div class="post-actions">
-                    <button>👍 Like</button>
-                    <button>💬 Comment</button>
-                    <button>↗️ Share</button>
-                </div>
+    <button>
+        💬 Comment
+    </button>
+
+    <button>
+        ↗️ Share
+    </button>
+</div>
+         
             `;
 
             postsFeed.appendChild(postDiv);
         });
 
     });
+function likePost(postId) {
 
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Like করতে আগে Login করুন।");
+        return;
+    }
+
+    const postRef = db.collection("Posts").doc(postId);
+
+    postRef.update({
+        likes: firebase.firestore.FieldValue.arrayUnion(user.uid)
+    })
+    .then(function() {
+        alert("Like হয়েছে! 👍");
+    })
+    .catch(function(error) {
+        console.error(error);
+        alert("Like করা যায়নি: " + error.message);
+    });
+}
 </script>
 
 </body>
