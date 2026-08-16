@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -36,7 +35,7 @@
             font-size: 34px;
             font-weight: bold;
             color: #1877f2;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         h2 {
@@ -45,63 +44,41 @@
 
         .subtitle {
             color: #666;
-            margin-bottom: 20px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 9px;
-            font-size: 16px;
-            outline: none;
+            margin-bottom: 22px;
         }
 
         button {
             width: 100%;
-            padding: 13px;
+            padding: 14px;
             border: none;
             border-radius: 9px;
-            background: #1877f2;
-            color: white;
             font-size: 17px;
             font-weight: bold;
             cursor: pointer;
+            background: #1877f2;
+            color: white;
         }
 
-        button:disabled {
-            background: #aaa;
-        }
-
-        #otpSection {
-            display: none;
+        .logout {
             margin-top: 15px;
-        }
-
-        #message {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #d00;
-        }
-
-        #recaptcha-container {
-            margin: 12px 0;
-            display: flex;
-            justify-content: center;
+            background: #555;
         }
 
         #homeSection {
             display: none;
         }
 
-        .success {
-            color: green !important;
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
         }
 
-        .logout {
-            margin-top: 15px;
-            background: #555;
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
         }
     </style>
 </head>
@@ -118,34 +95,12 @@
         <h2>Login to NEXORA</h2>
 
         <p class="subtitle">
-            মোবাইল নম্বর দিয়ে Login করুন
+            Gmail দিয়ে Login করুন
         </p>
 
-        <input
-            type="tel"
-            id="phoneNumber"
-            placeholder="+8801XXXXXXXXX"
-        >
-
-        <div id="recaptcha-container"></div>
-
-        <button id="sendOtpBtn" onclick="sendOTP()">
-            Send OTP
+        <button onclick="googleLogin()">
+            Sign in with Google
         </button>
-
-        <div id="otpSection">
-
-            <input
-                type="number"
-                id="otpCode"
-                placeholder="৬ সংখ্যার OTP দিন"
-            >
-
-            <button onclick="verifyOTP()">
-                Verify OTP
-            </button>
-
-        </div>
 
         <div id="message"></div>
 
@@ -163,7 +118,8 @@
             আপনি সফলভাবে Login করেছেন।
         </p>
 
-        <p id="userPhone"></p>
+        <p id="userName"></p>
+        <p id="userEmail"></p>
 
         <button class="logout" onclick="logout()">
             Logout
@@ -193,164 +149,47 @@ firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 
-let confirmationResult = null;
-let recaptchaVerifier = null;
+const provider = new firebase.auth.GoogleAuthProvider();
 
 
-// reCAPTCHA তৈরি
-function setupRecaptcha() {
+// Google Login
+function googleLogin() {
 
-    if (recaptchaVerifier) {
-        return;
-    }
+    const message = document.getElementById("message");
 
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-        "recaptcha-container",
-        {
-            size: "normal"
-        }
-    );
+    message.className = "";
+    message.innerText = "Google Login চালু হচ্ছে...";
 
-    recaptchaVerifier.render();
-}
+    auth.signInWithPopup(provider)
 
-
-// OTP পাঠানো
-function sendOTP() {
-
-    const phone = document
-        .getElementById("phoneNumber")
-        .value
-        .trim();
-
-    const message =
-        document.getElementById("message");
-
-    if (!phone) {
-
-        message.innerText =
-            "মোবাইল নম্বর দিন।";
-
-        return;
-    }
-
-    if (!phone.startsWith("+")) {
-
-        message.innerText =
-            "দেশের কোডসহ নম্বর দিন। যেমন: +8801XXXXXXXXX";
-
-        return;
-    }
-
-    message.innerText =
-        "OTP পাঠানো হচ্ছে...";
-
-    document
-        .getElementById("sendOtpBtn")
-        .disabled = true;
-
-    setupRecaptcha();
-
-    auth.signInWithPhoneNumber(
-        phone,
-        recaptchaVerifier
-    )
-    .then(function(result) {
-
-        confirmationResult = result;
-
-        document
-            .getElementById("otpSection")
-            .style.display = "block";
-
-        message.className = "success";
-
-        message.innerText =
-            "OTP আপনার মোবাইলে পাঠানো হয়েছে।";
-
-    })
-    .catch(function(error) {
-
-        console.error(error);
-
-        message.className = "";
-
-        message.innerText =
-            "OTP পাঠানো যায়নি: " + error.message;
-
-        document
-            .getElementById("sendOtpBtn")
-            .disabled = false;
-
-        if (recaptchaVerifier) {
-            recaptchaVerifier.clear();
-            recaptchaVerifier = null;
-        }
-
-    });
-
-}
-
-
-// OTP যাচাই
-function verifyOTP() {
-
-    const code =
-        document.getElementById("otpCode")
-        .value
-        .trim();
-
-    const message =
-        document.getElementById("message");
-
-    if (!code) {
-
-        message.innerText =
-            "OTP দিন।";
-
-        return;
-    }
-
-    if (!confirmationResult) {
-
-        message.innerText =
-            "আগে Send OTP চাপুন।";
-
-        return;
-    }
-
-    message.innerText =
-        "OTP যাচাই করা হচ্ছে...";
-
-    confirmationResult
-        .confirm(code)
         .then(function(result) {
 
             const user = result.user;
 
-            document
-                .getElementById("loginSection")
+            document.getElementById("loginSection")
                 .style.display = "none";
 
-            document
-                .getElementById("homeSection")
+            document.getElementById("homeSection")
                 .style.display = "block";
 
-            document
-                .getElementById("userPhone")
-                .innerText =
-                "মোবাইল: " + user.phoneNumber;
+            document.getElementById("userName")
+                .innerText = "নাম: " + (user.displayName || "");
+
+            document.getElementById("userEmail")
+                .innerText = "Gmail: " + user.email;
 
         })
+
         .catch(function(error) {
 
             console.error(error);
 
+            message.className = "error";
+
             message.innerText =
-                "OTP সঠিক নয় অথবা মেয়াদ শেষ হয়েছে।";
+                "Login করা যায়নি: " + error.message;
 
         });
-
 }
 
 
@@ -360,35 +199,39 @@ function logout() {
     auth.signOut()
         .then(function() {
 
-            document
-                .getElementById("homeSection")
+            document.getElementById("homeSection")
                 .style.display = "none";
 
-            document
-                .getElementById("loginSection")
+            document.getElementById("loginSection")
                 .style.display = "block";
 
-            document
-                .getElementById("phoneNumber")
-                .value = "";
-
-            document
-                .getElementById("otpCode")
-                .value = "";
-
-            document
-                .getElementById("message")
+            document.getElementById("message")
                 .innerText = "";
 
         });
-
 }
 
 
-// পেজ চালু হলে reCAPTCHA প্রস্তুত
-window.onload = function() {
-    setupRecaptcha();
-};
+// আগে Login করা থাকলে
+auth.onAuthStateChanged(function(user) {
+
+    if (user) {
+
+        document.getElementById("loginSection")
+            .style.display = "none";
+
+        document.getElementById("homeSection")
+            .style.display = "block";
+
+        document.getElementById("userName")
+            .innerText = "নাম: " + (user.displayName || "");
+
+        document.getElementById("userEmail")
+            .innerText = "Gmail: " + user.email;
+
+    }
+
+});
 
 </script>
 
