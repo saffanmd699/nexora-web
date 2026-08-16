@@ -426,12 +426,14 @@ const userLiked = auth.currentUser && likes.includes(auth.currentUser.uid);
         <span>${likeCount}</span>
     </button>
 
-   <button onclick="showCommentBox('${doc.id}')">
-    💬 Comment
-</button>
+    <button onclick="showCommentBox('${doc.id}')">
+        💬 Comment <span id="commentCount-${doc.id}">0</span>
+    </button>
+
     <button>
         ↗️ Share
     </button>
+
 </div>
          
             `;
@@ -580,7 +582,15 @@ function loadComments(postId, postElement) {
         .onSnapshot(function(snapshot) {
 
             let commentsHTML = "";
+            const commentCount = snapshot.size;
 
+            const countElement = document.getElementById(
+                "commentCount-" + postId
+            );
+
+            if (countElement) {
+                countElement.innerText = commentCount;
+            }
             snapshot.forEach(function(doc) {
 
                 const comment = doc.data();
