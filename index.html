@@ -230,7 +230,7 @@ body {
 
 </div>
         
-
+<div id="postsFeed"></div>
         <!-- POST -->
         <div class="post">
 
@@ -412,6 +412,45 @@ function createPost() {
 
     });
 }
+
+// Load posts from Firestore
+db.collection("Posts")
+    .orderBy("createdAt", "desc")
+    .onSnapshot(function(snapshot) {
+
+        const postsFeed = document.getElementById("postsFeed");
+
+        postsFeed.innerHTML = "";
+
+        snapshot.forEach(function(doc) {
+
+            const post = doc.data();
+
+            const postDiv = document.createElement("div");
+
+            postDiv.className = "post";
+
+            postDiv.innerHTML = `
+                <div class="post-user">
+                    👤 ${post.name || "NEXORA User"}
+                </div>
+
+                <div class="post-text">
+                    ${post.text || ""}
+                </div>
+
+                <div class="post-actions">
+                    <button>👍 Like</button>
+                    <button>💬 Comment</button>
+                    <button>↗️ Share</button>
+                </div>
+            `;
+
+            postsFeed.appendChild(postDiv);
+        });
+
+    });
+
 </script>
 
 </body>
