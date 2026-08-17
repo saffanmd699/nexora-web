@@ -2883,89 +2883,123 @@ function updatePostPreview() {
     }
 
 }
-
-
-// ================================
-// PUBLISH POST
-// ================================
-
 function publishNexoraPost() {
 
-    const user =
-        auth.currentUser;
+    const user = auth.currentUser;
 
     if (!user) {
-
-        alert(
-            "আগে Login করুন।"
-        );
-
+        alert("আগে Login করুন।");
         return;
-
     }
-
 
     const textElement =
-        document.getElementById(
-            "nexoraPostText"
-        );
+        document.getElementById("nexoraPostText");
 
     const text =
-        textElement.value.trim();
+        textElement ? textElement.value.trim() : "";
 
-
-    if (
-        !text &&
-        selectedPostFiles.length === 0
-    ) {
-
-        alert(
-            "কিছু লিখুন অথবা ছবি/ভিডিও নির্বাচন করুন।"
-        );
-
+    if (!text && selectedPostFiles.length === 0) {
+        alert("কিছু লিখুন অথবা ছবি/ভিডিও নির্বাচন করুন।");
         return;
-
     }
 
+    const files = selectedPostFiles || [];
 
-    const postData = {
+    const uploadPromises = files.map(function(file) {
 
-        text:
-            text,
+        const mediaType =
+            file.type.startsWith("video/")
+                ? "video"
+                : "image";
 
-        name:
-            user.displayName ||
-            "NEXORA User",
+        const formData = new FormData();
 
-        email:
-            user.email ||
-            "",
+        formData.append("file", file);
 
-        uid:
-            user.uid,
+        formData.append(
+            "upload_preset",
+            "NEXORA _Reels"
+        );
 
-        privacy:
-            selectedPostPrivacy,
+        return fetch(
+            "https://api.cloudinary.com/v1_1/xnpnqatf/" +
+            mediaType +
+            "/upload",
+            {
+                method: "POST",
+                body: formData
+            }
+        )
+        .then(function(response) {
 
-        feeling:
-            selectedPostFeeling,
+            if (!response.ok) {
+                throw new Error(
+                    "Cloudinary Upload ব্যর্থ হয়েছে।"
+                );
+            }
 
-        location:
-            selectedPostLocation,
+            return response.json();
 
-        taggedPeople:
-            selectedPostTags,
+        })
+        .then(function(data) {
 
-        createdAt:
-            firebase.firestore
-            .FieldValue
-            .serverTimestamp()
+            return {
+                url: data.secure_url,
+                type: mediaType
+            };
 
-    };
+        });
+
+    });
 
 
-    db.collection("Posts")
-        .add(postData)
+    Promise.all(uploadPromises)
+
+        .then(function(mediaFiles) {
+
+            const postData = {
+
+                text: text,
+
+                name:
+                    user.displayName ||
+                    "NEXORA User",
+
+                email:
+                    user.email ||
+                    "",
+
+                uid:
+                    user.uid,
+
+                privacy:
+                    selectedPostPrivacy,
+
+                feeling:
+                    selectedPostFeeling,
+
+                location:
+                    selectedPostLocation,
+
+                taggedPeople:
+                    selectedPostTags,
+
+                media:
+                    mediaFiles,
+
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            };
+
+
+            return db
+                .collection("Posts")
+                .add(postData);
+
+        })
 
         .then(function() {
 
