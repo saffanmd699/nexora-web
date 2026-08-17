@@ -884,7 +884,7 @@ body {
             <small>Friends</small>
         </button>
 
-        <button onclick="createPost()">
+        <button onclick="openCreatePost()">
             <span class="nx-create-button">＋</span>
             <small>Create</small>
         </button>
@@ -905,40 +905,6 @@ body {
 
 </div>
 
-    <!-- BOTTOM NAVIGATION -->
-<div class="nx-bottom-nav">
-
-    <button class="active">
-        <span>🏠</span>
-        <small>Home</small>
-    </button>
-
-    <button>
-        <span>👥</span>
-        <small>Friends</small>
-    </button>
-
-    <button onclick="createPost()">
-        <span class="nx-create-button">＋</span>
-        <small>Create</small>
-    </button>
-
-    <button
-        onclick="document.getElementById('reelsFeed').scrollIntoView({behavior:'smooth'})"
-    >
-        <span>🎬</span>
-        <small>Reels</small>
-    </button>
-
-    <button>
-        <span>👤</span>
-        <small>Profile</small>
-    </button>
-
-</div>
-
-
-</div>
 
 
 <!-- Firebase -->
@@ -3034,7 +3000,28 @@ function publishNexoraPost() {
         });
 
 }
+function openCreatePost() {
 
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("আগে Login করুন।");
+        return;
+    }
+
+    document.getElementById("homeSection").style.display = "none";
+    document.getElementById("createPostPage").style.display = "block";
+
+    document.getElementById("cpUserName").innerText =
+        user.displayName || "NEXORA User";
+}
+
+
+function closeCreatePost() {
+
+    document.getElementById("createPostPage").style.display = "none";
+    document.getElementById("homeSection").style.display = "block";
+}
 </script>
 
 </body>
