@@ -325,146 +325,208 @@ body {
 
     </div>
 
-
- <!-- HOME / NEXORA SOCIAL FEED -->
+<!-- HOME / NEXORA SOCIAL FEED -->
 <div id="homeSection">
 
-    <!-- TOP BAR -->
-    <div class="top-bar">
-        <div class="top-logo">NEXORA</div>
-        <div class="search-box">🔍 Search NEXORA</div>
+    <!-- TOP HEADER -->
+    <div class="nx-header">
+
+        <div class="nx-logo">
+            NEXORA
+        </div>
+
+        <div class="nx-search">
+            🔍 Search NEXORA
+        </div>
+
+        <div class="nx-header-buttons">
+            <button>➕</button>
+            <button>💬</button>
+            <button>🔔</button>
+        </div>
+
     </div>
 
-<!-- PROFILE SECTION -->
 
-<div class="profile-card">
+    <!-- MAIN FEED -->
+    <div class="nx-feed">
 
-    <div class="profile-cover"></div>
 
-    <div class="profile-info">
+        <!-- CREATE POST -->
+        <div class="nx-card">
 
-        <img
-            id="profilePhoto"
-            class="profile-photo"
-            src=""
-            alt="Profile"
-        >
+            <div class="nx-mind-row">
 
-        <h2 id="profileName">
-            NEXORA User
-        </h2>
+                <div class="nx-avatar">
+                    👤
+                </div>
 
-        <p id="profileEmail">
-            Gmail
-        </p>
+                <textarea
+                    id="postText"
+                    class="nx-mind"
+                    placeholder="What's on your mind?"
+                    rows="1"
+                ></textarea>
 
-        <p id="profileBio">
-            NEXORA-তে আমার Profile 🎉
-        </p>
-
-        <div class="profile-stats">
-
-            <div>
-                <b id="postCount">0</b>
-                <span>Posts</span>
             </div>
 
-            <div>
-                <b id="reelCount">0</b>
-                <span>Reels</span>
-            </div>
 
-            <div>
-                <b id="friendCount">0</b>
-                <span>Friends</span>
+            <div class="nx-action-row">
+
+                <button onclick="createPost()">
+                    📝 <span>Post</span>
+                </button>
+
+                <button
+                    onclick="document.getElementById('reelVideo').click()"
+                >
+                    🎬 <span>Reel</span>
+                </button>
+
+                <button onclick="createStory()">
+                    📷 <span>Story</span>
+                </button>
+
             </div>
 
         </div>
 
-        <button onclick="editProfile()">
-            ✏️ Edit Profile
+
+        <!-- STORIES -->
+        <div class="nx-card nx-story-card">
+
+            <div class="nx-section-title">
+                <b>Stories</b>
+                <span>See all</span>
+            </div>
+
+
+            <div class="nx-stories">
+
+                <div
+                    class="nx-story create-story"
+                    onclick="createStory()"
+                >
+
+                    <div class="story-plus">
+                        +
+                    </div>
+
+                    <b>Create Story</b>
+
+                </div>
+
+
+                <div
+                    id="storiesFeed"
+                    class="nx-story-list"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REEL UPLOAD -->
+        <input
+            type="file"
+            id="reelVideo"
+            accept="video/*"
+            style="display:none;"
+            onchange="uploadReel()"
+        >
+
+        <div
+            id="reelStatus"
+            style="display:none;"
+        ></div>
+
+
+        <!-- REELS -->
+        <div class="nx-section-heading">
+            <b>🎬 Reels</b>
+        </div>
+
+        <div id="reelsFeed"></div>
+
+
+        <!-- POSTS -->
+        <div class="nx-section-heading">
+            <b>📰 Posts</b>
+        </div>
+
+        <div id="postsFeed"></div>
+
+
+    </div>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="nx-bottom-nav">
+
+        <button class="active">
+            <span>🏠</span>
+            <small>Home</small>
+        </button>
+
+        <button>
+            <span>👥</span>
+            <small>Friends</small>
+        </button>
+
+        <button onclick="createPost()">
+            <span class="nx-create-button">＋</span>
+            <small>Create</small>
+        </button>
+
+        <button
+            onclick="document.getElementById('reelsFeed').scrollIntoView({behavior:'smooth'})"
+        >
+            <span>🎬</span>
+            <small>Reels</small>
+        </button>
+
+        <button>
+            <span>👤</span>
+            <small>Profile</small>
         </button>
 
     </div>
 
 </div>
 
+    <!-- BOTTOM NAVIGATION -->
+<div class="nx-bottom-nav">
 
-<!-- FEED -->
-<div class="feed">
+    <button class="active">
+        <span>🏠</span>
+        <small>Home</small>
+    </button>
 
-  
-        <!-- STORIES -->
-<div class="stories">
-
-    <div class="story" onclick="createStory()">
-        ➕<br>Create Story
-    </div>
-
-    <div id="storiesFeed" style="display:flex; gap:10px;"></div>
-
-</div>
-        
-
-        <!-- CREATE POST -->
-<div class="create-post">
-
-    <textarea
-        id="postText"
-        class="post-input"
-        placeholder="What's on your mind?"
-        rows="3"></textarea>
+    <button>
+        <span>👥</span>
+        <small>Friends</small>
+    </button>
 
     <button onclick="createPost()">
-        Post
+        <span class="nx-create-button">＋</span>
+        <small>Create</small>
     </button>
-
-</div>
-    <!-- CREATE REEL -->
-<div class="create-post">
-
-    <h3>🎬 Create Reel</h3>
-
-    <input
-        type="file"
-        id="reelVideo"
-        accept="video/*"
-        style="margin-top:10px;"
-    >
 
     <button
-        onclick="uploadReel()"
-        style="margin-top:10px;"
+        onclick="document.getElementById('reelsFeed').scrollIntoView({behavior:'smooth'})"
     >
-        📤 Upload Reel
+        <span>🎬</span>
+        <small>Reels</small>
     </button>
 
-    <div id="reelStatus" style="margin-top:10px;"></div>
+    <button>
+        <span>👤</span>
+        <small>Profile</small>
+    </button>
 
 </div>
 
-<!-- REELS FEED -->
-<div id="reelsFeed"></div>
-
-<div id="postsFeed"></div>    
-
-       
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <div class="bottom-nav">
-
-        <button>🏠<br>Home</button>
-
-        <button>👥<br>Friends</button>
-
-        <button>💬<br>Messages</button>
-
-        <button>🔔<br>Notifications</button>
-
-        <button onclick="logout()">🚪<br>Logout</button>
-
-    </div>
 
 </div>
 
