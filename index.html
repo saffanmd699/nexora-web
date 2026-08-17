@@ -3000,66 +3000,7 @@ function publishNexoraPost() {
         });
 
 }
-function openCreatePost() {
 
-    const user = auth.currentUser;
-
-    if (!user) {
-        alert("আগে Login করুন।");
-        return;
-    }
-
-    // Home বন্ধ করা হবে না
-    document.getElementById("homeSection").style.display = "block";
-
-    // Home-এর মূল অংশগুলো লুকানো
-    const header = document.querySelector(".nx-header");
-    const feed = document.querySelector(".nx-feed");
-    const bottomNav = document.querySelector(".nx-bottom-nav");
-
-    if (header) {
-        header.style.display = "none";
-    }
-
-    if (feed) {
-        feed.style.display = "none";
-    }
-
-    if (bottomNav) {
-        bottomNav.style.display = "none";
-    }
-
-    // Create Post Page দেখানো
-    document.getElementById("createPostPage").style.display = "block";
-
-    document.getElementById("cpUserName").innerText =
-        user.displayName || "NEXORA User";
-}
-
-
-function closeCreatePost() {
-
-    // Create Post Page বন্ধ
-    document.getElementById("createPostPage").style.display = "none";
-
-    // Home আবার দেখানো
-    const header = document.querySelector(".nx-header");
-    const feed = document.querySelector(".nx-feed");
-    const bottomNav = document.querySelector(".nx-bottom-nav");
-
-    if (header) {
-        header.style.display = "flex";
-    }
-
-    if (feed) {
-        feed.style.display = "block";
-    }
-
-    if (bottomNav) {
-        bottomNav.style.display = "flex";
-    }
-}
-}
 </script>
 
 </body>
