@@ -754,13 +754,22 @@ body {
                     👤
                 </div>
 
-                <textarea
-                    id="postText"
-                    class="nx-mind"
-                    placeholder="What's on your mind?"
-                    rows="1"
-                ></textarea>
+                <div
+    id="postMind"
+    class="nx-mind"
+    onclick="openPostGallery()"
+>
+    What's on your mind?
+</div>
 
+<input
+    type="file"
+    id="postMedia"
+    accept="image/*,video/*"
+    multiple
+    style="display:none;"
+    onchange="selectPostMedia()"
+>
             </div>
 
 
@@ -2100,6 +2109,43 @@ function shareReel(reelId, reelName) {
 
     }
 
+}
+// ================================
+// WHAT'S ON YOUR MIND
+// ================================
+
+function openPostGallery() {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("আগে Login করুন।");
+        return;
+    }
+
+    document.getElementById("postMedia").click();
+}
+
+
+// ================================
+// SELECT PHOTO / VIDEO
+// ================================
+
+function selectPostMedia() {
+
+    const fileInput =
+        document.getElementById("postMedia");
+
+    const files = fileInput.files;
+
+    if (!files.length) {
+        return;
+    }
+
+    alert(
+        files.length +
+        "টি ছবি/ভিডিও নির্বাচন করা হয়েছে।"
+    );
 }
 </script>
 
