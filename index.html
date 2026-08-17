@@ -819,7 +819,24 @@ body {
 
         </div>
 
+<!-- STORY UPLOAD -->
+<input
+    type="file"
+    id="storyMedia"
+    accept="image/*,video/*"
+    style="display:none;"
+    onchange="uploadStory()"
+>
 
+<div
+    id="storyStatus"
+    style="
+        display:none;
+        margin:10px 0;
+        padding:10px;
+        text-align:center;
+    "
+></div>
         <!-- REEL UPLOAD -->
         <input
             type="file"
@@ -1159,45 +1176,6 @@ function sharePost(postId, postText) {
 
     }
 }
-function createStory() {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-        alert("Story দিতে আগে Login করুন।");
-        return;
-    }
-
-    const text = prompt("আপনার Story লিখুন:");
-
-    if (!text || !text.trim()) {
-        return;
-    }
-
-    db.collection("Stories").add({
-
-        text: text.trim(),
-
-        name: user.displayName || "NEXORA User",
-
-        uid: user.uid,
-
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-
-    })
-    .then(function() {
-
-        alert("Story সফলভাবে তৈরি হয়েছে! 🎉");
-
-    })
-    .catch(function(error) {
-
-        console.error(error);
-
-        alert("Story তৈরি করা যায়নি: " + error.message);
-
-    });
-}
 function loadStories() {
 
     db.collection("Stories")
@@ -1218,12 +1196,48 @@ function loadStories() {
 
                 storyDiv.className = "story";
 
-                storyDiv.innerHTML = `
-                    👤<br>
-                    <b>${story.name || "NEXORA User"}</b>
-                    <br>
-                    ${story.text || ""}
-                `;
+                if (story.mediaType === "video") {
+
+                    storyDiv.innerHTML = `
+                        <video
+                            src="${story.mediaUrl}"
+                            controls
+                            playsinline
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                                border-radius:12px;
+                            "
+                        ></video>
+                    `;
+
+                } else if (story.mediaType === "image") {
+
+                    storyDiv.innerHTML = `
+                        <img
+                            src="${story.mediaUrl}"
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                                border-radius:12px;
+                            "
+                        >
+                    `;
+
+                } else {
+
+                    storyDiv.innerHTML = `
+                        👤<br>
+                        <b>
+                            ${story.name || "NEXORA User"}
+                        </b>
+                        <br>
+                        ${story.text || ""}
+                    `;
+
+                }
 
                 storiesFeed.appendChild(storyDiv);
 
@@ -1233,6 +1247,166 @@ function loadStories() {
 }
 
 loadStories();
+// ================================
+// CREATE STORY
+// ================================
+
+function createStory() {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Story দিতে আগে Login করুন।");
+        return;
+    }
+
+    document.getElementById("storyMedia").click();
+}
+
+
+// ================================
+// UPLOAD STORY
+// ================================
+
+function uploadStory() {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Story দিতে আগে Login করুন।");
+        return;
+    }
+
+    const fileInput =
+        document.getElementById("storyMedia");
+
+    const file = fileInput.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (
+        !file.type.startsWith("image/") &&
+        !file.type.startsWith("video/")
+    ) {
+
+        alert("শুধু ছবি অথবা ভিডিও নির্বাচন করুন।");
+
+        fileInput.value = "";
+
+        return;
+    }
+
+    const status =
+        document.getElementById("storyStatus");
+
+    status.style.display = "block";
+
+    status.innerText =
+        "Story Upload হচ্ছে... ⏳";
+
+
+    const mediaType =
+        file.type.startsWith("video/")
+            ? "video"
+            : "image";
+
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    formData.append(
+        "upload_preset",
+        "NEXORA _Reels"
+    );
+
+
+    const uploadType =
+        mediaType === "video"
+            ? "video"
+            : "image";
+
+
+    fetch(
+        "https://api.cloudinary.com/v1_1/xnpnqatf/" +
+        uploadType +
+        "/upload",
+        {
+            method: "POST",
+            body: formData
+        }
+    )
+
+    .then(function(response) {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Cloudinary Upload ব্যর্থ হয়েছে।"
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(function(data) {
+
+        return db.collection("Stories").add({
+
+            mediaUrl:
+                data.secure_url,
+
+            mediaType:
+                mediaType,
+
+            name:
+                user.displayName ||
+                "NEXORA User",
+
+            email:
+                user.email || "",
+
+            uid:
+                user.uid,
+
+            createdAt:
+                firebase.firestore.FieldValue
+                .serverTimestamp()
+
+        });
+
+    })
+
+    .then(function() {
+
+        status.innerText =
+            "Story সফলভাবে Upload হয়েছে! 🎉";
+
+        fileInput.value = "";
+
+        setTimeout(function() {
+
+            status.style.display = "none";
+
+        }, 3000);
+
+    })
+
+    .catch(function(error) {
+
+        console.error(error);
+
+        status.innerText =
+            "Story Upload করা যায়নি: " +
+            error.message;
+
+    });
+
+}
 function uploadReel() {
 
     const user = auth.currentUser;
