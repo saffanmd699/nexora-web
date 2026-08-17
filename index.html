@@ -3039,21 +3039,33 @@ function publishNexoraPost() {
         document.getElementById("nexoraPostText");
 
     const text =
-        textElement ? textElement.value.trim() : "";
+        textElement
+            ? textElement.value.trim()
+            : "";
 
-    if (!text && selectedPostFiles.length === 0) {
+    const files =
+        selectedPostFiles || [];
+
+    if (!text && files.length === 0) {
         alert("কিছু লিখুন অথবা ছবি/ভিডিও নির্বাচন করুন।");
         return;
     }
 
-    const files = selectedPostFiles || [];
-
     const uploadPromises = files.map(function(file) {
 
-        const mediaType =
-            file.type.startsWith("video/")
-                ? "video"
-                : "image";
+        let mediaType;
+
+        if (file.type.startsWith("image/")) {
+            mediaType = "image";
+        }
+        else if (file.type.startsWith("video/")) {
+            mediaType = "video";
+        }
+        else {
+            return Promise.reject(
+                new Error("শুধু ছবি অথবা ভিডিও নির্বাচন করুন।")
+            );
+        }
 
         const formData = new FormData();
 
@@ -3064,10 +3076,13 @@ function publishNexoraPost() {
             "NEXORA _Reels"
         );
 
-        return fetch(
+        const uploadURL =
             "https://api.cloudinary.com/v1_1/xnpnqatf/" +
             mediaType +
-            "/upload",
+            "/upload";
+
+        return fetch(
+            uploadURL,
             {
                 method: "POST",
                 body: formData
@@ -3075,13 +3090,22 @@ function publishNexoraPost() {
         )
         .then(function(response) {
 
-            if (!response.ok) {
-                throw new Error(
-                    "Cloudinary Upload ব্যর্থ হয়েছে।"
-                );
-            }
+            return response.json().then(function(data) {
 
-            return response.json();
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error &&
+                        data.error.message
+                            ? data.error.message
+                            : "Cloudinary Upload ব্যর্থ হয়েছে।"
+                    );
+
+                }
+
+                return data;
+
+            });
 
         })
         .then(function(data) {
@@ -3137,7 +3161,6 @@ function publishNexoraPost() {
 
             };
 
-
             return db
                 .collection("Posts")
                 .add(postData);
@@ -3167,10 +3190,13 @@ function publishNexoraPost() {
 
         .catch(function(error) {
 
-            console.error(error);
+            console.error(
+                "NEXORA POST ERROR:",
+                error
+            );
 
             alert(
-                "Post করা যায়নি: " +
+                "Post করা যায়নি:\n\n" +
                 error.message
             );
 
