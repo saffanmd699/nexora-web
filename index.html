@@ -299,6 +299,326 @@ body {
 .profile-cover {
     width: 100%;
 }
+/* =========================
+   NEXORA NEW HOME DESIGN
+========================= */
+
+#homeSection {
+    width: 100%;
+    min-height: 100vh;
+    background: #f0f2f5;
+    overflow-x: hidden;
+    padding-bottom: 75px;
+}
+
+/* TOP HEADER */
+.nx-header {
+    height: 60px;
+    width: 100%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 15px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.12);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nx-logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: #1877f2;
+    white-space: nowrap;
+}
+
+.nx-search {
+    height: 40px;
+    background: #f0f2f5;
+    border-radius: 22px;
+    padding: 10px 16px;
+    color: #65676b;
+    flex: 1;
+    max-width: 380px;
+}
+
+.nx-header-buttons {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.nx-header-buttons button {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #f0f2f5;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+/* MAIN FEED */
+.nx-feed {
+    width: 100%;
+    max-width: 680px;
+    margin: 15px auto;
+    padding: 0 10px 80px;
+}
+
+/* CARD */
+.nx-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+/* WHAT'S ON YOUR MIND */
+.nx-mind-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nx-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #e4e6eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    flex-shrink: 0;
+}
+
+.nx-mind {
+    flex: 1;
+    min-height: 42px;
+    max-height: 100px;
+    resize: none;
+    border: 1px solid #ddd;
+    border-radius: 22px;
+    padding: 11px 16px;
+    font-size: 16px;
+    outline: none;
+    background: #f0f2f5;
+    font-family: Arial, sans-serif;
+}
+
+.nx-mind:focus {
+    border-color: #1877f2;
+    background: #ffffff;
+}
+
+/* POST / REEL / STORY */
+.nx-action-row {
+    display: flex;
+    border-top: 1px solid #eee;
+    margin-top: 12px;
+    padding-top: 10px;
+}
+
+.nx-action-row button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px 5px;
+    font-size: 14px;
+    color: #444;
+    cursor: pointer;
+}
+
+.nx-action-row button:hover {
+    background: #f0f2f5;
+    border-radius: 8px;
+}
+
+/* STORIES */
+.nx-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 17px;
+}
+
+.nx-section-title span {
+    color: #1877f2;
+    font-size: 14px;
+}
+
+.nx-stories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 3px;
+}
+
+.nx-story {
+    min-width: 105px;
+    height: 145px;
+    border-radius: 12px;
+    background: #f0f2f5;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.create-story {
+    background: white;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 12px;
+    cursor: pointer;
+}
+
+.story-plus {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #1877f2;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.nx-story-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+/* SECTION TITLE */
+.nx-section-heading {
+    font-size: 18px;
+    margin: 12px 3px;
+    color: #222;
+}
+
+/* OLD POSTS / REELS CARDS */
+.nx-feed .post {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.nx-feed .post-user {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.nx-feed .post-text {
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.nx-feed .post-actions {
+    display: flex;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+}
+
+.nx-feed .post-actions button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px 4px;
+    font-size: 14px;
+}
+
+/* BOTTOM NAV */
+.nx-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 65px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+    z-index: 999;
+}
+
+.nx-bottom-nav button {
+    border: none;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #65676b;
+    font-size: 20px;
+    min-width: 55px;
+    cursor: pointer;
+}
+
+.nx-bottom-nav button small {
+    font-size: 11px;
+}
+
+.nx-bottom-nav button.active {
+    color: #1877f2;
+}
+
+.nx-create-button {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #1877f2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+/* MOBILE */
+@media (max-width: 699px) {
+
+    .nx-header {
+        padding: 0 10px;
+    }
+
+    .nx-logo {
+        font-size: 23px;
+    }
+
+    .nx-search {
+        max-width: none;
+        font-size: 13px;
+        padding: 11px;
+    }
+
+    .nx-header-buttons button {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+    }
+
+    .nx-feed {
+        margin-top: 8px;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .nx-card {
+        border-radius: 12px;
+    }
+}
 </style>
 </head>
 
