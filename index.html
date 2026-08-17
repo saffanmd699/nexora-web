@@ -3009,7 +3009,27 @@ function openCreatePost() {
         return;
     }
 
-    document.getElementById("homeSection").style.display = "none";
+    // Home বন্ধ করা হবে না
+    document.getElementById("homeSection").style.display = "block";
+
+    // Home-এর মূল অংশগুলো লুকানো
+    const header = document.querySelector(".nx-header");
+    const feed = document.querySelector(".nx-feed");
+    const bottomNav = document.querySelector(".nx-bottom-nav");
+
+    if (header) {
+        header.style.display = "none";
+    }
+
+    if (feed) {
+        feed.style.display = "none";
+    }
+
+    if (bottomNav) {
+        bottomNav.style.display = "none";
+    }
+
+    // Create Post Page দেখানো
     document.getElementById("createPostPage").style.display = "block";
 
     document.getElementById("cpUserName").innerText =
@@ -3019,8 +3039,26 @@ function openCreatePost() {
 
 function closeCreatePost() {
 
+    // Create Post Page বন্ধ
     document.getElementById("createPostPage").style.display = "none";
-    document.getElementById("homeSection").style.display = "block";
+
+    // Home আবার দেখানো
+    const header = document.querySelector(".nx-header");
+    const feed = document.querySelector(".nx-feed");
+    const bottomNav = document.querySelector(".nx-bottom-nav");
+
+    if (header) {
+        header.style.display = "flex";
+    }
+
+    if (feed) {
+        feed.style.display = "block";
+    }
+
+    if (bottomNav) {
+        bottomNav.style.display = "flex";
+    }
+}
 }
 </script>
 
