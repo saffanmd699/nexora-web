@@ -2102,9 +2102,939 @@ function shareReel(reelId, reelName) {
 
 
 }
+// ================================
+// NEXORA CREATE POST SYSTEM
+// ================================
+
+let selectedPostFiles = [];
+let selectedPostBackground = "#ffffff";
+let selectedPostFeeling = "";
+let selectedPostLocation = "";
+let selectedPostTags = "";
+let selectedPostPrivacy = "Public";
+
+
+// ================================
+// OPEN CREATE POST
+// ================================
+
 function openCreatePost() {
-    alert("Create Post চালু হয়েছে!");
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("আগে Login করুন।");
+        return;
+    }
+
+    // আগে খোলা থাকলে আবার তৈরি করবে না
+    if (document.getElementById("nexoraCreatePostPage")) {
+        return;
+    }
+
+    const page = document.createElement("div");
+
+    page.id = "nexoraCreatePostPage";
+
+    page.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:#f0f2f5;
+        z-index:5000;
+        overflow-y:auto;
+    `;
+
+    page.innerHTML = `
+
+        <!-- HEADER -->
+
+        <div style="
+            height:60px;
+            background:white;
+            display:flex;
+            align-items:center;
+            padding:0 15px;
+            box-shadow:0 1px 5px rgba(0,0,0,.15);
+            position:sticky;
+            top:0;
+            z-index:10;
+        ">
+
+            <button
+                onclick="closeCreatePost()"
+                style="
+                    width:40px;
+                    height:40px;
+                    border:none;
+                    border-radius:50%;
+                    background:#f0f2f5;
+                    font-size:23px;
+                "
+            >
+                ←
+            </button>
+
+            <b style="
+                margin-left:15px;
+                font-size:20px;
+            ">
+                Create Post
+            </b>
+
+        </div>
+
+
+        <!-- MAIN -->
+
+        <div style="
+            max-width:650px;
+            margin:15px auto;
+            padding:5px 10px 100px;
+        ">
+
+
+            <!-- USER -->
+
+            <div style="
+                background:white;
+                border-radius:15px;
+                padding:15px;
+            ">
+
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                ">
+
+                    <img
+                        src="${user.photoURL || ""}"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                        style="
+                            width:45px;
+                            height:45px;
+                            border-radius:50%;
+                            object-fit:cover;
+                        "
+                    >
+
+                    <div style="
+                        display:${user.photoURL ? "none" : "flex"};
+                        width:45px;
+                        height:45px;
+                        border-radius:50%;
+                        background:#e4e6eb;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:22px;
+                    ">
+                        👤
+                    </div>
+
+                    <div>
+
+                        <b>
+                            ${user.displayName || "NEXORA User"}
+                        </b>
+
+                        <br>
+
+                        <button
+                            onclick="changePostPrivacy()"
+                            id="postPrivacyButton"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                border-radius:6px;
+                                padding:4px 8px;
+                                margin-top:3px;
+                            "
+                        >
+                            🌍 Public ▾
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TEXT -->
+
+                <textarea
+                    id="nexoraPostText"
+                    placeholder="What's on your mind?"
+                    oninput="updatePostPreview()"
+                    style="
+                        width:100%;
+                        min-height:140px;
+                        margin-top:15px;
+                        border:none;
+                        outline:none;
+                        resize:none;
+                        font-size:19px;
+                        padding:15px;
+                        border-radius:15px;
+                        background:${selectedPostBackground};
+                    "
+                ></textarea>
+
+
+                <!-- FEELING / LOCATION / TAG -->
+
+                <div id="postExtraInfo"
+                    style="
+                        display:none;
+                        margin-top:8px;
+                        padding:10px;
+                        background:#f0f2f5;
+                        border-radius:10px;
+                        font-size:14px;
+                    ">
+                </div>
+
+
+                <!-- MEDIA PREVIEW -->
+
+                <div
+                    id="nexoraPostMediaPreview"
+                    style="
+                        margin-top:10px;
+                    "
+                ></div>
+
+
+                <!-- ADD TO POST -->
+
+                <div style="
+                    margin-top:15px;
+                    border:1px solid #ddd;
+                    border-radius:12px;
+                    padding:12px;
+                ">
+
+                    <b>
+                        Add to your post
+                    </b>
+
+
+                    <div style="
+                        display:flex;
+                        flex-wrap:wrap;
+                        gap:8px;
+                        margin-top:12px;
+                    ">
+
+
+                        <!-- GALLERY -->
+
+                        <button
+                            onclick="selectNexoraPostMedia()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            🖼️ Gallery
+                        </button>
+
+
+                        <!-- VIDEO -->
+
+                        <button
+                            onclick="selectNexoraPostVideo()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            🎬 Video
+                        </button>
+
+
+                        <!-- BACKGROUND -->
+
+                        <button
+                            onclick="changeNexoraBackground()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            🎨 Background
+                        </button>
+
+
+                        <!-- LIVE -->
+
+                        <button
+                            onclick="startNexoraLive()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            🔴 Live
+                        </button>
+
+
+                        <!-- MUSIC -->
+
+                        <button
+                            onclick="addNexoraMusic()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            🎵 Music
+                        </button>
+
+
+                        <!-- LOCATION -->
+
+                        <button
+                            onclick="addNexoraLocation()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            📍 Location
+                        </button>
+
+
+                        <!-- FEELING -->
+
+                        <button
+                            onclick="addNexoraFeeling()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            😊 Feeling
+                        </button>
+
+
+                        <!-- TAG -->
+
+                        <button
+                            onclick="addNexoraTag()"
+                            style="
+                                border:none;
+                                background:#f0f2f5;
+                                padding:11px 13px;
+                                border-radius:10px;
+                            "
+                        >
+                            👥 Tag People
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- POST -->
+
+                <button
+                    onclick="publishNexoraPost()"
+                    style="
+                        width:100%;
+                        margin-top:15px;
+                        padding:13px;
+                        border:none;
+                        border-radius:10px;
+                        background:#1877f2;
+                        color:white;
+                        font-size:17px;
+                        font-weight:bold;
+                    "
+                >
+                    🚀 Post
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDIA INPUT -->
+
+        <input
+            type="file"
+            id="nexoraPostMedia"
+            accept="image/*,video/*"
+            multiple
+            style="display:none;"
+            onchange="handleNexoraPostMedia()"
+        >
+
+    `;
+
+    document.body.appendChild(page);
+
 }
+
+
+// ================================
+// CLOSE
+// ================================
+
+function closeCreatePost() {
+
+    const page =
+        document.getElementById(
+            "nexoraCreatePostPage"
+        );
+
+    if (page) {
+        page.remove();
+    }
+
+    selectedPostFiles = [];
+}
+
+
+// ================================
+// GALLERY
+// ================================
+
+function selectNexoraPostMedia() {
+
+    const input =
+        document.getElementById(
+            "nexoraPostMedia"
+        );
+
+    input.accept =
+        "image/*,video/*";
+
+    input.click();
+
+}
+
+
+// ================================
+// VIDEO
+// ================================
+
+function selectNexoraPostVideo() {
+
+    const input =
+        document.getElementById(
+            "nexoraPostMedia"
+        );
+
+    input.accept =
+        "video/*";
+
+    input.click();
+
+}
+
+
+// ================================
+// MEDIA SELECTED
+// ================================
+
+function handleNexoraPostMedia() {
+
+    const input =
+        document.getElementById(
+            "nexoraPostMedia"
+        );
+
+    const files =
+        Array.from(input.files || []);
+
+    if (!files.length) {
+        return;
+    }
+
+    selectedPostFiles = files;
+
+    const preview =
+        document.getElementById(
+            "nexoraPostMediaPreview"
+        );
+
+    preview.innerHTML = "";
+
+
+    files.forEach(function(file) {
+
+        const box =
+            document.createElement("div");
+
+        box.style.cssText = `
+            margin-top:8px;
+            padding:10px;
+            background:#f0f2f5;
+            border-radius:10px;
+        `;
+
+
+        if (file.type.startsWith("image/")) {
+
+            const img =
+                document.createElement("img");
+
+            img.src =
+                URL.createObjectURL(file);
+
+            img.style.cssText = `
+                width:100%;
+                max-height:350px;
+                object-fit:cover;
+                border-radius:10px;
+            `;
+
+            box.appendChild(img);
+
+        } else {
+
+            const video =
+                document.createElement("video");
+
+            video.src =
+                URL.createObjectURL(file);
+
+            video.controls = true;
+
+            video.style.cssText = `
+                width:100%;
+                max-height:400px;
+                border-radius:10px;
+                background:#000;
+            `;
+
+            box.appendChild(video);
+
+        }
+
+
+        preview.appendChild(box);
+
+    });
+
+}
+
+
+// ================================
+// BACKGROUND
+// ================================
+
+function changeNexoraBackground() {
+
+    const colors = [
+
+        "#ffffff",
+        "#ffeaa7",
+        "#fab1a0",
+        "#ffcccc",
+        "#81ecec",
+        "#74b9ff",
+        "#a29bfe",
+        "#dfe6e9",
+        "#55efc4",
+        "#fdcb6e"
+
+    ];
+
+    const color =
+        colors[
+            Math.floor(
+                Math.random() *
+                colors.length
+            )
+        ];
+
+    selectedPostBackground =
+        color;
+
+    const text =
+        document.getElementById(
+            "nexoraPostText"
+        );
+
+    if (text) {
+
+        text.style.background =
+            color;
+
+    }
+
+}
+
+
+// ================================
+// PRIVACY
+// ================================
+
+function changePostPrivacy() {
+
+    const choice =
+        prompt(
+            "Privacy নির্বাচন করুন:\n\n1 = Public\n2 = Friends\n3 = Only Me"
+        );
+
+    if (choice === "1") {
+
+        selectedPostPrivacy =
+            "Public";
+
+    } else if (choice === "2") {
+
+        selectedPostPrivacy =
+            "Friends";
+
+    } else if (choice === "3") {
+
+        selectedPostPrivacy =
+            "Only Me";
+
+    } else {
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "postPrivacyButton"
+        );
+
+    if (button) {
+
+        const icon =
+            selectedPostPrivacy === "Public"
+                ? "🌍"
+                : selectedPostPrivacy === "Friends"
+                    ? "👥"
+                    : "🔒";
+
+        button.innerText =
+            icon +
+            " " +
+            selectedPostPrivacy +
+            " ▾";
+
+    }
+
+}
+
+
+// ================================
+// LOCATION
+// ================================
+
+function addNexoraLocation() {
+
+    const location =
+        prompt(
+            "আপনার Location লিখুন:"
+        );
+
+    if (!location) {
+        return;
+    }
+
+    selectedPostLocation =
+        location;
+
+    updateExtraInfo();
+
+}
+
+
+// ================================
+// FEELING
+// ================================
+
+function addNexoraFeeling() {
+
+    const feeling =
+        prompt(
+            "Feeling লিখুন:\n\nযেমন: Happy, Sad, Excited, Love"
+        );
+
+    if (!feeling) {
+        return;
+    }
+
+    selectedPostFeeling =
+        feeling;
+
+    updateExtraInfo();
+
+}
+
+
+// ================================
+// TAG
+// ================================
+
+function addNexoraTag() {
+
+    const tag =
+        prompt(
+            "যাকে Tag করতে চান তার নাম লিখুন:"
+        );
+
+    if (!tag) {
+        return;
+    }
+
+    selectedPostTags =
+        tag;
+
+    updateExtraInfo();
+
+}
+
+
+// ================================
+// EXTRA INFO
+// ================================
+
+function updateExtraInfo() {
+
+    const box =
+        document.getElementById(
+            "postExtraInfo"
+        );
+
+    if (!box) {
+        return;
+    }
+
+
+    let html = "";
+
+
+    if (selectedPostFeeling) {
+
+        html +=
+            "😊 Feeling: " +
+            selectedPostFeeling +
+            "<br>";
+
+    }
+
+
+    if (selectedPostLocation) {
+
+        html +=
+            "📍 Location: " +
+            selectedPostLocation +
+            "<br>";
+
+    }
+
+
+    if (selectedPostTags) {
+
+        html +=
+            "👥 Tagged: " +
+            selectedPostTags;
+
+    }
+
+
+    if (html) {
+
+        box.style.display =
+            "block";
+
+        box.innerHTML =
+            html;
+
+    } else {
+
+        box.style.display =
+            "none";
+
+    }
+
+}
+
+
+// ================================
+// MUSIC
+// ================================
+
+function addNexoraMusic() {
+
+    alert(
+        "🎵 Music system পরবর্তী ধাপে Cloud Music-এর সঙ্গে যুক্ত করা হবে।"
+    );
+
+}
+
+
+// ================================
+// LIVE
+// ================================
+
+function startNexoraLive() {
+
+    alert(
+        "🔴 NEXORA Live system পরবর্তী ধাপে চালু করা হবে।"
+    );
+
+}
+
+
+// ================================
+// TEXT PREVIEW
+// ================================
+
+function updatePostPreview() {
+
+    const text =
+        document.getElementById(
+            "nexoraPostText"
+        );
+
+    if (!text) {
+        return;
+    }
+
+}
+
+
+// ================================
+// PUBLISH POST
+// ================================
+
+function publishNexoraPost() {
+
+    const user =
+        auth.currentUser;
+
+    if (!user) {
+
+        alert(
+            "আগে Login করুন।"
+        );
+
+        return;
+
+    }
+
+
+    const textElement =
+        document.getElementById(
+            "nexoraPostText"
+        );
+
+    const text =
+        textElement.value.trim();
+
+
+    if (
+        !text &&
+        selectedPostFiles.length === 0
+    ) {
+
+        alert(
+            "কিছু লিখুন অথবা ছবি/ভিডিও নির্বাচন করুন।"
+        );
+
+        return;
+
+    }
+
+
+    const postData = {
+
+        text:
+            text,
+
+        name:
+            user.displayName ||
+            "NEXORA User",
+
+        email:
+            user.email ||
+            "",
+
+        uid:
+            user.uid,
+
+        privacy:
+            selectedPostPrivacy,
+
+        feeling:
+            selectedPostFeeling,
+
+        location:
+            selectedPostLocation,
+
+        taggedPeople:
+            selectedPostTags,
+
+        createdAt:
+            firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+    };
+
+
+    db.collection("Posts")
+        .add(postData)
+
+        .then(function() {
+
+            alert(
+                "🎉 NEXORA-তে Post সফল হয়েছে!"
+            );
+
+            selectedPostFiles = [];
+
+            selectedPostFeeling = "";
+
+            selectedPostLocation = "";
+
+            selectedPostTags = "";
+
+            selectedPostBackground =
+                "#ffffff";
+
+            closeCreatePost();
+
+        })
+
+        .catch(function(error) {
+
+            console.error(error);
+
+            alert(
+                "Post করা যায়নি: " +
+                error.message
+            );
+
+        });
+
+}
+
 </script>
 
 </body>
