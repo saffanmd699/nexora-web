@@ -904,9 +904,11 @@ function likePost(postId) {
 
     });
 }
+
 function showCommentBox(postId) {
 
-    const oldBox = document.getElementById("commentBox-" + postId);
+    const oldBox =
+        document.getElementById("commentBox-" + postId);
 
     if (oldBox) {
         oldBox.remove();
@@ -918,26 +920,60 @@ function showCommentBox(postId) {
     box.id = "commentBox-" + postId;
 
     box.innerHTML = `
-        <input
-            id="commentInput-${postId}"
-            type="text"
-            placeholder="আপনার Comment লিখুন..."
-            style="width:100%; padding:10px; margin-top:10px; border:1px solid #ddd; border-radius:8px;"
-        >
+        <div style="
+            margin-top:10px;
+            border-top:1px solid #eee;
+            padding-top:10px;
+        ">
 
-        <button
-            onclick="addComment('${postId}')"
-            style="margin-top:8px; padding:8px 15px;"
-        >
-            Comment করুন
-        </button>
+            <input
+                id="commentInput-${postId}"
+                type="text"
+                placeholder="আপনার Comment লিখুন..."
+                style="
+                    width:100%;
+                    padding:11px;
+                    border:1px solid #ddd;
+                    border-radius:20px;
+                    outline:none;
+                "
+            >
+
+            <button
+                onclick="addComment('${postId}')"
+                style="
+                    margin-top:8px;
+                    padding:8px 16px;
+                    background:#1877f2;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                "
+            >
+                Comment করুন
+            </button>
+
+            <div
+                id="commentsArea-${postId}"
+                style="margin-top:10px;"
+            ></div>
+
+        </div>
     `;
 
-const post = document.querySelector(
-    `button[onclick="showCommentBox('${postId}')"]`
-).closest(".post");
+    const button = document.querySelector(
+        `button[onclick="showCommentBox('${postId}')"]`
+    );
 
-post.appendChild(box);
+    if (button) {
+
+        const post =
+            button.closest(".post");
+
+        post.appendChild(box);
+
+        loadComments(postId, post);
+    }
 }
 
 
@@ -950,7 +986,10 @@ function addComment(postId) {
         return;
     }
 
-    const input = document.getElementById("commentInput-" + postId);
+    const input =
+        document.getElementById(
+            "commentInput-" + postId
+        );
 
     const text = input.value.trim();
 
@@ -966,11 +1005,14 @@ function addComment(postId) {
 
             text: text,
 
-            name: user.displayName || "NEXORA User",
+            name:
+                user.displayName ||
+                "NEXORA User",
 
             uid: user.uid,
 
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt:
+                firebase.firestore.FieldValue.serverTimestamp()
 
         })
 
@@ -978,15 +1020,16 @@ function addComment(postId) {
 
             input.value = "";
 
-            alert("Comment সফলভাবে হয়েছে! 💬");
-
         })
 
         .catch(function(error) {
 
             console.error(error);
 
-            alert("Comment করা যায়নি: " + error.message);
+            alert(
+                "Comment করা যায়নি: " +
+                error.message
+            );
 
         });
 }
@@ -998,46 +1041,58 @@ function loadComments(postId, postElement) {
         .orderBy("createdAt", "asc")
         .onSnapshot(function(snapshot) {
 
-            let commentsHTML = "";
             const commentCount = snapshot.size;
 
-            const countElement = document.getElementById(
-                "commentCount-" + postId
-            );
+            const countElement =
+                document.getElementById(
+                    "commentCount-" + postId
+                );
 
             if (countElement) {
                 countElement.innerText = commentCount;
             }
+
+            // Comment চাপ দিয়ে box খোলা না থাকলে
+            // কমেন্টগুলো দেখাবে না
+            const commentsArea =
+                document.getElementById(
+                    "commentsArea-" + postId
+                );
+
+            if (!commentsArea) {
+                return;
+            }
+
+            commentsArea.innerHTML = "";
+
             snapshot.forEach(function(doc) {
 
                 const comment = doc.data();
 
-                commentsHTML += `
-                    <div style="
-                        background:#f0f2f5;
-                        padding:8px 12px;
-                        margin-top:8px;
-                        border-radius:10px;
-                    ">
-                        <b>👤 ${comment.name || "NEXORA User"}</b>
-                        <div>${comment.text || ""}</div>
+                const commentDiv =
+                    document.createElement("div");
+
+                commentDiv.style.cssText = `
+                    background:#f0f2f5;
+                    padding:9px 12px;
+                    margin-top:8px;
+                    border-radius:10px;
+                `;
+
+                commentDiv.innerHTML = `
+                    <b>
+                        👤 ${comment.name || "NEXORA User"}
+                    </b>
+
+                    <div style="margin-top:3px;">
+                        ${comment.text || ""}
                     </div>
                 `;
+
+                commentsArea.appendChild(commentDiv);
+
             });
 
-            let commentsArea =
-                postElement.querySelector(".comments-area");
-
-            if (!commentsArea) {
-
-                commentsArea = document.createElement("div");
-
-                commentsArea.className = "comments-area";
-
-                postElement.appendChild(commentsArea);
-            }
-
-            commentsArea.innerHTML = commentsHTML;
         });
 }
 function loadReels() {
