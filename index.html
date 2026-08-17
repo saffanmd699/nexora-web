@@ -1218,6 +1218,37 @@ html {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* =====================================================
+   TOP GAP & LOGIN TITLE REMOVAL (PERFECT FIX)
+===================================================== */
+
+/* ১. ব্রাউজারের মার্জিন ও প্যাডিং শূন্য করা */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ২. শুধু ওপরে থাকাLOGIN টাইটেলটি স্থায়ীভাবে হাইড করা */
+.login-title {
+    display: none !important;
+}
+
+/* ৩. হেডার একদম ওপরে ফিট রাখা */
+.nx-header {
+    top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* ৪. ফিডের ওপরের অতিরিক্ত ফাঁকা জায়গা দূর করা */
+.nx-feed {
+    margin-top: 0 !important;
+    padding-top: 8px !important;
+}
+
+/* ৫. প্রোফাইল কার্ডের অতিরিক্ত টপ মার্জিন সরানো */
+.profile-card {
+    margin-top: 0 !important;
+}
 
 </style>
 </head>
