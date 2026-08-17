@@ -1209,6 +1209,20 @@ db.collection("Posts")
                     : ""
                 }
 
+<button
+    onclick="deletePost('${doc.id}')"
+    style="
+        margin-top:10px;
+        background:#ffe5e5;
+        color:#e41e3f;
+        border:none;
+        padding:9px 14px;
+        border-radius:8px;
+        cursor:pointer;
+    "
+>
+    🗑️ Delete Post
+</button>
 
                 <div class="post-actions">
 
@@ -3197,6 +3211,69 @@ function publishNexoraPost() {
 
             alert(
                 "Post করা যায়নি:\n\n" +
+                error.message
+            );
+
+        });
+}
+
+// ================================
+// DELETE POST
+// ================================
+
+function deletePost(postId) {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("আগে Login করুন।");
+        return;
+    }
+
+    const postRef =
+        db.collection("Posts").doc(postId);
+
+    postRef.get()
+        .then(function(doc) {
+
+            if (!doc.exists) {
+                alert("Post পাওয়া যায়নি।");
+                return;
+            }
+
+            const post = doc.data();
+
+            // শুধু নিজের Post Delete করতে পারবে
+            if (post.uid !== user.uid) {
+                alert("আপনি এই Post Delete করতে পারবেন না।");
+                return;
+            }
+
+            const confirmDelete = confirm(
+                "আপনি কি এই Post টি Delete করতে চান?"
+            );
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            return postRef.delete();
+
+        })
+        .then(function() {
+
+            alert("🗑️ Post সফলভাবে Delete হয়েছে!");
+
+        })
+        .catch(function(error) {
+
+            console.error(
+                "DELETE POST ERROR:",
+                error
+            );
+
+            alert(
+                "Post Delete করা যায়নি:\n\n" +
                 error.message
             );
 
