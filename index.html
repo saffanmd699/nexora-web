@@ -1429,6 +1429,7 @@ function showCommentBox(postId){
 }
 
 
+
 function addComment(postId){
 
     const user =
@@ -1459,13 +1460,16 @@ function addComment(postId){
       .collection("Comments")
       .add({
 
-        text:text,
+        // Comment যে ভাষায় লেখা হবে,
+        // ঠিক সেই ভাষাতেই সংরক্ষণ হবে
+        text: text,
 
         name:
             user.displayName ||
             "NEXORA User",
 
-        uid:user.uid,
+        uid:
+            user.uid,
 
         createdAt:
             firebase.firestore
@@ -1480,6 +1484,8 @@ function addComment(postId){
       })
       .catch(function(error){
 
+        console.error(error);
+
         alert(
             "Comment করা যায়নি: " +
             error.message
@@ -1488,7 +1494,6 @@ function addComment(postId){
       });
 
 }
-
 
 function loadCommentCount(postId){
 
