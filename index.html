@@ -740,6 +740,308 @@ button{
     margin-top:8px;
     border-radius:10px;
 }
+/* ================= STORIES CSS START ================= */
+
+/* Story list */
+#storiesFeed{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:10px 5px;
+    scroll-behavior:smooth;
+    scrollbar-width:none;
+}
+
+#storiesFeed::-webkit-scrollbar{
+    display:none;
+}
+
+/* Story card */
+.nx-story{
+    flex:0 0 115px;
+    height:190px;
+    border-radius:14px;
+    overflow:hidden;
+    position:relative;
+    cursor:pointer;
+    background:#e4e6eb;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.nx-story-preview{
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+}
+
+.nx-story-preview img,
+.nx-story-preview video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+/* Story profile */
+.nx-story-profile{
+    position:absolute;
+    top:8px;
+    left:8px;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid #1877f2;
+    background:#fff;
+    z-index:3;
+}
+
+.nx-story-profile img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.nx-story-profile-fallback{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    background:#eee;
+}
+
+/* Story name */
+.nx-story-name{
+    position:absolute;
+    left:8px;
+    right:8px;
+    bottom:8px;
+    color:#fff;
+    font-size:13px;
+    font-weight:bold;
+    text-shadow:0 1px 4px #000;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    z-index:3;
+}
+
+/* ================= FULL SCREEN VIEWER ================= */
+
+.nexora-story-viewer{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100dvh;
+    background:#000;
+    z-index:99999;
+    overflow:hidden;
+}
+
+/* Close button */
+.nexora-story-close{
+    position:fixed;
+    top:15px;
+    right:15px;
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,.55);
+    color:#fff;
+    font-size:24px;
+    z-index:100005;
+    cursor:pointer;
+}
+
+/* Story scroll */
+.nexora-story-scroll{
+    width:100%;
+    height:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    scroll-snap-type:y mandatory;
+    scrollbar-width:none;
+}
+
+.nexora-story-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+/* Full story */
+.nexora-story-full{
+    position:relative;
+    width:100%;
+    height:100dvh;
+    min-height:100dvh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    background:#000;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+}
+
+/* Story top profile */
+.nexora-story-top{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    padding:14px 60px 14px 15px;
+    z-index:10;
+    background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,.65),
+        transparent
+    );
+}
+
+.nexora-story-user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#fff;
+}
+
+.nexora-story-user img,
+.nexora-story-user-fallback{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #1877f2;
+}
+
+.nexora-story-user-fallback{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eee;
+    font-size:22px;
+}
+
+.nexora-story-time{
+    font-size:12px;
+    color:#ddd;
+    margin-top:2px;
+}
+
+/* Story media */
+.nexora-story-media-area{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#000;
+}
+
+.nexora-story-media{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+}
+
+/* Reaction area */
+.nexora-story-reactions{
+    position:absolute;
+    left:10px;
+    right:10px;
+    bottom:72px;
+    z-index:20;
+    display:flex;
+    justify-content:center;
+    gap:7px;
+    flex-wrap:wrap;
+    padding:7px;
+}
+
+.nexora-story-reactions button{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,.55);
+    color:#fff;
+    font-size:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:transform .15s;
+}
+
+.nexora-story-reactions button:active{
+    transform:scale(1.25);
+}
+
+/* Reply box */
+.nexora-story-chat{
+    position:absolute;
+    left:10px;
+    right:10px;
+    bottom:15px;
+    z-index:30;
+    display:flex;
+    gap:7px;
+}
+
+.nexora-story-chat input{
+    flex:1;
+    height:44px;
+    border:1px solid rgba(255,255,255,.4);
+    border-radius:24px;
+    background:rgba(0,0,0,.55);
+    color:#fff;
+    padding:0 16px;
+    font-size:15px;
+    outline:none;
+}
+
+.nexora-story-chat input::placeholder{
+    color:#ddd;
+}
+
+.nexora-story-chat button{
+    width:46px;
+    height:44px;
+    border:none;
+    border-radius:50%;
+    background:#1877f2;
+    color:#fff;
+    font-size:20px;
+    cursor:pointer;
+}
+
+/* Mobile */
+@media(max-width:600px){
+
+    .nx-story{
+        flex-basis:105px;
+        height:175px;
+    }
+
+    .nexora-story-reactions{
+        bottom:70px;
+        gap:5px;
+    }
+
+    .nexora-story-reactions button{
+        width:38px;
+        height:38px;
+        font-size:20px;
+    }
+
+}
+
+/* ================= STORIES CSS END ================= */
 </style>
 </head>
 
@@ -1648,8 +1950,13 @@ function sharePost(postId){
 
 }
 
+/* ================= STORIES START ================= */
 
-/* ================= STORIES ================= */
+let nexoraStories = [];
+let currentStoryIndex = 0;
+
+
+/* ================= LOAD STORIES ================= */
 
 function loadStories(){
 
@@ -1658,76 +1965,623 @@ function loadStories(){
       .onSnapshot(function(snapshot){
 
         const feed =
-            document.getElementById(
-                "storiesFeed"
-            );
+            document.getElementById("storiesFeed");
 
         if(!feed) return;
 
         feed.innerHTML = "";
 
+        nexoraStories = [];
+
         snapshot.forEach(function(doc){
 
-            const story =
-                doc.data();
+            const story = doc.data();
+
+            nexoraStories.push({
+                id: doc.id,
+                ...story
+            });
+
+        });
+
+
+        if(nexoraStories.length === 0){
+
+            feed.innerHTML = `
+                <div style="
+                    padding:25px;
+                    text-align:center;
+                    color:#777;
+                ">
+                    📖 এখনো কোনো Story নেই।
+                </div>
+            `;
+
+            return;
+        }
+
+
+        nexoraStories.forEach(function(story,index){
 
             const div =
                 document.createElement("div");
 
-            div.className =
-                "nx-story";
+            div.className = "nx-story";
 
-            if(
-                story.mediaType === "video"
-            ){
+            div.onclick = function(){
 
-                div.innerHTML = `
+                openNexoraStory(index);
+
+            };
+
+
+            const profile =
+                story.photoURL ||
+                "";
+
+
+            let mediaHTML = "";
+
+
+            if(story.mediaType === "video"){
+
+                mediaHTML = `
                     <video
-                        src="${escapeHTML(story.mediaUrl || "")}"
-                        controls
+                        src="${escapeHTML(
+                            story.mediaUrl || ""
+                        )}"
+                        muted
                         playsinline
+                        preload="metadata"
                     ></video>
-                `;
-
-            }else if(
-                story.mediaType === "image"
-            ){
-
-                div.innerHTML = `
-                    <img
-                        src="${escapeHTML(story.mediaUrl || "")}"
-                        alt="Story"
-                    >
                 `;
 
             }else{
 
-                div.innerHTML = `
-                    <div style="
-                        padding:12px;
-                        text-align:center;
-                    ">
-                        👤<br>
+                mediaHTML = `
+                    <img
+                        src="${escapeHTML(
+                            story.mediaUrl || ""
+                        )}"
+                        alt="Story"
+                    >
+                `;
+
+            }
+
+
+            div.innerHTML = `
+
+                <div class="nx-story-preview">
+
+                    ${mediaHTML}
+
+                    <div class="nx-story-profile">
+
+                        ${
+                            profile
+                            ?
+                            `
+                            <img
+                                src="${escapeHTML(profile)}"
+                            >
+                            `
+                            :
+                            `
+                            <div class="nx-story-profile-fallback">
+                                👤
+                            </div>
+                            `
+                        }
+
+                    </div>
+
+                    <div class="nx-story-name">
+
+                        ${escapeHTML(
+                            story.name ||
+                            "NEXORA User"
+                        )}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            feed.appendChild(div);
+
+        });
+
+      },function(error){
+
+        console.error(
+            "STORY LOAD ERROR:",
+            error
+        );
+
+      });
+
+}
+
+
+loadStories();
+
+
+/* ================= OPEN STORY ================= */
+
+function openNexoraStory(index){
+
+    if(!nexoraStories.length)
+        return;
+
+
+    currentStoryIndex = index;
+
+
+    let viewer =
+        document.getElementById(
+            "nexoraStoryViewer"
+        );
+
+
+    if(!viewer){
+
+        viewer =
+            document.createElement("div");
+
+        viewer.id =
+            "nexoraStoryViewer";
+
+        viewer.className =
+            "nexora-story-viewer";
+
+
+        viewer.innerHTML = `
+
+            <button
+                class="nexora-story-close"
+                onclick="closeNexoraStory()"
+            >
+                ✕
+            </button>
+
+
+            <div
+                id="nexoraStoryScroll"
+                class="nexora-story-scroll"
+            ></div>
+
+        `;
+
+
+        document.body.appendChild(viewer);
+
+    }
+
+
+    viewer.style.display = "block";
+
+
+    renderNexoraStories();
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* ================= RENDER STORIES ================= */
+
+function renderNexoraStories(){
+
+    const container =
+        document.getElementById(
+            "nexoraStoryScroll"
+        );
+
+    if(!container) return;
+
+
+    container.innerHTML = "";
+
+
+    nexoraStories.forEach(function(story,index){
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "nexora-story-full";
+
+
+        const photo =
+            story.photoURL || "";
+
+
+        let mediaHTML = "";
+
+
+        if(story.mediaType === "video"){
+
+            mediaHTML = `
+                <video
+                    class="nexora-story-media"
+                    src="${escapeHTML(
+                        story.mediaUrl || ""
+                    )}"
+                    controls
+                    playsinline
+                    loop
+                ></video>
+            `;
+
+        }else{
+
+            mediaHTML = `
+                <img
+                    class="nexora-story-media"
+                    src="${escapeHTML(
+                        story.mediaUrl || ""
+                    )}"
+                    alt="NEXORA Story"
+                >
+            `;
+
+        }
+
+
+        card.innerHTML = `
+
+            <div class="nexora-story-top">
+
+                <div class="nexora-story-user">
+
+                    ${
+                        photo
+                        ?
+                        `
+                        <img
+                            src="${escapeHTML(photo)}"
+                        >
+                        `
+                        :
+                        `
+                        <div class="nexora-story-user-fallback">
+                            👤
+                        </div>
+                        `
+                    }
+
+                    <div>
+
                         <b>
                             ${escapeHTML(
                                 story.name ||
                                 "NEXORA User"
                             )}
                         </b>
+
+                        <div class="nexora-story-time">
+                            NEXORA Story
+                        </div>
+
                     </div>
-                `;
 
-            }
+                </div>
 
-            feed.appendChild(div);
+            </div>
 
-        });
+
+            <div class="nexora-story-media-area">
+
+                ${mediaHTML}
+
+            </div>
+
+
+            <div class="nexora-story-reactions">
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '❤️'
+                    )"
+                >❤️</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '😂'
+                    )"
+                >😂</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '😍'
+                    )"
+                >😍</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '😮'
+                    )"
+                >😮</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '😢'
+                    )"
+                >😢</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '😡'
+                    )"
+                >😡</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '👍'
+                    )"
+                >👍</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '🔥'
+                    )"
+                >🔥</button>
+
+                <button
+                    onclick="reactToNexoraStory(
+                        '${story.id}',
+                        '🎉'
+                    )"
+                >🎉</button>
+
+            </div>
+
+
+            <div class="nexora-story-chat">
+
+                <input
+                    id="storyReply-${story.id}"
+                    type="text"
+                    placeholder="Story-তে Reply করুন..."
+                >
+
+                <button
+                    onclick="replyToNexoraStory(
+                        '${story.id}'
+                    )"
+                >
+                    ➤
+                </button>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+
+    setTimeout(function(){
+
+        const target =
+            container.children[
+                currentStoryIndex
+            ];
+
+        if(target){
+
+            target.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+
+        }
+
+    },100);
+
+}
+
+
+/* ================= CLOSE STORY ================= */
+
+function closeNexoraStory(){
+
+    const viewer =
+        document.getElementById(
+            "nexoraStoryViewer"
+        );
+
+
+    if(viewer)
+        viewer.style.display = "none";
+
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* ================= STORY REACTION ================= */
+
+function reactToNexoraStory(
+    storyId,
+    emoji
+){
+
+    const user =
+        auth.currentUser;
+
+
+    if(!user){
+
+        alert(
+            "Reaction দিতে আগে Login করুন।"
+        );
+
+        return;
+
+    }
+
+
+    db.collection("Stories")
+      .doc(storyId)
+      .collection("Reactions")
+      .doc(user.uid)
+      .set({
+
+          uid:user.uid,
+
+          name:
+              user.displayName ||
+              "NEXORA User",
+
+          photoURL:
+              user.photoURL ||
+              "",
+
+          emoji:emoji,
+
+          createdAt:
+              firebase.firestore
+              .FieldValue
+              .serverTimestamp()
+
+      })
+
+      .then(function(){
+
+          console.log(
+              "Story Reaction:",
+              emoji
+          );
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "STORY REACTION ERROR:",
+              error
+          );
+
+          alert(
+              "Reaction দেওয়া যায়নি।"
+          );
 
       });
 
 }
 
-loadStories();
+
+/* ================= STORY REPLY ================= */
+
+function replyToNexoraStory(storyId){
+
+    const user =
+        auth.currentUser;
+
+
+    if(!user){
+
+        alert(
+            "Reply দিতে আগে Login করুন।"
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "storyReply-" + storyId
+        );
+
+
+    if(!input) return;
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        alert(
+            "Reply লিখুন।"
+        );
+
+        return;
+
+    }
+
+
+    db.collection("Stories")
+      .doc(storyId)
+      .collection("Replies")
+      .add({
+
+          text:text,
+
+          uid:user.uid,
+
+          name:
+              user.displayName ||
+              "NEXORA User",
+
+          photoURL:
+              user.photoURL ||
+              "",
+
+          createdAt:
+              firebase.firestore
+              .FieldValue
+              .serverTimestamp()
+
+      })
+
+      .then(function(){
+
+          input.value = "";
+
+          alert(
+              "💬 Reply পাঠানো হয়েছে!"
+          );
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "STORY REPLY ERROR:",
+              error
+          );
+
+          alert(
+              "Reply পাঠানো যায়নি।"
+          );
+
+      });
+
+}
+
+
+/* ================= STORIES END ================= */
 
 
 function createStory(){
