@@ -15,6 +15,8 @@
 }
 
 html,body{
+    margin:0;
+    padding:0;
     background:#f0f2f5;
     color:#1c1e21;
 }
@@ -49,7 +51,7 @@ button:disabled{
     width:150px;
     height:55px;
     margin:0 auto 20px;
-    background:linear-gradient(135deg,#1877f2,#4f46e5);
+    background:linear-gradient(135deg,#1877f2,#7c3aed);
     color:white;
     border-radius:14px;
     display:flex;
@@ -100,7 +102,7 @@ button:disabled{
     display:none;
     min-height:100vh;
     background:#f0f2f5;
-    padding-bottom:75px;
+    padding-bottom:80px;
     overflow-x:hidden;
 }
 
@@ -128,11 +130,9 @@ button:disabled{
     white-space:nowrap;
 }
 
-/* SEARCH */
-
 .nx-search{
     height:42px;
-    max-width:380px;
+    max-width:360px;
     background:#f0f2f5;
     border-radius:24px;
     padding:0 16px;
@@ -140,24 +140,13 @@ button:disabled{
     display:flex;
     align-items:center;
     flex:1;
-    border:1px solid transparent;
+    cursor:pointer;
 }
 
-.nx-search:focus-within{
-    background:white;
-    border-color:#1877f2;
-}
-
-.nx-search-icon{
-    font-size:18px;
-    margin-right:8px;
-}
-
-#nexoraSearchInput{
+.nx-search input{
     width:100%;
-    height:100%;
-    border:none;
-    outline:none;
+    border:0;
+    outline:0;
     background:transparent;
     font-size:15px;
 }
@@ -191,19 +180,24 @@ button:disabled{
     background:#e4e6eb;
 }
 
-/* আগের গোল রঙিন Messenger আইকন */
-
+/* Messenger গোল আইকন */
 .nx-messenger-icon{
-    width:29px;
-    height:29px;
+    width:30px;
+    height:30px;
     border-radius:50%;
-    background:linear-gradient(135deg,#00c6ff,#1877f2,#635bff);
+    background:linear-gradient(
+        135deg,
+        #00c6ff,
+        #1877f2,
+        #7c3aed
+    );
     color:white;
     display:flex;
     align-items:center;
     justify-content:center;
     font-size:16px;
     transform:rotate(-20deg);
+    box-shadow:0 3px 8px rgba(24,119,242,.3);
 }
 
 .nx-badge{
@@ -242,7 +236,7 @@ button:disabled{
     padding:14px;
 }
 
-/* CREATE */
+/* ================= CREATE ================= */
 
 .nx-mind-row{
     display:flex;
@@ -272,7 +266,7 @@ button:disabled{
 
 .nx-mind{
     flex:1;
-    height:46px;
+    min-height:46px;
     border:1px solid #ddd;
     border-radius:25px;
     background:#f0f2f5;
@@ -304,9 +298,17 @@ button:disabled{
     background:#f0f2f5;
 }
 
-.nx-action-row button:nth-child(1){color:#e41e3f}
-.nx-action-row button:nth-child(2){color:#7b2cff}
-.nx-action-row button:nth-child(3){color:#16a34a}
+.nx-action-row button:nth-child(1){
+    color:#e41e3f;
+}
+
+.nx-action-row button:nth-child(2){
+    color:#7b2cff;
+}
+
+.nx-action-row button:nth-child(3){
+    color:#16a34a;
+}
 
 /* ================= STORIES ================= */
 
@@ -354,6 +356,7 @@ button:disabled{
     background:#ddd;
     flex-shrink:0;
     box-shadow:0 2px 6px rgba(0,0,0,.15);
+    cursor:pointer;
 }
 
 .nx-story img,
@@ -371,7 +374,6 @@ button:disabled{
     align-items:center;
     justify-content:flex-end;
     padding-bottom:15px;
-    cursor:pointer;
 }
 
 .story-plus{
@@ -408,38 +410,13 @@ button:disabled{
     box-shadow:0 2px 7px rgba(0,0,0,.07);
 }
 
-.post-user-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:9px;
-}
-
-.post-avatar{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#1877f2,#6c5ce7);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    flex-shrink:0;
-}
-
-.post-avatar img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
 .post-user{
     font-size:16px;
     font-weight:700;
+    margin-bottom:8px;
 }
 
-.post-privacy{
+.post-time{
     font-size:12px;
     color:#65676b;
     margin-top:2px;
@@ -459,6 +436,41 @@ button:disabled{
     border-radius:10px;
     margin-top:10px;
     display:block;
+}
+
+.post-meta{
+    margin-top:8px;
+    padding:8px;
+    background:#f0f2f5;
+    border-radius:9px;
+    color:#65676b;
+    font-size:14px;
+}
+
+.post-poll{
+    margin-top:10px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+}
+
+.poll-question{
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.poll-option{
+    width:100%;
+    text-align:left;
+    border:1px solid #ddd;
+    background:#f8f9fa;
+    padding:10px;
+    border-radius:9px;
+    margin-top:7px;
+}
+
+.poll-option:hover{
+    background:#e9eef8;
 }
 
 .post-actions{
@@ -483,10 +495,6 @@ button:disabled{
     background:#f0f2f5;
 }
 
-.post-actions button.liked{
-    color:#e41e3f;
-}
-
 .delete-btn{
     margin-top:10px;
     background:#ffe5e5;
@@ -506,7 +514,7 @@ button:disabled{
 
 .comment-input{
     width:100%;
-    padding:11px 14px;
+    padding:11px;
     border:1px solid #ddd;
     border-radius:20px;
     outline:none;
@@ -526,10 +534,6 @@ button:disabled{
     padding:9px 12px;
     margin-top:8px;
     border-radius:10px;
-}
-
-.comment-count{
-    font-weight:bold;
 }
 
 /* ================= BOTTOM NAV ================= */
@@ -680,6 +684,11 @@ button:disabled{
     background:#f0f2f5;
     padding:11px 13px;
     border-radius:10px;
+    font-weight:600;
+}
+
+.nx-add-buttons button:hover{
+    background:#e4e6eb;
 }
 
 .nx-publish-btn{
@@ -692,46 +701,6 @@ button:disabled{
     color:white;
     font-size:17px;
     font-weight:bold;
-}
-
-/* PRIVACY MENU */
-
-.privacy-menu{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.35);
-    z-index:7000;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.privacy-box{
-    width:100%;
-    max-width:350px;
-    background:white;
-    border-radius:16px;
-    padding:18px;
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
-}
-
-.privacy-box h3{
-    margin-bottom:15px;
-}
-
-.privacy-option{
-    width:100%;
-    text-align:left;
-    border:none;
-    background:#f0f2f5;
-    padding:13px;
-    margin-top:8px;
-    border-radius:10px;
-}
-
-.privacy-option:hover{
-    background:#e4e6eb;
 }
 
 /* ================= REELS ================= */
@@ -790,22 +759,39 @@ button:disabled{
     color:white;
 }
 
-/* ================= SEARCH RESULTS ================= */
+/* ================= SEARCH PAGE ================= */
 
-#searchResults{
+#nexoraSearchPage{
     display:none;
+    position:fixed;
+    inset:0;
+    background:#f0f2f5;
+    z-index:4500;
+    overflow-y:auto;
 }
 
-.search-title{
-    padding:12px 4px;
-    font-weight:bold;
-    color:#555;
+.search-container{
+    max-width:650px;
+    margin:auto;
+    padding:15px;
 }
 
-.no-result{
-    text-align:center;
-    padding:30px;
-    color:#777;
+.search-main{
+    width:100%;
+    padding:14px 18px;
+    border:none;
+    border-radius:25px;
+    outline:none;
+    font-size:16px;
+    background:white;
+    box-shadow:0 2px 7px rgba(0,0,0,.08);
+}
+
+.search-result{
+    background:white;
+    margin-top:10px;
+    padding:13px;
+    border-radius:12px;
 }
 
 /* ================= MOBILE ================= */
@@ -825,16 +811,12 @@ button:disabled{
     .nx-search{
         display:flex;
         max-width:none;
-        height:38px;
-        padding:0 11px;
+        height:40px;
+        padding:0 10px;
     }
 
-    .nx-search-icon{
-        font-size:15px;
-    }
-
-    #nexoraSearchInput{
-        font-size:13px;
+    .nx-search input{
+        display:none;
     }
 
     .nx-header-buttons{
@@ -888,23 +870,23 @@ button:disabled{
 
 <div class="login-box">
 
-    <div id="loginSection">
+<div id="loginSection">
 
-        <div class="logo">NEXORA</div>
+<div class="logo">NEXORA</div>
 
-        <h2>Login to NEXORA</h2>
+<h2>Login to NEXORA</h2>
 
-        <p class="subtitle">
-            Gmail দিয়ে Login করুন
-        </p>
+<p class="subtitle">
+Gmail দিয়ে Login করুন
+</p>
 
-        <button class="login-btn" onclick="googleLogin()">
-            Sign in with Google
-        </button>
+<button class="login-btn" onclick="googleLogin()">
+Sign in with Google
+</button>
 
-        <div id="message"></div>
+<div id="message"></div>
 
-    </div>
+</div>
 
 </div>
 
@@ -913,220 +895,213 @@ button:disabled{
 
 <div id="homeSection">
 
-    <div class="nx-header">
+<header class="nx-header">
 
-        <div class="nx-logo">
-            NEXORA
-        </div>
+<div class="nx-logo">
+NEXORA
+</div>
 
-        <!-- SEARCH -->
-        <div class="nx-search">
-            <span class="nx-search-icon">🔍</span>
-            <input
-                id="nexoraSearchInput"
-                type="search"
-                placeholder="Search NEXORA"
-                autocomplete="off"
-            >
-        </div>
+<div class="nx-search" onclick="openSearch()">
+<span>🔍</span>
+<input
+id="headerSearchInput"
+type="text"
+placeholder="Search NEXORA"
+onclick="event.stopPropagation();openSearch();"
+/>
+</div>
 
-        <div class="nx-header-buttons">
+<div class="nx-header-buttons">
 
-            <button
-                class="nx-top-btn"
-                onclick="openCreatePost()"
-                title="Create"
-            >
-                ＋
-            </button>
+<button
+class="nx-top-btn"
+onclick="openCreatePost()"
+title="Create"
+>
+＋
+</button>
 
-            <!-- আগের গোল রঙিন Messenger -->
-            <button
-                class="nx-top-btn"
-                onclick="openMessenger()"
-                title="Messages"
-            >
-                <span class="nx-messenger-icon">➤</span>
-                <span class="nx-badge">2</span>
-            </button>
+<button
+class="nx-top-btn"
+onclick="openMessenger()"
+title="Messenger"
+>
+<span class="nx-messenger-icon">➤</span>
+<span class="nx-badge">2</span>
+</button>
 
-            <button
-                class="nx-top-btn"
-                onclick="openNotifications()"
-                title="Notifications"
-            >
-                🔔
-                <span class="nx-badge">3</span>
-            </button>
+<button
+class="nx-top-btn"
+onclick="showNotifications()"
+title="Notifications"
+>
+🔔
+<span class="nx-badge">3</span>
+</button>
 
-        </div>
+</div>
 
-    </div>
+</header>
 
 
-    <div class="nx-feed">
+<div class="nx-feed">
 
-        <!-- SEARCH RESULT -->
-        <div
-            id="searchResults"
-            class="nx-card"
-        ></div>
+<!-- CREATE -->
 
+<div class="nx-card">
 
-        <!-- CREATE -->
+<div class="nx-mind-row">
 
-        <div class="nx-card">
+<div class="nx-avatar" id="homeAvatar">
+👤
+</div>
 
-            <div class="nx-mind-row">
+<div
+id="postMind"
+class="nx-mind"
+onclick="openCreatePost()"
+>
+What's on your mind?
+</div>
 
-                <div
-                    class="nx-avatar"
-                    id="homeAvatar"
-                >
-                    👤
-                </div>
+</div>
 
-                <div
-                    id="postMind"
-                    class="nx-mind"
-                    onclick="openCreatePost()"
-                >
-                    What's on your mind?
-                </div>
+<div class="nx-action-row">
 
-            </div>
+<button onclick="openCreatePost()">
+📝 <span>Post</span>
+</button>
 
-            <div class="nx-action-row">
+<button onclick="document.getElementById('reelVideo').click()">
+🎬 <span>Reel</span>
+</button>
 
-                <button onclick="openCreatePost()">
-                    📝 <span>Post</span>
-                </button>
+<button onclick="createStory()">
+📷 <span>Story</span>
+</button>
 
-                <button onclick="document.getElementById('reelVideo').click()">
-                    🎬 <span>Reel</span>
-                </button>
+</div>
 
-                <button onclick="createStory()">
-                    📷 <span>Story</span>
-                </button>
-
-            </div>
-
-        </div>
+</div>
 
 
-        <!-- STORIES -->
+<!-- STORIES -->
 
-        <div class="nx-card">
+<div class="nx-card">
 
-            <div class="nx-section-title">
+<div class="nx-section-title">
 
-                <b>Stories</b>
+<b>Stories</b>
 
-                <span onclick="alert('সব Story এখানে দেখানো হবে।')">
-                    See all
-                </span>
+<span onclick="showAllStories()">
+See all
+</span>
 
-            </div>
+</div>
 
-            <div class="nx-stories">
+<div class="nx-stories">
 
-                <div
-                    class="nx-story create-story"
-                    onclick="createStory()"
-                >
-                    <div class="story-plus">+</div>
-                    <b>Create Story</b>
-                </div>
+<div
+class="nx-story create-story"
+onclick="createStory()"
+>
 
-                <div
-                    id="storiesFeed"
-                    class="nx-story-list"
-                ></div>
+<div class="story-plus">
++
+</div>
 
-            </div>
+<b>Create Story</b>
 
-        </div>
+</div>
 
+<div
+id="storiesFeed"
+class="nx-story-list"
+></div>
 
-        <input
-            type="file"
-            id="storyMedia"
-            accept="image/*,video/*"
-            style="display:none"
-            onchange="uploadStory()"
-        >
+</div>
 
-        <div
-            id="storyStatus"
-            style="display:none;text-align:center;padding:10px;"
-        ></div>
+</div>
 
 
-        <input
-            type="file"
-            id="reelVideo"
-            accept="video/*"
-            style="display:none"
-            onchange="uploadReel()"
-        >
+<input
+type="file"
+id="storyMedia"
+accept="image/*,video/*"
+style="display:none"
+onchange="uploadStory()"
+>
 
-        <div
-            id="reelStatus"
-            style="display:none;text-align:center;padding:10px;"
-        ></div>
-
-
-        <!-- REELS -->
-
-        <div class="nx-section-heading">
-            <b>🎬 Reels</b>
-        </div>
-
-        <div id="reelsFeed"></div>
+<div
+id="storyStatus"
+style="display:none;text-align:center;padding:10px;"
+></div>
 
 
-        <!-- POSTS -->
+<input
+type="file"
+id="reelVideo"
+accept="video/*"
+style="display:none"
+onchange="uploadReel()"
+>
 
-        <div class="nx-section-heading">
-            <b>📰 Posts</b>
-        </div>
-
-        <div id="postsFeed"></div>
-
-    </div>
+<div
+id="reelStatus"
+style="display:none;text-align:center;padding:10px;"
+></div>
 
 
-    <!-- BOTTOM NAV -->
+<!-- REELS -->
 
-    <div class="nx-bottom-nav">
+<div class="nx-section-heading">
+<b>🎬 Reels</b>
+</div>
 
-        <button class="active">
-            <span>🏠</span>
-            <small>Home</small>
-        </button>
+<div id="reelsFeed"></div>
 
-        <button onclick="openFriends()">
-            <span>👥</span>
-            <small>Friends</small>
-        </button>
 
-        <button onclick="openCreatePost()">
-            <span class="nx-create-button">＋</span>
-            <small>Create</small>
-        </button>
+<!-- POSTS -->
 
-        <button onclick="openNexoraReels()">
-            <span>🎬</span>
-            <small>Reels</small>
-        </button>
+<div class="nx-section-heading">
+<b>📰 Posts</b>
+</div>
 
-        <button onclick="openProfile()">
-            <span>👤</span>
-            <small>Profile</small>
-        </button>
+<div id="postsFeed"></div>
 
-    </div>
+</div>
+
+
+<!-- BOTTOM -->
+
+<div class="nx-bottom-nav">
+
+<button class="active">
+<span>🏠</span>
+<small>Home</small>
+</button>
+
+<button onclick="showFriends()">
+<span>👥</span>
+<small>Friends</small>
+</button>
+
+<button onclick="openCreatePost()">
+<span class="nx-create-button">＋</span>
+<small>Create</small>
+</button>
+
+<button onclick="openNexoraReels()">
+<span>🎬</span>
+<small>Reels</small>
+</button>
+
+<button onclick="openProfile()">
+<span>👤</span>
+<small>Profile</small>
+</button>
+
+</div>
 
 </div>
 
@@ -1135,25 +1110,60 @@ button:disabled{
 
 <div id="nexoraReelsPage">
 
-    <div class="nx-modal-header">
+<div class="nx-modal-header">
 
-        <button
-            class="nx-back-btn"
-            onclick="closeNexoraReels()"
-        >
-            ←
-        </button>
+<button
+class="nx-back-btn"
+onclick="closeNexoraReels()"
+>
+←
+</button>
 
-        <b style="margin-left:15px;font-size:21px;">
-            🎬 Reels
-        </b>
+<b style="margin-left:15px;font-size:21px;">
+🎬 Reels
+</b>
 
-    </div>
+</div>
 
-    <div
-        id="nexoraReelsContainer"
-        class="reels-container"
-    ></div>
+<div
+id="nexoraReelsContainer"
+class="reels-container"
+></div>
+
+</div>
+
+
+<!-- ================= SEARCH PAGE ================= -->
+
+<div id="nexoraSearchPage">
+
+<div class="nx-modal-header">
+
+<button
+class="nx-back-btn"
+onclick="closeSearch()"
+>
+←
+</button>
+
+<b style="margin-left:15px;font-size:21px;">
+🔍 Search NEXORA
+</b>
+
+</div>
+
+<div class="search-container">
+
+<input
+id="searchInput"
+class="search-main"
+placeholder="মানুষ বা Post খুঁজুন..."
+oninput="performSearch()"
+/>
+
+<div id="searchResults"></div>
+
+</div>
 
 </div>
 
@@ -1161,7 +1171,9 @@ button:disabled{
 <!-- ================= FIREBASE ================= -->
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
@@ -1181,20 +1193,21 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 const provider =
-    new firebase.auth.GoogleAuthProvider();
+new firebase.auth.GoogleAuthProvider();
 
 const CLOUDINARY_CLOUD =
-    "xnpnqatf";
+"xnpnqatf";
 
 const CLOUDINARY_PRESET =
-    "NEXORA _Reels";
+"NEXORA _Reels";
 
 
-/* ================= GLOBAL STATE ================= */
+/* ================= GLOBAL ================= */
 
 let selectedPostFiles = [];
 
-let selectedPostBackground = "#ffffff";
+let selectedPostBackground =
+"#ffffff";
 
 let selectedPostFeeling = "";
 
@@ -1202,34 +1215,39 @@ let selectedPostLocation = "";
 
 let selectedPostTags = "";
 
-let selectedPostPrivacy = "Public";
+let selectedPostPrivacy =
+"Public";
+
+let selectedPollQuestion = "";
+
+let selectedPollOptions = [];
 
 
 /* ================= LOGIN ================= */
 
 function googleLogin(){
 
-    const message =
-        document.getElementById("message");
+const message =
+document.getElementById("message");
 
-    message.className = "";
+message.className="";
 
-    message.innerText =
-        "Google Login চালু হচ্ছে...";
+message.innerText =
+"Google Login চালু হচ্ছে...";
 
-    auth.signInWithPopup(provider)
+auth.signInWithPopup(provider)
 
-    .catch(function(error){
+.catch(function(error){
 
-        console.error(error);
+console.error(error);
 
-        message.className = "error";
+message.className="error";
 
-        message.innerText =
-            "Login করা যায়নি: " +
-            error.message;
+message.innerText =
+"Login করা যায়নি: " +
+error.message;
 
-    });
+});
 
 }
 
@@ -1238,257 +1256,243 @@ function googleLogin(){
 
 auth.onAuthStateChanged(function(user){
 
-    const login =
-        document.getElementById("loginSection");
+const login =
+document.getElementById("loginSection");
 
-    const home =
-        document.getElementById("homeSection");
+const home =
+document.getElementById("homeSection");
 
-    if(user){
+if(user){
 
-        login.style.display = "none";
+login.style.display="none";
 
-        home.style.display = "block";
+home.style.display="block";
 
-        updateHomeUser(user);
+updateHomeUser(user);
 
-    }else{
+}else{
 
-        login.style.display = "flex";
+login.style.display="flex";
 
-        home.style.display = "none";
+home.style.display="none";
 
-    }
+}
 
 });
 
 
 function updateHomeUser(user){
 
-    const avatar =
-        document.getElementById("homeAvatar");
+const avatar =
+document.getElementById("homeAvatar");
 
-    if(
-        avatar &&
-        user.photoURL
-    ){
+if(
+avatar &&
+user.photoURL
+){
 
-        avatar.innerHTML =
-            `<img src="${escapeHTML(user.photoURL)}">`;
+avatar.innerHTML=
+`
+<img
+src="${escapeHTML(user.photoURL)}"
+>
+`;
 
-    }
+}
 
 }
 
 
-/* ================= HEADER BUTTONS ================= */
+/* ================= MESSENGER ================= */
 
 function openMessenger(){
 
-    alert(
-        "💬 NEXORA Messenger\n\nMessenger system এখানে যুক্ত হবে।"
-    );
+alert(
+"💬 NEXORA Messenger\n\nMessenger system-এর backend পরবর্তী ধাপে যুক্ত হবে।"
+);
 
 }
 
 
-function openNotifications(){
+function showNotifications(){
 
-    alert(
-        "🔔 NEXORA Notifications\n\nআপনার Notification এখানে দেখা যাবে।"
-    );
+alert(
+"🔔 Notifications\n\nআপনার নতুন Notification এখানে আসবে।"
+);
 
 }
 
 
-function openFriends(){
+function showFriends(){
 
-    alert(
-        "👥 Friends system\n\nFriends system-এর পরবর্তী অংশ এখানে যুক্ত হবে।"
-    );
+alert(
+"👥 Friends system\n\nFriends system পরবর্তী ধাপে সম্পূর্ণ করা হবে।"
+);
 
 }
 
 
 function openProfile(){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user) return;
+if(!user){
 
-    alert(
-        "👤 Profile\n\n" +
-        (user.displayName || "NEXORA User") +
-        "\n" +
-        (user.email || "")
-    );
+alert("আগে Login করুন।");
+
+return;
+
+}
+
+alert(
+"👤 Profile\n\n" +
+(user.displayName || "NEXORA User") +
+"\n" +
+(user.email || "")
+);
 
 }
 
 
 /* ================= SEARCH ================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
+function openSearch(){
 
-        const input =
-            document.getElementById(
-                "nexoraSearchInput"
-            );
-
-        if(!input) return;
-
-        input.addEventListener(
-            "input",
-            function(){
-
-                searchNexora(
-                    input.value.trim()
-                );
-
-            }
-        );
-
-    }
+const page =
+document.getElementById(
+"nexoraSearchPage"
 );
 
+page.style.display="block";
 
-function searchNexora(query){
+setTimeout(function(){
 
-    const result =
-        document.getElementById(
-            "searchResults"
-        );
+const input =
+document.getElementById(
+"searchInput"
+);
 
-    const posts =
-        document.getElementById(
-            "postsFeed"
-        );
+if(input)
+input.focus();
 
-    if(!result) return;
+},100);
 
-    if(!query){
+}
 
-        result.style.display = "none";
 
-        if(posts)
-            posts.style.display = "block";
+function closeSearch(){
 
-        return;
+document.getElementById(
+"nexoraSearchPage"
+).style.display="none";
 
-    }
+}
 
-    result.style.display = "block";
 
-    if(posts)
-        posts.style.display = "none";
+function performSearch(){
 
-    result.innerHTML = `
-        <div class="search-title">
-            🔍 "${escapeHTML(query)}" এর Search Result
-        </div>
-        <div style="text-align:center;padding:20px;color:#777;">
-            Search করা হচ্ছে...
-        </div>
-    `;
+const input =
+document.getElementById(
+"searchInput"
+);
 
-    db.collection("Posts")
-      .orderBy("createdAt","desc")
-      .limit(50)
-      .get()
+const results =
+document.getElementById(
+"searchResults"
+);
 
-      .then(function(snapshot){
+const text =
+(input.value || "")
+.trim()
+.toLowerCase();
 
-        result.innerHTML = `
-            <div class="search-title">
-                🔍 "${escapeHTML(query)}" এর Search Result
-            </div>
-        `;
+results.innerHTML="";
 
-        let found = 0;
+if(!text){
 
-        snapshot.forEach(function(doc){
+return;
 
-            const post =
-                doc.data();
+}
 
-            const text =
-                String(
-                    post.text || ""
-                ).toLowerCase();
+db.collection("Posts")
+.limit(50)
+.get()
 
-            const name =
-                String(
-                    post.name || ""
-                ).toLowerCase();
+.then(function(snapshot){
 
-            if(
-                text.includes(
-                    query.toLowerCase()
-                ) ||
-                name.includes(
-                    query.toLowerCase()
-                )
-            ){
+let found=0;
 
-                found++;
+snapshot.forEach(function(doc){
 
-                const div =
-                    document.createElement("div");
+const post =
+doc.data();
 
-                div.className =
-                    "post";
+const name =
+(post.name || "")
+.toLowerCase();
 
-                div.innerHTML = `
-                    <div class="post-user">
-                        👤 ${escapeHTML(
-                            post.name ||
-                            "NEXORA User"
-                        )}
-                    </div>
+const postText =
+(post.text || "")
+.toLowerCase();
 
-                    ${
-                        post.text
-                        ? `
-                        <div class="post-text">
-                            ${escapeHTML(post.text)}
-                        </div>
-                        `
-                        : ""
-                    }
-                `;
+if(
+name.includes(text) ||
+postText.includes(text)
+){
 
-                result.appendChild(div);
+found++;
 
-            }
+const div =
+document.createElement("div");
 
-        });
+div.className=
+"search-result";
 
-        if(found === 0){
+div.innerHTML=
+`
+<b>👤 ${escapeHTML(
+post.name || "NEXORA User"
+)}</b>
 
-            result.innerHTML += `
-                <div class="no-result">
-                    কোনো Post পাওয়া যায়নি।
-                </div>
-            `;
+<div style="margin-top:5px;">
+${escapeHTML(
+post.text || "Media Post"
+)}
+</div>
+`;
 
-        }
+results.appendChild(div);
 
-      })
+}
 
-      .catch(function(error){
+});
 
-        console.error(error);
+if(!found){
 
-        result.innerHTML += `
-            <div class="no-result">
-                Search করা যায়নি।
-            </div>
-        `;
+results.innerHTML=
+`
+<div class="search-result">
+কোনো ফলাফল পাওয়া যায়নি।
+</div>
+`;
 
-      });
+}
+
+})
+
+.catch(function(error){
+
+console.error(error);
+
+results.innerHTML=
+`
+<div class="search-result">
+Search করা যায়নি।
+</div>
+`;
+
+});
 
 }
 
@@ -1497,404 +1501,365 @@ function searchNexora(query){
 
 function loadPosts(){
 
-    db.collection("Posts")
-      .orderBy("createdAt","desc")
-      .onSnapshot(function(snapshot){
+db.collection("Posts")
+.orderBy("createdAt","desc")
+.onSnapshot(function(snapshot){
 
-        const feed =
-            document.getElementById(
-                "postsFeed"
-            );
+const feed =
+document.getElementById(
+"postsFeed"
+);
 
-        if(!feed) return;
+if(!feed)return;
 
-        feed.innerHTML = "";
+feed.innerHTML="";
 
-        snapshot.forEach(function(doc){
+snapshot.forEach(function(doc){
 
-            const post =
-                doc.data();
+const post =
+doc.data();
 
-            if(!canViewPost(post))
-                return;
+const likes =
+post.likes || [];
 
-            renderPost(
-                feed,
-                doc.id,
-                post
-            );
+const currentUser =
+auth.currentUser;
 
-        });
+const liked =
+currentUser &&
+likes.includes(
+currentUser.uid
+);
 
-      },function(error){
+const postDiv =
+document.createElement("div");
 
-        console.error(
-            "POST LOAD ERROR:",
-            error
-        );
+postDiv.className="post";
 
-      });
+let mediaHTML="";
 
-}
-
-
-function canViewPost(post){
-
-    const user =
-        auth.currentUser;
-
-    const privacy =
-        post.privacy || "Public";
-
-    if(privacy === "Public")
-        return true;
-
-    if(!user)
-        return false;
-
-    if(post.uid === user.uid)
-        return true;
-
-    if(privacy === "Only Me")
-        return false;
-
-    /*
-      Friends privacy-এর জন্য:
-      Post-এ friendIds থাকলে এবং current user
-      সেই list-এ থাকলে দেখতে পারবে।
-      পরে Firebase Rules-এ একই নিরাপত্তা বসানো হবে।
-    */
-
-    if(
-        privacy === "Friends" &&
-        Array.isArray(post.friendIds) &&
-        post.friendIds.includes(user.uid)
-    ){
-
-        return true;
-
-    }
-
-    return false;
-
-}
-
-
-function privacyLabel(privacy){
-
-    if(privacy === "Friends")
-        return "👥 Friends";
-
-    if(privacy === "Only Me")
-        return "🔒 Only Me";
-
-    return "🌍 Public";
-
-}
-
-
-function renderPost(
-    feed,
-    postId,
-    post
+if(
+post.media &&
+Array.isArray(post.media)
 ){
 
-    const currentUser =
-        auth.currentUser;
+post.media.forEach(function(media){
 
-    const likes =
-        Array.isArray(post.likes)
-        ? post.likes
-        : [];
+if(!media || !media.url)
+return;
 
-    const liked =
-        currentUser &&
-        likes.includes(
-            currentUser.uid
-        );
+if(media.type==="image"){
 
-    const postDiv =
-        document.createElement("div");
-
-    postDiv.className =
-        "post";
-
-    let mediaHTML = "";
-
-    if(
-        post.media &&
-        Array.isArray(post.media)
-    ){
-
-        post.media.forEach(function(media){
-
-            if(!media || !media.url)
-                return;
-
-            if(media.type === "image"){
-
-                mediaHTML += `
-                    <img
-                        class="post-media"
-                        src="${escapeHTML(media.url)}"
-                        alt="NEXORA Image"
-                    >
-                `;
-
-            }
-
-            if(media.type === "video"){
-
-                mediaHTML += `
-                    <video
-                        class="post-media"
-                        src="${escapeHTML(media.url)}"
-                        controls
-                        playsinline
-                        preload="metadata"
-                    ></video>
-                `;
-
-            }
-
-        });
-
-    }
-
-    let extra = "";
-
-    if(post.feeling){
-
-        extra += `
-            <div style="margin-top:7px;color:#65676b;font-size:14px;">
-                😊 ${escapeHTML(post.feeling)}
-            </div>
-        `;
-
-    }
-
-    if(post.location){
-
-        extra += `
-            <div style="margin-top:5px;color:#65676b;font-size:14px;">
-                📍 ${escapeHTML(post.location)}
-            </div>
-        `;
-
-    }
-
-    if(post.taggedPeople){
-
-        extra += `
-            <div style="margin-top:5px;color:#65676b;font-size:14px;">
-                👥 ${escapeHTML(post.taggedPeople)}
-            </div>
-        `;
-
-    }
-
-    postDiv.innerHTML = `
-
-        <div class="post-user-row">
-
-            <div class="post-avatar">
-
-                ${
-                    post.photoURL
-                    ? `
-                    <img
-                        src="${escapeHTML(post.photoURL)}"
-                        alt="Avatar"
-                    >
-                    `
-                    : "👤"
-                }
-
-            </div>
-
-            <div>
-
-                <div class="post-user">
-                    ${escapeHTML(
-                        post.name ||
-                        "NEXORA User"
-                    )}
-                </div>
-
-                <div class="post-privacy">
-                    ${privacyLabel(
-                        post.privacy
-                    )}
-                </div>
-
-            </div>
-
-        </div>
-
-        ${
-            post.text
-            ? `
-            <div
-                class="post-text"
-                style="
-                    background:${safeBackground(
-                        post.background
-                    )};
-                    padding:10px;
-                    border-radius:10px;
-                "
-            >
-                ${escapeHTML(post.text)}
-            </div>
-            `
-            : ""
-        }
-
-        ${mediaHTML}
-
-        ${extra}
-
-        ${
-            currentUser &&
-            post.uid === currentUser.uid
-            ? `
-            <button
-                class="delete-btn"
-                onclick="deletePost('${postId}')"
-            >
-                🗑️ Delete Post
-            </button>
-            `
-            : ""
-        }
-
-        <div class="post-actions">
-
-            <button
-                class="${liked ? "liked" : ""}"
-                onclick="likePost('${postId}')"
-            >
-                ${liked ? "❤️ Liked" : "👍 Like"}
-                <span>
-                    ${likes.length}
-                </span>
-            </button>
-
-            <button
-                onclick="showCommentBox('${postId}')"
-            >
-                💬 Comment
-                <span
-                    class="comment-count"
-                    id="commentCount-${postId}"
-                >
-                    0
-                </span>
-            </button>
-
-            <button
-                onclick="sharePost('${postId}')"
-            >
-                ↗️ Share
-            </button>
-
-        </div>
-
-    `;
-
-    feed.appendChild(postDiv);
-
-    loadCommentCount(postId);
+mediaHTML+=
+`
+<img
+class="post-media"
+src="${escapeHTML(media.url)}"
+alt="NEXORA Image"
+>
+`;
 
 }
+
+if(media.type==="video"){
+
+mediaHTML+=
+`
+<video
+class="post-media"
+src="${escapeHTML(media.url)}"
+controls
+playsinline
+preload="metadata"
+></video>
+`;
+
+}
+
+});
+
+}
+
+
+let extra="";
+
+if(post.feeling){
+
+extra+=
+`
+<div class="post-meta">
+😊 Feeling: ${escapeHTML(
+post.feeling
+)}
+</div>
+`;
+
+}
+
+if(post.location){
+
+extra+=
+`
+<div class="post-meta">
+📍 Location: ${escapeHTML(
+post.location
+)}
+</div>
+`;
+
+}
+
+if(post.taggedPeople){
+
+extra+=
+`
+<div class="post-meta">
+👥 Tagged: ${escapeHTML(
+post.taggedPeople
+)}
+</div>
+`;
+
+}
+
+
+if(post.privacy){
+
+const icon =
+post.privacy==="Public"
+?"🌍"
+:
+post.privacy==="Friends"
+?"👥"
+:"🔒";
+
+extra+=
+`
+<div class="post-time">
+${icon} ${escapeHTML(
+post.privacy
+)}
+</div>
+`;
+
+}
+
+
+let pollHTML="";
+
+if(
+post.poll &&
+post.poll.question
+){
+
+pollHTML=
+`
+<div class="post-poll">
+
+<div class="poll-question">
+📊 ${escapeHTML(
+post.poll.question
+)}
+</div>
+
+${
+(post.poll.options || [])
+.map(function(option,index){
+
+return `
+<button
+class="poll-option"
+onclick="votePoll('${doc.id}',${index})"
+>
+${escapeHTML(option)}
+</button>
+`;
+
+})
+.join("")
+}
+
+</div>
+`;
+
+}
+
+
+postDiv.innerHTML=
+`
+
+<div class="post-user">
+
+👤 ${escapeHTML(
+post.name ||
+"NEXORA User"
+)}
+
+<div class="post-time">
+NEXORA Post
+</div>
+
+</div>
+
+
+${
+post.text
+?
+`
+<div
+class="post-text"
+style="
+background:${safeBackground(
+post.background
+)};
+padding:10px;
+border-radius:10px;
+"
+>
+${escapeHTML(post.text)}
+</div>
+`
+:""
+}
+
+
+${mediaHTML}
+
+${extra}
+
+${pollHTML}
+
+
+${
+currentUser &&
+post.uid===currentUser.uid
+?
+`
+<button
+class="delete-btn"
+onclick="deletePost('${doc.id}')"
+>
+🗑️ Delete Post
+</button>
+`
+:""
+}
+
+
+<div class="post-actions">
+
+<button
+onclick="likePost('${doc.id}')"
+>
+${liked ? "❤️ Liked":"👍 Like"}
+<span>
+${likes.length}
+</span>
+</button>
+
+<button
+onclick="showCommentBox('${doc.id}')"
+>
+💬 Comment
+<span
+id="commentCount-${doc.id}"
+>
+0
+</span>
+</button>
+
+<button
+onclick="sharePost('${doc.id}')"
+>
+↗️ Share
+</button>
+
+</div>
+
+`;
+
+feed.appendChild(postDiv);
+
+loadCommentCount(doc.id);
+
+});
+
+});
+
+}
+
+loadPosts();
 
 
 /* ================= LIKE ================= */
 
 function likePost(postId){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+if(!user){
 
-        alert("আগে Login করুন।");
+alert("আগে Login করুন।");
 
-        return;
+return;
 
-    }
+}
 
-    const ref =
-        db.collection("Posts")
-          .doc(postId);
+const ref =
+db.collection("Posts")
+.doc(postId);
 
-    db.runTransaction(function(transaction){
+db.runTransaction(function(transaction){
 
-        return transaction.get(ref)
+return transaction.get(ref)
 
-        .then(function(doc){
+.then(function(doc){
 
-            if(!doc.exists)
-                throw new Error(
-                    "Post পাওয়া যায়নি।"
-                );
+if(!doc.exists)
+throw new Error(
+"Post পাওয়া যায়নি।"
+);
 
-            const data =
-                doc.data();
+const likes =
+doc.data().likes || [];
 
-            const likes =
-                Array.isArray(data.likes)
-                ? data.likes
-                : [];
+if(likes.includes(user.uid)){
 
-            if(
-                likes.includes(
-                    user.uid
-                )
-            ){
+transaction.update(
+ref,
+{
+likes:
+firebase.firestore.FieldValue
+.arrayRemove(user.uid)
+}
+);
 
-                transaction.update(
-                    ref,
-                    {
-                        likes:
-                            firebase.firestore
-                            .FieldValue
-                            .arrayRemove(
-                                user.uid
-                            )
-                    }
-                );
+}else{
 
-            }else{
+transaction.update(
+ref,
+{
+likes:
+firebase.firestore.FieldValue
+.arrayUnion(user.uid)
+}
+);
 
-                transaction.update(
-                    ref,
-                    {
-                        likes:
-                            firebase.firestore
-                            .FieldValue
-                            .arrayUnion(
-                                user.uid
-                            )
-                    }
-                );
+}
 
-            }
+});
 
-        });
+})
 
-    })
+.catch(function(error){
 
-    .catch(function(error){
+alert(
+"Like করা যায়নি: " +
+error.message
+);
 
-        console.error(error);
-
-        alert(
-            "Like করা যায়নি: " +
-            error.message
-        );
-
-    });
+});
 
 }
 
@@ -1903,236 +1868,210 @@ function likePost(postId){
 
 function showCommentBox(postId){
 
-    const old =
-        document.getElementById(
-            "commentBox-" +
-            postId
-        );
+const old =
+document.getElementById(
+"commentBox-"+postId
+);
 
-    if(old){
+if(old){
 
-        old.remove();
+old.remove();
 
-        return;
+return;
 
-    }
+}
 
-    const box =
-        document.createElement("div");
+const box =
+document.createElement("div");
 
-    box.id =
-        "commentBox-" +
-        postId;
+box.id=
+"commentBox-"+postId;
 
-    box.className =
-        "comment-box";
+box.className=
+"comment-box";
 
-    box.innerHTML = `
+box.innerHTML=
+`
+<input
+id="commentInput-${postId}"
+class="comment-input"
+placeholder="আপনার Comment লিখুন..."
+>
 
-        <input
-            id="commentInput-${postId}"
-            class="comment-input"
-            type="text"
-            placeholder="আপনার Comment লিখুন..."
-        >
+<button
+class="comment-submit"
+onclick="addComment('${postId}')"
+>
+Comment করুন
+</button>
 
-        <button
-            class="comment-submit"
-            onclick="addComment('${postId}')"
-        >
-            Comment করুন
-        </button>
+<div
+id="commentsArea-${postId}"
+></div>
+`;
 
-        <div
-            id="commentsArea-${postId}"
-        ></div>
+const button =
+document.querySelector(
+`button[onclick="showCommentBox('${postId}')"]`
+);
 
-    `;
+if(button){
 
-    const button =
-        document.querySelector(
-            `button[onclick="showCommentBox('${postId}')"]`
-        );
+const post =
+button.closest(".post");
 
-    if(button){
+post.appendChild(box);
 
-        const post =
-            button.closest(".post");
+loadComments(
+postId,
+box
+);
 
-        post.appendChild(box);
-
-        loadComments(
-            postId,
-            box
-        );
-
-    }
+}
 
 }
 
 
 function addComment(postId){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+if(!user){
 
-        alert("আগে Login করুন.");
+alert("আগে Login করুন।");
 
-        return;
+return;
 
-    }
+}
 
-    const input =
-        document.getElementById(
-            "commentInput-" +
-            postId
-        );
+const input =
+document.getElementById(
+"commentInput-"+postId
+);
 
-    if(!input) return;
+const text =
+(input.value || "").trim();
 
-    const text =
-        input.value.trim();
+if(!text){
 
-    if(!text){
+alert("Comment লিখুন।");
 
-        alert("Comment লিখুন।");
+return;
 
-        return;
+}
 
-    }
+db.collection("Posts")
+.doc(postId)
+.collection("Comments")
+.add({
 
-    db.collection("Posts")
-      .doc(postId)
-      .collection("Comments")
-      .add({
+text:text,
 
-        text:text,
+name:
+user.displayName ||
+"NEXORA User",
 
-        name:
-            user.displayName ||
-            "NEXORA User",
+uid:user.uid,
 
-        photoURL:
-            user.photoURL ||
-            "",
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
 
-        uid:
-            user.uid,
+})
 
-        createdAt:
-            firebase.firestore
-            .FieldValue
-            .serverTimestamp()
+.then(function(){
 
-      })
+input.value="";
 
-      .then(function(){
+})
 
-        input.value = "";
+.catch(function(error){
 
-      })
+alert(
+"Comment করা যায়নি: " +
+error.message
+);
 
-      .catch(function(error){
-
-        alert(
-            "Comment করা যায়নি: " +
-            error.message
-        );
-
-      });
+});
 
 }
 
 
 function loadCommentCount(postId){
 
-    db.collection("Posts")
-      .doc(postId)
-      .collection("Comments")
-      .onSnapshot(function(snapshot){
+db.collection("Posts")
+.doc(postId)
+.collection("Comments")
+.onSnapshot(function(snapshot){
 
-        const el =
-            document.getElementById(
-                "commentCount-" +
-                postId
-            );
+const el =
+document.getElementById(
+"commentCount-"+postId
+);
 
-        if(el){
+if(el){
 
-            el.innerText =
-                snapshot.size;
+el.innerText =
+snapshot.size;
 
-        }
+}
 
-      },function(error){
-
-        console.error(
-            "COMMENT COUNT ERROR:",
-            error
-        );
-
-      });
+});
 
 }
 
 
-function loadComments(
-    postId,
-    box
-){
+function loadComments(postId,box){
 
-    db.collection("Posts")
-      .doc(postId)
-      .collection("Comments")
-      .orderBy("createdAt","asc")
-      .onSnapshot(function(snapshot){
+db.collection("Posts")
+.doc(postId)
+.collection("Comments")
+.orderBy("createdAt","asc")
+.onSnapshot(function(snapshot){
 
-        const area =
-            box.querySelector(
-                "#commentsArea-" +
-                postId
-            );
+const area =
+box.querySelector(
+"#commentsArea-"+postId
+);
 
-        if(!area) return;
+if(!area)return;
 
-        area.innerHTML = "";
+area.innerHTML="";
 
-        snapshot.forEach(function(doc){
+snapshot.forEach(function(doc){
 
-            const comment =
-                doc.data();
+const comment =
+doc.data();
 
-            const div =
-                document.createElement("div");
+const div =
+document.createElement("div");
 
-            div.className =
-                "comment-item";
+div.className=
+"comment-item";
 
-            div.innerHTML = `
+div.innerHTML=
+`
+<b>
+👤 ${escapeHTML(
+comment.name ||
+"NEXORA User"
+)}
+</b>
 
-                <b>
-                    👤 ${escapeHTML(
-                        comment.name ||
-                        "NEXORA User"
-                    )}
-                </b>
+<div style="margin-top:3px;">
+${escapeHTML(
+comment.text || ""
+)}
+</div>
+`;
 
-                <div style="margin-top:3px;">
-                    ${escapeHTML(
-                        comment.text ||
-                        ""
-                    )}
-                </div>
+area.appendChild(div);
 
-            `;
+});
 
-            area.appendChild(div);
-
-        });
-
-      });
+});
 
 }
 
@@ -2141,29 +2080,28 @@ function loadComments(
 
 function sharePost(postId){
 
-    const url =
-        window.location.href +
-        "#post-" +
-        postId;
+const url =
+window.location.href+
+"#post-"+postId;
 
-    if(navigator.share){
+if(navigator.share){
 
-        navigator.share({
+navigator.share({
 
-            title:"NEXORA",
+title:"NEXORA",
 
-            text:
-                "NEXORA-এর একটি Post দেখুন! 📰",
+text:
+"NEXORA-এর একটি Post দেখুন! 📰",
 
-            url:url
+url:url
 
-        }).catch(function(){});
+}).catch(function(){});
 
-    }else{
+}else{
 
-        copyText(url);
+copyText(url);
 
-    }
+}
 
 }
 
@@ -2172,78 +2110,63 @@ function sharePost(postId){
 
 function loadStories(){
 
-    db.collection("Stories")
-      .orderBy("createdAt","desc")
-      .onSnapshot(function(snapshot){
+db.collection("Stories")
+.orderBy("createdAt","desc")
+.onSnapshot(function(snapshot){
 
-        const feed =
-            document.getElementById(
-                "storiesFeed"
-            );
+const feed =
+document.getElementById(
+"storiesFeed"
+);
 
-        if(!feed) return;
+if(!feed)return;
 
-        feed.innerHTML = "";
+feed.innerHTML="";
 
-        snapshot.forEach(function(doc){
+snapshot.forEach(function(doc){
 
-            const story =
-                doc.data();
+const story =
+doc.data();
 
-            const div =
-                document.createElement("div");
+const div =
+document.createElement("div");
 
-            div.className =
-                "nx-story";
+div.className=
+"nx-story";
 
-            if(
-                story.mediaType === "video"
-            ){
+if(
+story.mediaType==="video"
+){
 
-                div.innerHTML = `
-                    <video
-                        src="${escapeHTML(
-                            story.mediaUrl || ""
-                        )}"
-                        controls
-                        playsinline
-                    ></video>
-                `;
+div.innerHTML=
+`
+<video
+src="${escapeHTML(
+story.mediaUrl || ""
+)}"
+playsinline
+></video>
+`;
 
-            }else if(
-                story.mediaType === "image"
-            ){
+}else{
 
-                div.innerHTML = `
-                    <img
-                        src="${escapeHTML(
-                            story.mediaUrl || ""
-                        )}"
-                        alt="Story"
-                    >
-                `;
+div.innerHTML=
+`
+<img
+src="${escapeHTML(
+story.mediaUrl || ""
+)}"
+alt="Story"
+>
+`;
 
-            }else{
+}
 
-                div.innerHTML = `
-                    <div style="padding:12px;text-align:center;">
-                        👤<br>
-                        <b>
-                            ${escapeHTML(
-                                story.name ||
-                                "NEXORA User"
-                            )}
-                        </b>
-                    </div>
-                `;
+feed.appendChild(div);
 
-            }
+});
 
-            feed.appendChild(div);
-
-        });
-
-      });
+});
 
 }
 
@@ -2252,139 +2175,114 @@ loadStories();
 
 function createStory(){
 
-    if(!auth.currentUser){
+if(!auth.currentUser){
 
-        alert(
-            "Story দিতে আগে Login করুন।"
-        );
+alert(
+"Story দিতে আগে Login করুন।"
+);
 
-        return;
+return;
 
-    }
+}
 
-    document
-        .getElementById("storyMedia")
-        .click();
+document
+.getElementById("storyMedia")
+.click();
 
 }
 
 
 function uploadStory(){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+const input =
+document.getElementById(
+"storyMedia"
+);
 
-        alert("আগে Login করুন.");
+const file =
+input.files[0];
 
-        return;
+if(!file)return;
 
-    }
+const status =
+document.getElementById(
+"storyStatus"
+);
 
-    const input =
-        document.getElementById(
-            "storyMedia"
-        );
+status.style.display="block";
 
-    const file =
-        input.files[0];
+status.innerText=
+"Story Upload হচ্ছে... ⏳";
 
-    if(!file) return;
+const type =
+file.type.startsWith("video/")
+?"video"
+:"image";
 
-    if(
-        !file.type.startsWith("image/") &&
-        !file.type.startsWith("video/")
-    ){
+uploadToCloudinary(
+file,
+type
+)
 
-        alert(
-            "শুধু ছবি অথবা ভিডিও নির্বাচন করুন।"
-        );
+.then(function(data){
 
-        input.value = "";
+return db.collection("Stories")
+.add({
 
-        return;
+mediaUrl:
+data.secure_url,
 
-    }
+mediaType:type,
 
-    const status =
-        document.getElementById(
-            "storyStatus"
-        );
+name:
+user.displayName ||
+"NEXORA User",
 
-    status.style.display =
-        "block";
+uid:user.uid,
 
-    status.innerText =
-        "Story Upload হচ্ছে... ⏳";
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
 
-    const type =
-        file.type.startsWith("video/")
-        ? "video"
-        : "image";
+});
 
-    uploadToCloudinary(
-        file,
-        type
-    )
+})
 
-    .then(function(data){
+.then(function(){
 
-        return db
-            .collection("Stories")
-            .add({
+status.innerText=
+"Story সফল হয়েছে! 🎉";
 
-                mediaUrl:
-                    data.secure_url,
+input.value="";
 
-                mediaType:
-                    type,
+setTimeout(function(){
 
-                name:
-                    user.displayName ||
-                    "NEXORA User",
+status.style.display="none";
 
-                photoURL:
-                    user.photoURL ||
-                    "",
+},2500);
 
-                uid:
-                    user.uid,
+})
 
-                createdAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
+.catch(function(error){
 
-            });
+status.innerText=
+"Story Upload করা যায়নি: "+
+error.message;
 
-    })
+});
 
-    .then(function(){
+}
 
-        status.innerText =
-            "Story সফলভাবে Upload হয়েছে! 🎉";
 
-        input.value = "";
+function showAllStories(){
 
-        setTimeout(function(){
-
-            status.style.display =
-                "none";
-
-        },3000);
-
-    })
-
-    .catch(function(error){
-
-        console.error(error);
-
-        status.innerText =
-            "Story Upload করা যায়নি: " +
-            error.message;
-
-    });
+alert(
+"📷 Stories\n\nসব Story এখানে দেখানো হবে।"
+);
 
 }
 
@@ -2393,221 +2291,190 @@ function uploadStory(){
 
 function uploadReel(){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+const input =
+document.getElementById(
+"reelVideo"
+);
 
-        alert("আগে Login করুন.");
+const file =
+input.files[0];
 
-        return;
+if(!file)return;
 
-    }
+if(
+!file.type.startsWith("video/")
+){
 
-    const input =
-        document.getElementById(
-            "reelVideo"
-        );
+alert("শুধু Video নির্বাচন করুন।");
 
-    const file =
-        input.files[0];
+return;
 
-    if(!file) return;
+}
 
-    if(
-        !file.type.startsWith("video/")
-    ){
+const status =
+document.getElementById(
+"reelStatus"
+);
 
-        alert(
-            "শুধু ভিডিও নির্বাচন করুন।"
-        );
+status.style.display="block";
 
-        input.value = "";
+status.innerText=
+"ভিডিও Upload হচ্ছে... ⏳";
 
-        return;
+uploadToCloudinary(
+file,
+"video"
+)
 
-    }
+.then(function(data){
 
-    const status =
-        document.getElementById(
-            "reelStatus"
-        );
+return db.collection("Reels")
+.add({
 
-    status.style.display =
-        "block";
+videoUrl:
+data.secure_url,
 
-    status.innerText =
-        "ভিডিও Upload হচ্ছে... ⏳";
+name:
+user.displayName ||
+"NEXORA User",
 
-    uploadToCloudinary(
-        file,
-        "video"
-    )
+uid:user.uid,
 
-    .then(function(data){
+likes:[],
 
-        return db
-            .collection("Reels")
-            .add({
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
 
-                videoUrl:
-                    data.secure_url,
+});
 
-                name:
-                    user.displayName ||
-                    "NEXORA User",
+})
 
-                photoURL:
-                    user.photoURL ||
-                    "",
+.then(function(){
 
-                uid:
-                    user.uid,
+status.innerText=
+"Reel সফলভাবে Upload হয়েছে! 🎉";
 
-                likes:[],
+input.value="";
 
-                createdAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
+})
 
-            });
+.catch(function(error){
 
-    })
+status.innerText=
+"Reel Upload করা যায়নি: "+
+error.message;
 
-    .then(function(){
-
-        status.innerText =
-            "Reel সফলভাবে Upload হয়েছে! 🎉";
-
-        input.value = "";
-
-    })
-
-    .catch(function(error){
-
-        console.error(error);
-
-        status.innerText =
-            "Reel Upload করা যায়নি: " +
-            error.message;
-
-    });
+});
 
 }
 
 
 function loadReels(){
 
-    db.collection("Reels")
-      .orderBy("createdAt","desc")
-      .onSnapshot(function(snapshot){
+db.collection("Reels")
+.orderBy("createdAt","desc")
+.onSnapshot(function(snapshot){
 
-        const feed =
-            document.getElementById(
-                "reelsFeed"
-            );
+const feed =
+document.getElementById(
+"reelsFeed"
+);
 
-        if(!feed) return;
+if(!feed)return;
 
-        feed.innerHTML = "";
+feed.innerHTML="";
 
-        snapshot.forEach(function(doc){
+snapshot.forEach(function(doc){
 
-            const reel =
-                doc.data();
+const reel =
+doc.data();
 
-            const likes =
-                Array.isArray(reel.likes)
-                ? reel.likes
-                : [];
+const likes =
+reel.likes || [];
 
-            const user =
-                auth.currentUser;
+const user =
+auth.currentUser;
 
-            const liked =
-                user &&
-                likes.includes(user.uid);
+const liked =
+user &&
+likes.includes(user.uid);
 
-            const div =
-                document.createElement("div");
+const div =
+document.createElement("div");
 
-            div.className =
-                "post";
+div.className="post";
 
-            div.innerHTML = `
+div.innerHTML=
+`
 
-                <div class="post-user">
-                    🎬 ${escapeHTML(
-                        reel.name ||
-                        "NEXORA User"
-                    )}
-                </div>
+<div class="post-user">
+🎬 ${escapeHTML(
+reel.name ||
+"NEXORA User"
+)}
+</div>
 
-                <video
-                    src="${escapeHTML(
-                        reel.videoUrl || ""
-                    )}"
-                    controls
-                    playsinline
-                    preload="metadata"
-                    style="
-                        width:100%;
-                        max-height:500px;
-                        border-radius:12px;
-                        background:#000;
-                    "
-                ></video>
+<video
+src="${escapeHTML(
+reel.videoUrl || ""
+)}"
+controls
+playsinline
+preload="metadata"
+style="
+width:100%;
+max-height:500px;
+border-radius:12px;
+background:#000;
+"
+></video>
 
-                <div class="post-actions">
+<div class="post-actions">
 
-                    <button
-                        class="${liked ? "liked" : ""}"
-                        onclick="likeReel('${doc.id}')"
-                    >
-                        ${
-                            liked
-                            ? "❤️ Liked"
-                            : "👍 Like"
-                        }
-                        <span>
-                            ${likes.length}
-                        </span>
-                    </button>
+<button
+onclick="likeReel('${doc.id}')"
+>
+${liked?"❤️ Liked":"👍 Like"}
+<span>
+${likes.length}
+</span>
+</button>
 
-                    <button
-                        onclick="showReelCommentBox('${doc.id}')"
-                    >
-                        💬 Comment
-                        <span
-                            class="comment-count"
-                            id="reelCommentCount-${doc.id}"
-                        >
-                            0
-                        </span>
-                    </button>
+<button
+onclick="showReelCommentBox('${doc.id}')"
+>
+💬 Comment
+<span
+id="reelCommentCount-${doc.id}"
+>
+0
+</span>
+</button>
 
-                    <button
-                        onclick="shareReel('${escapeHTML(
-                            reel.videoUrl || ""
-                        )}')"
-                    >
-                        ↗️ Share
-                    </button>
+<button
+onclick="shareReel('${escapeHTML(
+reel.videoUrl || ""
+)}')"
+>
+↗️ Share
+</button>
 
-                </div>
+</div>
 
-            `;
+`;
 
-            feed.appendChild(div);
+feed.appendChild(div);
 
-            loadReelCommentCount(
-                doc.id
-            );
+loadReelCommentCount(doc.id);
 
-        });
+});
 
-      });
+});
 
 }
 
@@ -2616,84 +2483,72 @@ loadReels();
 
 function likeReel(reelId){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+if(!user){
 
-        alert("আগে Login করুন.");
+alert("আগে Login করুন।");
 
-        return;
+return;
 
-    }
+}
 
-    const ref =
-        db.collection("Reels")
-          .doc(reelId);
+const ref =
+db.collection("Reels")
+.doc(reelId);
 
-    db.runTransaction(function(transaction){
+db.runTransaction(function(transaction){
 
-        return transaction.get(ref)
+return transaction.get(ref)
+.then(function(doc){
 
-        .then(function(doc){
+if(!doc.exists)
+throw new Error(
+"Reel পাওয়া যায়নি।"
+);
 
-            if(!doc.exists)
-                throw new Error(
-                    "Reel পাওয়া যায়নি।"
-                );
+const likes =
+doc.data().likes || [];
 
-            const data =
-                doc.data();
+if(likes.includes(user.uid)){
 
-            const likes =
-                Array.isArray(data.likes)
-                ? data.likes
-                : [];
+transaction.update(
+ref,
+{
+likes:
+firebase.firestore
+.FieldValue
+.arrayRemove(user.uid)
+}
+);
 
-            if(
-                likes.includes(user.uid)
-            ){
+}else{
 
-                transaction.update(
-                    ref,
-                    {
-                        likes:
-                            firebase.firestore
-                            .FieldValue
-                            .arrayRemove(
-                                user.uid
-                            )
-                    }
-                );
+transaction.update(
+ref,
+{
+likes:
+firebase.firestore
+.FieldValue
+.arrayUnion(user.uid)
+}
+);
 
-            }else{
+}
 
-                transaction.update(
-                    ref,
-                    {
-                        likes:
-                            firebase.firestore
-                            .FieldValue
-                            .arrayUnion(
-                                user.uid
-                            )
-                    }
-                );
+});
 
-            }
+})
 
-        });
+.catch(function(error){
 
-    })
+alert(
+"Like করা যায়নি: "+
+error.message
+);
 
-    .catch(function(error){
-
-        alert(
-            "Like করা যায়নি: " +
-            error.message
-        );
-
-    });
+});
 
 }
 
@@ -2702,252 +2557,213 @@ function likeReel(reelId){
 
 function showReelCommentBox(reelId){
 
-    const old =
-        document.getElementById(
-            "reelCommentBox-" +
-            reelId
-        );
+const old =
+document.getElementById(
+"reelCommentBox-"+reelId
+);
 
-    if(old){
+if(old){
 
-        old.remove();
+old.remove();
 
-        return;
+return;
 
-    }
+}
 
-    const box =
-        document.createElement("div");
+const box =
+document.createElement("div");
 
-    box.id =
-        "reelCommentBox-" +
-        reelId;
+box.id=
+"reelCommentBox-"+reelId;
 
-    box.className =
-        "comment-box";
+box.className=
+"comment-box";
 
-    box.innerHTML = `
+box.innerHTML=
+`
+<input
+id="reelCommentInput-${reelId}"
+class="comment-input"
+placeholder="আপনার Comment লিখুন..."
+>
 
-        <input
-            id="reelCommentInput-${reelId}"
-            class="comment-input"
-            type="text"
-            placeholder="আপনার Comment লিখুন..."
-        >
+<button
+class="comment-submit"
+onclick="addReelComment('${reelId}')"
+>
+Comment করুন
+</button>
 
-        <button
-            class="comment-submit"
-            onclick="addReelComment('${reelId}')"
-        >
-            Comment করুন
-        </button>
+<div
+id="reelComments-${reelId}"
+></div>
+`;
 
-        <div
-            id="reelComments-${reelId}"
-        ></div>
+const button =
+document.querySelector(
+`button[onclick="showReelCommentBox('${reelId}')"]`
+);
 
-    `;
+if(button){
 
-    const button =
-        document.querySelector(
-            `button[onclick="showReelCommentBox('${reelId}')"]`
-        );
+button.closest(".post")
+.appendChild(box);
 
-    if(button){
+loadReelComments(
+reelId,
+box
+);
 
-        button
-            .closest(".post")
-            .appendChild(box);
-
-        loadReelComments(
-            reelId,
-            box
-        );
-
-    }
+}
 
 }
 
 
 function addReelComment(reelId){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+const input =
+document.getElementById(
+"reelCommentInput-"+reelId
+);
 
-        alert("আগে Login করুন.");
+const text =
+(input.value || "").trim();
 
-        return;
+if(!text){
 
-    }
+alert("Comment লিখুন।");
 
-    const input =
-        document.getElementById(
-            "reelCommentInput-" +
-            reelId
-        );
+return;
 
-    if(!input) return;
+}
 
-    const text =
-        input.value.trim();
+db.collection("Reels")
+.doc(reelId)
+.collection("Comments")
+.add({
 
-    if(!text){
+text:text,
 
-        alert("Comment লিখুন.");
+name:
+user.displayName ||
+"NEXORA User",
 
-        return;
+uid:user.uid,
 
-    }
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
 
-    db.collection("Reels")
-      .doc(reelId)
-      .collection("Comments")
-      .add({
+})
 
-        text:text,
+.then(function(){
 
-        name:
-            user.displayName ||
-            "NEXORA User",
+input.value="";
 
-        uid:
-            user.uid,
-
-        createdAt:
-            firebase.firestore
-            .FieldValue
-            .serverTimestamp()
-
-      })
-
-      .then(function(){
-
-        input.value = "";
-
-      })
-
-      .catch(function(error){
-
-        alert(
-            "Comment করা যায়নি: " +
-            error.message
-        );
-
-      });
+});
 
 }
 
 
 function loadReelCommentCount(reelId){
 
-    db.collection("Reels")
-      .doc(reelId)
-      .collection("Comments")
-      .onSnapshot(function(snapshot){
+db.collection("Reels")
+.doc(reelId)
+.collection("Comments")
+.onSnapshot(function(snapshot){
 
-        const el =
-            document.getElementById(
-                "reelCommentCount-" +
-                reelId
-            );
+const el =
+document.getElementById(
+"reelCommentCount-"+reelId
+);
 
-        if(el){
+if(el)
+el.innerText=snapshot.size;
 
-            el.innerText =
-                snapshot.size;
-
-        }
-
-      });
+});
 
 }
 
 
-function loadReelComments(
-    reelId,
-    box
-){
+function loadReelComments(reelId,box){
 
-    db.collection("Reels")
-      .doc(reelId)
-      .collection("Comments")
-      .orderBy("createdAt","asc")
-      .onSnapshot(function(snapshot){
+db.collection("Reels")
+.doc(reelId)
+.collection("Comments")
+.orderBy("createdAt","asc")
+.onSnapshot(function(snapshot){
 
-        const area =
-            box.querySelector(
-                "#reelComments-" +
-                reelId
-            );
+const area =
+box.querySelector(
+"#reelComments-"+reelId
+);
 
-        if(!area) return;
+if(!area)return;
 
-        area.innerHTML = "";
+area.innerHTML="";
 
-        snapshot.forEach(function(doc){
+snapshot.forEach(function(doc){
 
-            const comment =
-                doc.data();
+const comment =
+doc.data();
 
-            const div =
-                document.createElement("div");
+const div =
+document.createElement("div");
 
-            div.className =
-                "comment-item";
+div.className=
+"comment-item";
 
-            div.innerHTML = `
+div.innerHTML=
+`
+<b>
+👤 ${escapeHTML(
+comment.name ||
+"NEXORA User"
+)}
+</b>
 
-                <b>
-                    👤 ${escapeHTML(
-                        comment.name ||
-                        "NEXORA User"
-                    )}
-                </b>
+<div>
+${escapeHTML(
+comment.text || ""
+)}
+</div>
+`;
 
-                <div style="margin-top:3px;">
-                    ${escapeHTML(
-                        comment.text ||
-                        ""
-                    )}
-                </div>
+area.appendChild(div);
 
-            `;
+});
 
-            area.appendChild(div);
-
-        });
-
-      });
+});
 
 }
 
 
 function shareReel(url){
 
-    const finalUrl =
-        url ||
-        window.location.href;
+if(navigator.share){
 
-    if(navigator.share){
+navigator.share({
 
-        navigator.share({
+title:"NEXORA Reel",
 
-            title:"NEXORA Reel",
+text:
+"দেখুন NEXORA-এর এই Reel 🎬",
 
-            text:
-                "দেখুন NEXORA-এর এই Reel 🎬",
+url:url || location.href
 
-            url:finalUrl
+}).catch(function(){});
 
-        }).catch(function(){});
+}else{
 
-    }else{
+copyText(
+url || location.href
+);
 
-        copyText(finalUrl);
-
-    }
+}
 
 }
 
@@ -2956,348 +2772,404 @@ function shareReel(url){
 
 function openCreatePost(){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+if(!user){
 
-        alert("আগে Login করুন.");
+alert("আগে Login করুন।");
 
-        return;
+return;
 
-    }
+}
 
-    if(
-        document.getElementById(
-            "nexoraCreatePostPage"
-        )
-    ){
+if(
+document.getElementById(
+"nexoraCreatePostPage"
+)
+)return;
 
-        return;
 
-    }
+selectedPostFiles=[];
 
-    resetCreatePost();
+selectedPostFeeling="";
 
-    const page =
-        document.createElement("div");
+selectedPostLocation="";
 
-    page.id =
-        "nexoraCreatePostPage";
+selectedPostTags="";
 
-    page.className =
-        "nx-modal-page";
+selectedPostPrivacy="Public";
 
-    page.innerHTML = `
+selectedPostBackground="#ffffff";
 
-        <div class="nx-modal-header">
+selectedPollQuestion="";
 
-            <button
-                class="nx-back-btn"
-                onclick="closeCreatePost()"
-            >
-                ←
-            </button>
+selectedPollOptions=[];
 
-            <b style="
-                margin-left:15px;
-                font-size:20px;
-            ">
-                Create Post
-            </b>
 
-        </div>
+const page =
+document.createElement("div");
 
-        <div class="nx-create-container">
+page.id=
+"nexoraCreatePostPage";
 
-            <div class="nx-create-box">
+page.className=
+"nx-modal-page";
 
-                <div class="nx-create-user">
+page.innerHTML=
+`
 
-                    ${
-                        user.photoURL
-                        ? `
-                        <img
-                            src="${escapeHTML(
-                                user.photoURL
-                            )}"
-                        >
-                        `
-                        : `
-                        <div class="nx-create-fallback">
-                            👤
-                        </div>
-                        `
-                    }
+<div class="nx-modal-header">
 
-                    <div>
+<button
+class="nx-back-btn"
+onclick="closeCreatePost()"
+>
+←
+</button>
 
-                        <b>
-                            ${escapeHTML(
-                                user.displayName ||
-                                "NEXORA User"
-                            )}
-                        </b>
+<b style="
+margin-left:15px;
+font-size:20px;
+">
+Create Post
+</b>
 
-                        <br>
+</div>
 
-                        <button
-                            onclick="changePostPrivacy()"
-                            id="postPrivacyButton"
-                            style="
-                                border:none;
-                                background:#f0f2f5;
-                                border-radius:6px;
-                                padding:5px 9px;
-                                margin-top:3px;
-                            "
-                        >
-                            🌍 Public ▾
-                        </button>
 
-                    </div>
+<div class="nx-create-container">
 
-                </div>
+<div class="nx-create-box">
 
-                <textarea
-                    id="nexoraPostText"
-                    placeholder="What's on your mind?"
-                ></textarea>
+<div class="nx-create-user">
 
-                <div
-                    id="postExtraInfo"
-                    style="
-                        display:none;
-                        margin-top:8px;
-                        padding:10px;
-                        background:#f0f2f5;
-                        border-radius:10px;
-                        font-size:14px;
-                    "
-                ></div>
+${
+user.photoURL
+?
+`
+<img
+src="${escapeHTML(
+user.photoURL
+)}"
+>
+`
+:
+`
+<div class="nx-create-fallback">
+👤
+</div>
+`
+}
 
-                <div
-                    id="nexoraPostMediaPreview"
-                    style="margin-top:10px;"
-                ></div>
+<div>
 
-                <div class="nx-add-box">
+<b>
+${escapeHTML(
+user.displayName ||
+"NEXORA User"
+)}
+</b>
 
-                    <b>
-                        Add to your post
-                    </b>
+<br>
 
-                    <div class="nx-add-buttons">
+<button
+onclick="changePostPrivacy()"
+id="postPrivacyButton"
+style="
+border:none;
+background:#f0f2f5;
+border-radius:6px;
+padding:4px 8px;
+margin-top:3px;
+"
+>
+🌍 Public ▾
+</button>
 
-                        <button
-                            onclick="selectNexoraPostMedia()"
-                        >
-                            🖼️ Gallery
-                        </button>
+</div>
 
-                        <button
-                            onclick="selectNexoraPostVideo()"
-                        >
-                            🎬 Video
-                        </button>
+</div>
 
-                        <button
-                            onclick="changeNexoraBackground()"
-                        >
-                            🎨 Background
-                        </button>
 
-                        <button
-                            onclick="startNexoraLive()"
-                        >
-                            🔴 Live
-                        </button>
+<textarea
+id="nexoraPostText"
+placeholder="What's on your mind?"
+></textarea>
 
-                        <button
-                            onclick="addNexoraMusic()"
-                        >
-                            🎵 Music
-                        </button>
 
-                        <button
-                            onclick="addNexoraLocation()"
-                        >
-                            📍 Location
-                        </button>
+<div
+id="postExtraInfo"
+style="
+display:none;
+margin-top:8px;
+padding:10px;
+background:#f0f2f5;
+border-radius:10px;
+font-size:14px;
+"
+></div>
 
-                        <button
-                            onclick="addNexoraFeeling()"
-                        >
-                            😊 Feeling
-                        </button>
 
-                        <button
-                            onclick="addNexoraTag()"
-                        >
-                            👥 Tag People
-                        </button>
+<div
+id="nexoraPostMediaPreview"
+style="margin-top:10px;"
+></div>
 
-                    </div>
 
-                </div>
+<div
+id="nexoraPollBox"
+style="display:none;margin-top:10px;"
+>
+<input
+id="pollQuestion"
+class="comment-input"
+placeholder="Poll question"
+/>
 
-                <button
-                    class="nx-publish-btn"
-                    onclick="publishNexoraPost()"
-                >
-                    🚀 Post
-                </button>
+<input
+id="pollOption1"
+class="comment-input"
+style="margin-top:7px;"
+placeholder="Option 1"
+/>
 
-            </div>
+<input
+id="pollOption2"
+class="comment-input"
+style="margin-top:7px;"
+placeholder="Option 2"
+/>
 
-        </div>
+<input
+id="pollOption3"
+class="comment-input"
+style="margin-top:7px;"
+placeholder="Option 3"
+/>
 
-        <input
-            type="file"
-            id="nexoraPostMedia"
-            accept="image/*,video/*"
-            multiple
-            style="display:none"
-            onchange="handleNexoraPostMedia()"
-        >
+</div>
 
-    `;
 
-    document.body.appendChild(page);
+<div class="nx-add-box">
+
+<b>
+Add to your post
+</b>
+
+<div class="nx-add-buttons">
+
+<button
+onclick="selectNexoraPostMedia()"
+>
+🖼️ Gallery
+</button>
+
+<button
+onclick="selectNexoraPostVideo()"
+>
+🎬 Video
+</button>
+
+<button
+onclick="changeNexoraBackground()"
+>
+🎨 Background
+</button>
+
+<button
+onclick="startNexoraLive()"
+>
+🔴 Live
+</button>
+
+<button
+onclick="addNexoraMusic()"
+>
+🎵 Music
+</button>
+
+<button
+onclick="addNexoraLocation()"
+>
+📍 Location
+</button>
+
+<button
+onclick="addNexoraFeeling()"
+>
+😊 Feeling
+</button>
+
+<button
+onclick="addNexoraTag()"
+>
+👥 Tag People
+</button>
+
+<button
+onclick="changePostPrivacy()"
+>
+🔒 Privacy
+</button>
+
+<button
+onclick="addNexoraPoll()"
+>
+📊 Poll
+</button>
+
+</div>
+
+</div>
+
+
+<button
+class="nx-publish-btn"
+onclick="publishNexoraPost()"
+>
+🚀 Post
+</button>
+
+</div>
+
+</div>
+
+
+<input
+type="file"
+id="nexoraPostMedia"
+accept="image/*"
+multiple
+style="display:none"
+onchange="handleNexoraPostMedia()"
+>
+
+`;
+
+document.body.appendChild(page);
 
 }
 
 
 function closeCreatePost(){
 
-    const page =
-        document.getElementById(
-            "nexoraCreatePostPage"
-        );
+const page =
+document.getElementById(
+"nexoraCreatePostPage"
+);
 
-    if(page)
-        page.remove();
+if(page)
+page.remove();
 
-    selectedPostFiles = [];
+selectedPostFiles=[];
 
 }
 
 
-/* ================= POST MEDIA ================= */
+/* ================= MEDIA ================= */
 
 function selectNexoraPostMedia(){
 
-    const input =
-        document.getElementById(
-            "nexoraPostMedia"
-        );
+const input =
+document.getElementById(
+"nexoraPostMedia"
+);
 
-    input.accept =
-        "image/*";
+input.accept=
+"image/*";
 
-    input.click();
+input.multiple=true;
+
+input.click();
 
 }
 
 
 function selectNexoraPostVideo(){
 
-    const input =
-        document.getElementById(
-            "nexoraPostMedia"
-        );
+const input =
+document.getElementById(
+"nexoraPostMedia"
+);
 
-    input.accept =
-        "video/*";
+input.accept=
+"video/*";
 
-    input.click();
+input.multiple=false;
+
+input.click();
 
 }
 
 
 function handleNexoraPostMedia(){
 
-    const input =
-        document.getElementById(
-            "nexoraPostMedia"
-        );
+const input =
+document.getElementById(
+"nexoraPostMedia"
+);
 
-    const files =
-        Array.from(
-            input.files || []
-        );
+const files =
+Array.from(input.files || []);
 
-    if(!files.length)
-        return;
+if(!files.length)return;
 
-    selectedPostFiles =
-        files;
+selectedPostFiles=files;
 
-    const preview =
-        document.getElementById(
-            "nexoraPostMediaPreview"
-        );
+const preview =
+document.getElementById(
+"nexoraPostMediaPreview"
+);
 
-    preview.innerHTML = "";
+preview.innerHTML="";
 
-    files.forEach(function(file){
+files.forEach(function(file){
 
-        const box =
-            document.createElement("div");
+const url =
+URL.createObjectURL(file);
 
-        box.style.cssText = `
-            margin-top:8px;
-            padding:10px;
-            background:#f0f2f5;
-            border-radius:10px;
-        `;
+const box =
+document.createElement("div");
 
-        const url =
-            URL.createObjectURL(file);
+box.style.marginTop="8px";
 
-        if(
-            file.type.startsWith(
-                "image/"
-            )
-        ){
+if(file.type.startsWith("image/")){
 
-            const img =
-                document.createElement("img");
+box.innerHTML=
+`
+<img
+src="${url}"
+style="
+width:100%;
+max-height:350px;
+object-fit:cover;
+border-radius:10px;
+"
+>
+`;
 
-            img.src = url;
+}else{
 
-            img.style.cssText = `
-                width:100%;
-                max-height:350px;
-                object-fit:cover;
-                border-radius:10px;
-            `;
+box.innerHTML=
+`
+<video
+src="${url}"
+controls
+style="
+width:100%;
+max-height:400px;
+border-radius:10px;
+background:#000;
+"
+></video>
+`;
 
-            box.appendChild(img);
+}
 
-        }else{
+preview.appendChild(box);
 
-            const video =
-                document.createElement("video");
-
-            video.src = url;
-
-            video.controls = true;
-
-            video.style.cssText = `
-                width:100%;
-                max-height:400px;
-                border-radius:10px;
-                background:#000;
-            `;
-
-            box.appendChild(video);
-
-        }
-
-        preview.appendChild(box);
-
-    });
+});
 
 }
 
@@ -3306,38 +3178,37 @@ function handleNexoraPostMedia(){
 
 function changeNexoraBackground(){
 
-    const colors = [
-        "#ffffff",
-        "#ffeaa7",
-        "#fab1a0",
-        "#ffcccc",
-        "#81ecec",
-        "#74b9ff",
-        "#a29bfe",
-        "#dfe6e9",
-        "#55efc4",
-        "#fdcb6e"
-    ];
+const colors=[
+"#ffffff",
+"#ffeaa7",
+"#fab1a0",
+"#ffcccc",
+"#81ecec",
+"#74b9ff",
+"#a29bfe",
+"#dfe6e9",
+"#55efc4",
+"#fdcb6e"
+];
 
-    selectedPostBackground =
-        colors[
-            Math.floor(
-                Math.random() *
-                colors.length
-            )
-        ];
+selectedPostBackground =
+colors[
+Math.floor(
+Math.random()*colors.length
+)
+];
 
-    const text =
-        document.getElementById(
-            "nexoraPostText"
-        );
+const text =
+document.getElementById(
+"nexoraPostText"
+);
 
-    if(text){
+if(text){
 
-        text.style.background =
-            selectedPostBackground;
+text.style.background=
+selectedPostBackground;
 
-    }
+}
 
 }
 
@@ -3346,237 +3217,154 @@ function changeNexoraBackground(){
 
 function changePostPrivacy(){
 
-    const old =
-        document.querySelector(
-            ".privacy-menu"
-        );
+const choice =
+prompt(
+"Privacy নির্বাচন করুন:\n\n1 = Public 🌍\n2 = Friends 👥\n3 = Only Me 🔒"
+);
 
-    if(old)
-        old.remove();
+if(choice==="1")
+selectedPostPrivacy="Public";
 
-    const menu =
-        document.createElement("div");
+else if(choice==="2")
+selectedPostPrivacy="Friends";
 
-    menu.className =
-        "privacy-menu";
+else if(choice==="3")
+selectedPostPrivacy="Only Me";
 
-    menu.innerHTML = `
+else
+return;
 
-        <div class="privacy-box">
 
-            <h3>
-                🔐 Post Privacy
-            </h3>
+const button =
+document.getElementById(
+"postPrivacyButton"
+);
 
-            <p style="
-                color:#65676b;
-                font-size:14px;
-            ">
-                কে আপনার Post দেখতে পারবে?
-            </p>
+if(button){
 
-            <button
-                class="privacy-option"
-                onclick="selectPostPrivacy('Public')"
-            >
-                🌍 <b>Public</b><br>
-                <small>সবাই দেখতে পারবে</small>
-            </button>
+const icon =
+selectedPostPrivacy==="Public"
+?"🌍"
+:
+selectedPostPrivacy==="Friends"
+?"👥"
+:"🔒";
 
-            <button
-                class="privacy-option"
-                onclick="selectPostPrivacy('Friends')"
-            >
-                👥 <b>Friends</b><br>
-                <small>আপনার Friends দেখতে পারবে</small>
-            </button>
+button.innerText=
+icon+
+" "+
+selectedPostPrivacy+
+" ▾";
 
-            <button
-                class="privacy-option"
-                onclick="selectPostPrivacy('Only Me')"
-            >
-                🔒 <b>Only Me</b><br>
-                <small>শুধু আপনি দেখতে পারবেন</small>
-            </button>
-
-            <button
-                class="privacy-option"
-                onclick="closePrivacyMenu()"
-                style="background:#ffe5e5;color:#c00;"
-            >
-                Cancel
-            </button>
-
-        </div>
-
-    `;
-
-    menu.addEventListener(
-        "click",
-        function(event){
-
-            if(
-                event.target === menu
-            ){
-
-                closePrivacyMenu();
-
-            }
-
-        }
-    );
-
-    document.body.appendChild(menu);
+}
 
 }
 
 
-function selectPostPrivacy(value){
-
-    selectedPostPrivacy =
-        value;
-
-    const button =
-        document.getElementById(
-            "postPrivacyButton"
-        );
-
-    if(button){
-
-        button.innerText =
-            privacyLabel(value) +
-            " ▾";
-
-    }
-
-    closePrivacyMenu();
-
-}
-
-
-function closePrivacyMenu(){
-
-    const menu =
-        document.querySelector(
-            ".privacy-menu"
-        );
-
-    if(menu)
-        menu.remove();
-
-}
-
-
-/* ================= EXTRA INFO ================= */
+/* ================= EXTRA ================= */
 
 function addNexoraLocation(){
 
-    const value =
-        prompt(
-            "আপনার Location লিখুন:"
-        );
+const value =
+prompt(
+"আপনার Location লিখুন:"
+);
 
-    if(!value) return;
+if(!value)return;
 
-    selectedPostLocation =
-        value;
+selectedPostLocation=value;
 
-    updateExtraInfo();
+updateExtraInfo();
 
 }
 
 
 function addNexoraFeeling(){
 
-    const value =
-        prompt(
-            "Feeling লিখুন:\n\nযেমন: Happy, Sad, Excited, Love"
-        );
+const value =
+prompt(
+"Feeling লিখুন:\nHappy, Sad, Excited, Love"
+);
 
-    if(!value) return;
+if(!value)return;
 
-    selectedPostFeeling =
-        value;
+selectedPostFeeling=value;
 
-    updateExtraInfo();
+updateExtraInfo();
 
 }
 
 
 function addNexoraTag(){
 
-    const value =
-        prompt(
-            "যাকে Tag করতে চান তার নাম লিখুন:"
-        );
+const value =
+prompt(
+"যাকে Tag করতে চান তার নাম লিখুন:"
+);
 
-    if(!value) return;
+if(!value)return;
 
-    selectedPostTags =
-        value;
+selectedPostTags=value;
 
-    updateExtraInfo();
+updateExtraInfo();
 
 }
 
 
 function updateExtraInfo(){
 
-    const box =
-        document.getElementById(
-            "postExtraInfo"
-        );
+const box =
+document.getElementById(
+"postExtraInfo"
+);
 
-    if(!box) return;
+if(!box)return;
 
-    let html = "";
+let html="";
 
-    if(selectedPostFeeling){
+if(selectedPostFeeling){
 
-        html +=
-            "😊 Feeling: " +
-            escapeHTML(
-                selectedPostFeeling
-            ) +
-            "<br>";
+html+=
+"😊 Feeling: "+
+escapeHTML(
+selectedPostFeeling
+)+
+"<br>";
 
-    }
+}
 
-    if(selectedPostLocation){
+if(selectedPostLocation){
 
-        html +=
-            "📍 Location: " +
-            escapeHTML(
-                selectedPostLocation
-            ) +
-            "<br>";
+html+=
+"📍 Location: "+
+escapeHTML(
+selectedPostLocation
+)+
+"<br>";
 
-    }
+}
 
-    if(selectedPostTags){
+if(selectedPostTags){
 
-        html +=
-            "👥 Tagged: " +
-            escapeHTML(
-                selectedPostTags
-            );
+html+=
+"👥 Tagged: "+
+escapeHTML(
+selectedPostTags
+);
 
-    }
+}
 
-    if(html){
+if(html){
 
-        box.style.display =
-            "block";
+box.style.display="block";
 
-        box.innerHTML =
-            html;
+box.innerHTML=html;
 
-    }else{
+}else{
 
-        box.style.display =
-            "none";
+box.style.display="none";
 
-    }
+}
 
 }
 
@@ -3585,18 +3373,164 @@ function updateExtraInfo(){
 
 function addNexoraMusic(){
 
-    alert(
-        "🎵 Music system-এর interface প্রস্তুত আছে। Music library/backend পরের ধাপে যুক্ত হবে।"
-    );
+alert(
+"🎵 Music option রাখা হয়েছে। Music library/backend পরবর্তী ধাপে যুক্ত হবে।"
+);
 
 }
 
 
 function startNexoraLive(){
 
-    alert(
-        "🔴 NEXORA Live-এর interface প্রস্তুত আছে। Live backend পরের ধাপে যুক্ত হবে।"
-    );
+alert(
+"🔴 Live option রাখা হয়েছে। Live backend পরবর্তী ধাপে যুক্ত হবে।"
+);
+
+}
+
+
+/* ================= POLL ================= */
+
+function addNexoraPoll(){
+
+const box =
+document.getElementById(
+"nexoraPollBox"
+);
+
+if(!box)return;
+
+box.style.display=
+box.style.display==="none"
+?"block"
+:"none";
+
+}
+
+
+function readPoll(){
+
+const question =
+(
+document.getElementById(
+"pollQuestion"
+)?.value || ""
+).trim();
+
+const options=[
+document.getElementById(
+"pollOption1"
+)?.value || "",
+
+document.getElementById(
+"pollOption2"
+)?.value || "",
+
+document.getElementById(
+"pollOption3"
+)?.value || ""
+]
+.map(function(x){
+return x.trim();
+})
+.filter(Boolean);
+
+if(!question || options.length<2){
+
+return null;
+
+}
+
+return {
+
+question:question,
+
+options:options,
+
+votes:{}
+
+};
+
+}
+
+
+function votePoll(postId,index){
+
+const user =
+auth.currentUser;
+
+if(!user){
+
+alert("আগে Login করুন।");
+
+return;
+
+}
+
+const ref =
+db.collection("Posts")
+.doc(postId);
+
+db.runTransaction(function(transaction){
+
+return transaction.get(ref)
+.then(function(doc){
+
+if(!doc.exists)
+return;
+
+const data =
+doc.data();
+
+const poll =
+data.poll;
+
+if(!poll)
+return;
+
+const votes =
+poll.votes || {};
+
+Object.keys(votes)
+.forEach(function(key){
+
+if(
+Array.isArray(votes[key]) &&
+votes[key].includes(user.uid)
+){
+
+votes[key] =
+votes[key].filter(function(uid){
+
+return uid!==user.uid;
+
+});
+
+}
+
+});
+
+if(!votes[index])
+votes[index]=[];
+
+votes[index].push(user.uid);
+
+transaction.update(
+ref,
+{
+"poll.votes":votes
+}
+);
+
+});
+
+})
+
+.catch(function(error){
+
+console.error(error);
+
+});
 
 }
 
@@ -3605,192 +3539,168 @@ function startNexoraLive(){
 
 function publishNexoraPost(){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+if(!user){
 
-        alert("আগে Login করুন.");
+alert("আগে Login করুন.");
 
-        return;
+return;
 
-    }
+}
 
-    const textElement =
-        document.getElementById(
-            "nexoraPostText"
-        );
+const textElement =
+document.getElementById(
+"nexoraPostText"
+);
 
-    const text =
-        textElement
-        ? textElement.value.trim()
-        : "";
+const text =
+textElement
+?textElement.value.trim()
+:"";
 
-    const files =
-        selectedPostFiles || [];
+const files =
+selectedPostFiles || [];
 
-    if(
-        !text &&
-        files.length === 0
-    ){
+const poll =
+readPoll();
 
-        alert(
-            "কিছু লিখুন অথবা ছবি/ভিডিও নির্বাচন করুন।"
-        );
 
-        return;
+if(
+!text &&
+files.length===0 &&
+!poll
+){
 
-    }
+alert(
+"কিছু লিখুন অথবা ছবি/ভিডিও নির্বাচন করুন।"
+);
 
-    const button =
-        document.querySelector(
-            ".nx-publish-btn"
-        );
-
-    if(button){
-
-        button.disabled = true;
-
-        button.innerText =
-            "Upload হচ্ছে... ⏳";
-
-    }
-
-    const promises =
-        files.map(function(file){
-
-            const type =
-                file.type.startsWith(
-                    "video/"
-                )
-                ? "video"
-                : "image";
-
-            return uploadToCloudinary(
-                file,
-                type
-            )
-
-            .then(function(data){
-
-                return {
-
-                    url:
-                        data.secure_url,
-
-                    type:
-                        type
-
-                };
-
-            });
-
-        });
-
-    Promise.all(promises)
-
-    .then(function(media){
-
-        return db
-            .collection("Posts")
-            .add({
-
-                text:text,
-
-                name:
-                    user.displayName ||
-                    "NEXORA User",
-
-                photoURL:
-                    user.photoURL ||
-                    "",
-
-                email:
-                    user.email ||
-                    "",
-
-                uid:
-                    user.uid,
-
-                privacy:
-                    selectedPostPrivacy,
-
-                feeling:
-                    selectedPostFeeling,
-
-                location:
-                    selectedPostLocation,
-
-                taggedPeople:
-                    selectedPostTags,
-
-                background:
-                    selectedPostBackground,
-
-                media:
-                    media,
-
-                likes:[],
-
-                createdAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
-
-            });
-
-    })
-
-    .then(function(){
-
-        alert(
-            "🎉 NEXORA-তে Post সফল হয়েছে!"
-        );
-
-        closeCreatePost();
-
-        resetCreatePost();
-
-    })
-
-    .catch(function(error){
-
-        console.error(error);
-
-        alert(
-            "Post করা যায়নি:\n\n" +
-            error.message
-        );
-
-        if(button){
-
-            button.disabled = false;
-
-            button.innerText =
-                "🚀 Post";
-
-        }
-
-    });
+return;
 
 }
 
 
-function resetCreatePost(){
+const button =
+document.querySelector(
+".nx-publish-btn"
+);
 
-    selectedPostFiles = [];
+if(button){
 
-    selectedPostFeeling = "";
+button.disabled=true;
 
-    selectedPostLocation = "";
+button.innerText=
+"Upload হচ্ছে... ⏳";
 
-    selectedPostTags = "";
+}
 
-    selectedPostPrivacy =
-        "Public";
 
-    selectedPostBackground =
-        "#ffffff";
+const promises =
+files.map(function(file){
+
+const type =
+file.type.startsWith("video/")
+?"video"
+:"image";
+
+return uploadToCloudinary(
+file,
+type
+)
+.then(function(data){
+
+return {
+
+url:data.secure_url,
+
+type:type
+
+};
+
+});
+
+});
+
+
+Promise.all(promises)
+
+.then(function(media){
+
+return db.collection("Posts")
+.add({
+
+text:text,
+
+name:
+user.displayName ||
+"NEXORA User",
+
+email:
+user.email || "",
+
+uid:user.uid,
+
+privacy:
+selectedPostPrivacy,
+
+feeling:
+selectedPostFeeling,
+
+location:
+selectedPostLocation,
+
+taggedPeople:
+selectedPostTags,
+
+background:
+selectedPostBackground,
+
+media:media,
+
+poll:poll,
+
+likes:[],
+
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
+
+});
+
+})
+
+.then(function(){
+
+alert(
+"🎉 NEXORA-তে Post সফল হয়েছে!"
+);
+
+closeCreatePost();
+
+})
+
+.catch(function(error){
+
+console.error(error);
+
+alert(
+"Post করা যায়নি:\n\n"+
+error.message
+);
+
+if(button){
+
+button.disabled=false;
+
+button.innerText=
+"🚀 Post";
+
+}
+
+});
 
 }
 
@@ -3799,268 +3709,214 @@ function resetCreatePost(){
 
 function deletePost(postId){
 
-    const user =
-        auth.currentUser;
+const user =
+auth.currentUser;
 
-    if(!user){
+if(!user){
 
-        alert("আগে Login করুন.");
+alert("আগে Login করুন.");
 
-        return;
+return;
 
-    }
+}
 
-    const ref =
-        db.collection("Posts")
-          .doc(postId);
+if(
+!confirm(
+"আপনি কি এই Post টি Delete করতে চান?"
+)
+)return;
 
-    ref.get()
+db.collection("Posts")
+.doc(postId)
+.get()
 
-    .then(function(doc){
+.then(function(doc){
 
-        if(!doc.exists){
+if(!doc.exists)
+throw new Error(
+"Post পাওয়া যায়নি।"
+);
 
-            throw new Error(
-                "Post পাওয়া যায়নি।"
-            );
+if(
+doc.data().uid!==user.uid
+){
 
-        }
+throw new Error(
+"আপনি এই Post Delete করতে পারবেন না।"
+);
 
-        const post =
-            doc.data();
+}
 
-        if(
-            post.uid !== user.uid
-        ){
+return doc.ref.delete();
 
-            throw new Error(
-                "আপনি এই Post Delete করতে পারবেন না।"
-            );
+})
 
-        }
+.then(function(){
 
-        if(
-            !confirm(
-                "আপনি কি এই Post টি Delete করতে চান?"
-            )
-        ){
+alert(
+"🗑️ Post সফলভাবে Delete হয়েছে!"
+);
 
-            return null;
+})
 
-        }
+.catch(function(error){
 
-        return ref.delete();
+alert(error.message);
 
-    })
-
-    .then(function(result){
-
-        if(result === null)
-            return;
-
-        alert(
-            "🗑️ Post সফলভাবে Delete হয়েছে!"
-        );
-
-    })
-
-    .catch(function(error){
-
-        console.error(error);
-
-        alert(
-            error.message
-        );
-
-    });
+});
 
 }
 
 
-/* ================= FULL REELS PAGE ================= */
+/* ================= FULL REELS ================= */
 
 function openNexoraReels(){
 
-    const home =
-        document.getElementById(
-            "homeSection"
-        );
+document.getElementById(
+"homeSection"
+).style.display="none";
 
-    const page =
-        document.getElementById(
-            "nexoraReelsPage"
-        );
+document.getElementById(
+"nexoraReelsPage"
+).style.display="block";
 
-    if(home)
-        home.style.display =
-            "none";
-
-    if(page)
-        page.style.display =
-            "block";
-
-    loadNexoraReels();
+loadNexoraReels();
 
 }
 
 
 function closeNexoraReels(){
 
-    const page =
-        document.getElementById(
-            "nexoraReelsPage"
-        );
+document.getElementById(
+"nexoraReelsPage"
+).style.display="none";
 
-    const home =
-        document.getElementById(
-            "homeSection"
-        );
-
-    if(page)
-        page.style.display =
-            "none";
-
-    if(home)
-        home.style.display =
-            "block";
+document.getElementById(
+"homeSection"
+).style.display="block";
 
 }
 
 
 function loadNexoraReels(){
 
-    const container =
-        document.getElementById(
-            "nexoraReelsContainer"
-        );
+const container =
+document.getElementById(
+"nexoraReelsContainer"
+);
 
-    if(!container)
-        return;
+container.innerHTML=
+`
+<div style="
+text-align:center;
+padding:30px;
+color:#666;
+">
+🎬 Reels লোড হচ্ছে...
+</div>
+`;
 
-    container.innerHTML = `
-        <div style="
-            text-align:center;
-            padding:30px;
-            color:#666;
-        ">
-            🎬 Reels লোড হচ্ছে...
-        </div>
-    `;
+db.collection("Reels")
+.orderBy("createdAt","desc")
+.get()
 
-    db.collection("Reels")
-      .orderBy("createdAt","desc")
-      .get()
+.then(function(snapshot){
 
-    .then(function(snapshot){
+container.innerHTML="";
 
-        container.innerHTML = "";
+if(snapshot.empty){
 
-        if(snapshot.empty){
+container.innerHTML=
+`
+<div style="
+text-align:center;
+padding:50px;
+color:#666;
+">
+🎬 এখনো কোনো Reel নেই।
+</div>
+`;
 
-            container.innerHTML = `
-                <div style="
-                    text-align:center;
-                    padding:50px 20px;
-                    color:#666;
-                ">
-                    🎬 এখনো কোনো Reel নেই।
-                </div>
-            `;
+return;
 
-            return;
+}
 
-        }
+snapshot.forEach(function(doc){
 
-        snapshot.forEach(function(doc){
+const reel =
+doc.data();
 
-            const reel =
-                doc.data();
+const likes =
+reel.likes || [];
 
-            const likes =
-                Array.isArray(reel.likes)
-                ? reel.likes
-                : [];
+const div =
+document.createElement("div");
 
-            const user =
-                auth.currentUser;
+div.className=
+"reel-card";
 
-            const liked =
-                user &&
-                likes.includes(
-                    user.uid
-                );
+div.innerHTML=
+`
 
-            const div =
-                document.createElement("div");
+<div class="reel-header">
+👤 ${escapeHTML(
+reel.name ||
+"NEXORA User"
+)}
+</div>
 
-            div.className =
-                "reel-card";
+<video
+class="reel-video"
+src="${escapeHTML(
+reel.videoUrl || ""
+)}"
+controls
+playsinline
+preload="metadata"
+></video>
 
-            div.innerHTML = `
+<div class="reel-actions">
 
-                <div class="reel-header">
-                    👤 ${escapeHTML(
-                        reel.name ||
-                        "NEXORA User"
-                    )}
-                </div>
+<button
+onclick="likeReel('${doc.id}')"
+>
+❤️ Like ${likes.length}
+</button>
 
-                <video
-                    class="reel-video"
-                    src="${escapeHTML(
-                        reel.videoUrl || ""
-                    )}"
-                    controls
-                    playsinline
-                    preload="metadata"
-                ></video>
+<button
+onclick="shareReel('${escapeHTML(
+reel.videoUrl || ""
+)}')"
+>
+↗️ Share
+</button>
 
-                <div class="reel-actions">
+</div>
 
-                    <button
-                        onclick="likeReel('${doc.id}')"
-                    >
-                        ${
-                            liked
-                            ? "❤️ Liked"
-                            : "👍 Like"
-                        }
-                        ${likes.length}
-                    </button>
+`;
 
-                    <button
-                        onclick="shareReel('${escapeHTML(
-                            reel.videoUrl || ""
-                        )}')"
-                    >
-                        ↗️ Share
-                    </button>
+container.appendChild(div);
 
-                </div>
+});
 
-            `;
+})
 
-            container.appendChild(div);
+.catch(function(error){
 
-        });
+console.error(error);
 
-    })
+container.innerHTML=
+`
+<div style="
+text-align:center;
+padding:30px;
+color:red;
+">
+Reels লোড করা যায়নি।
+</div>
+`;
 
-    .catch(function(error){
-
-        console.error(error);
-
-        container.innerHTML = `
-            <div style="
-                text-align:center;
-                padding:30px;
-                color:red;
-            ">
-                Reels লোড করা যায়নি।
-            </div>
-        `;
-
-    });
+});
 
 }
 
@@ -4068,60 +3924,58 @@ function loadNexoraReels(){
 /* ================= CLOUDINARY ================= */
 
 function uploadToCloudinary(
-    file,
-    type
+file,
+type
 ){
 
-    const formData =
-        new FormData();
+const formData =
+new FormData();
 
-    formData.append(
-        "file",
-        file
-    );
+formData.append(
+"file",
+file
+);
 
-    formData.append(
-        "upload_preset",
-        CLOUDINARY_PRESET
-    );
+formData.append(
+"upload_preset",
+CLOUDINARY_PRESET
+);
 
-    return fetch(
+return fetch(
+"https://api.cloudinary.com/v1_1/"+
+CLOUDINARY_CLOUD+
+"/"+
+type+
+"/upload",
+{
+method:"POST",
+body:formData
+}
+)
 
-        "https://api.cloudinary.com/v1_1/" +
-        CLOUDINARY_CLOUD +
-        "/" +
-        type +
-        "/upload",
+.then(function(response){
 
-        {
-            method:"POST",
-            body:formData
-        }
+return response.json()
+.then(function(data){
 
-    )
+if(!response.ok){
 
-    .then(function(response){
+throw new Error(
+data.error &&
+data.error.message
+?
+data.error.message
+:
+"Cloudinary Upload ব্যর্থ হয়েছে।"
+);
 
-        return response.json()
+}
 
-        .then(function(data){
+return data;
 
-            if(!response.ok){
+});
 
-                throw new Error(
-                    data.error &&
-                    data.error.message
-                    ? data.error.message
-                    : "Cloudinary Upload ব্যর্থ হয়েছে।"
-                );
-
-            }
-
-            return data;
-
-        });
-
-    });
+});
 
 }
 
@@ -4130,94 +3984,72 @@ function uploadToCloudinary(
 
 function escapeHTML(value){
 
-    if(
-        value === null ||
-        value === undefined
-    )
-        return "";
+if(
+value===null ||
+value===undefined
+)
+return "";
 
-    return String(value)
+return String(value)
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
 function safeBackground(value){
 
-    const allowed = [
-        "#ffffff",
-        "#ffeaa7",
-        "#fab1a0",
-        "#ffcccc",
-        "#81ecec",
-        "#74b9ff",
-        "#a29bfe",
-        "#dfe6e9",
-        "#55efc4",
-        "#fdcb6e"
-    ];
+const allowed=[
+"#ffffff",
+"#ffeaa7",
+"#fab1a0",
+"#ffcccc",
+"#81ecec",
+"#74b9ff",
+"#a29bfe",
+"#dfe6e9",
+"#55efc4",
+"#fdcb6e"
+];
 
-    return allowed.includes(value)
-        ? value
-        : "#ffffff";
+return allowed.includes(value)
+?value
+:"#ffffff";
 
 }
 
 
 function copyText(text){
 
-    if(
-        navigator.clipboard &&
-        navigator.clipboard.writeText
-    ){
+if(
+navigator.clipboard &&
+navigator.clipboard.writeText
+){
 
-        navigator.clipboard.writeText(text)
+navigator.clipboard.writeText(text)
+.then(function(){
 
-        .then(function(){
+alert(
+"🔗 Link কপি হয়েছে!"
+);
 
-            alert(
-                "🔗 Link কপি হয়েছে!"
-            );
+})
 
-        })
+.catch(function(){
 
-        .catch(function(){
+alert(text);
 
-            alert(
-                "Link কপি করা যায়নি।"
-            );
+});
 
-        });
+}else{
 
-    }else{
+alert(text);
 
-        alert(text);
-
-    }
+}
 
 }
 
