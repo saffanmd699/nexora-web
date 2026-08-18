@@ -1042,28 +1042,34 @@ const CLOUDINARY_PRESET =
 
 function googleLogin(){
 
-    const message =
-        document.getElementById("message");
-
-    message.className = "";
-    message.innerText =
-        "Google Login চালু হচ্ছে...";
+    alert("Google Login Button কাজ করছে!");
 
     auth.signInWithPopup(provider)
 
+        .then(function(result){
+
+            console.log(
+                "Google Login সফল:",
+                result.user
+            );
+
+        })
+
         .catch(function(error){
 
-            console.error(error);
+            console.error(
+                "Google Login Error:",
+                error
+            );
 
-            message.className = "error";
-
-            message.innerText =
-                "Login করা যায়নি: " +
-                error.message;
+            alert(
+                "Login Error: " +
+                error.message
+            );
 
         });
-}
 
+}
 
 /* ================= LOGOUT ================= */
 
