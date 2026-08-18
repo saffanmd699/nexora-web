@@ -3549,7 +3549,224 @@ function closeNexoraSearch(){
         page.remove();
 
 }
+/* ================= NEXORA USER SEARCH ================= */
 
+function searchNexoraUsers(){
+
+    const input =
+        document.getElementById(
+            "nexoraSearchInput"
+        );
+
+    const results =
+        document.getElementById(
+            "nexoraSearchResults"
+        );
+
+    if(!input || !results)
+        return;
+
+    const searchText =
+        input.value.trim().toLowerCase();
+
+    if(!searchText){
+
+        results.innerHTML = `
+            <div style="
+                text-align:center;
+                color:#777;
+                padding:30px;
+            ">
+                🔍 User-এর নাম লিখে Search করুন
+            </div>
+        `;
+
+        return;
+    }
+
+    results.innerHTML = `
+        <div style="
+            text-align:center;
+            color:#777;
+            padding:25px;
+        ">
+            🔎 Search হচ্ছে...
+        </div>
+    `;
+
+
+    db.collection("Users")
+      .get()
+
+      .then(function(snapshot){
+
+        results.innerHTML = "";
+
+        let found = false;
+
+        snapshot.forEach(function(doc){
+
+            const user =
+                doc.data();
+
+            const name =
+                user.name ||
+                user.displayName ||
+                "NEXORA User";
+
+            const email =
+                user.email ||
+                "";
+
+            const nameMatch =
+                name
+                    .toLowerCase()
+                    .includes(searchText);
+
+            const emailMatch =
+                email
+                    .toLowerCase()
+                    .includes(searchText);
+
+            if(!nameMatch && !emailMatch)
+                return;
+
+            found = true;
+
+            const div =
+                document.createElement("div");
+
+            div.style.cssText = `
+                display:flex;
+                align-items:center;
+                gap:12px;
+                padding:12px;
+                margin-bottom:8px;
+                background:#fff;
+                border:1px solid #eee;
+                border-radius:12px;
+                cursor:pointer;
+            `;
+
+
+            const photo =
+                user.photoURL ||
+                user.photo ||
+                "";
+
+
+            div.innerHTML = `
+
+                ${
+                    photo
+                    ? `
+                        <img
+                            src="${escapeHTML(photo)}"
+                            style="
+                                width:50px;
+                                height:50px;
+                                border-radius:50%;
+                                object-fit:cover;
+                            "
+                        >
+                    `
+                    : `
+                        <div style="
+                            width:50px;
+                            height:50px;
+                            border-radius:50%;
+                            background:#1877f2;
+                            color:white;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:22px;
+                        ">
+                            👤
+                        </div>
+                    `
+                }
+
+                <div style="
+                    flex:1;
+                    min-width:0;
+                ">
+
+                    <div style="
+                        font-size:16px;
+                        font-weight:bold;
+                        color:#222;
+                    ">
+                        ${escapeHTML(name)}
+                    </div>
+
+                    ${
+                        email
+                        ? `
+                            <div style="
+                                margin-top:3px;
+                                font-size:13px;
+                                color:#777;
+                                overflow:hidden;
+                                text-overflow:ellipsis;
+                            ">
+                                ${escapeHTML(email)}
+                            </div>
+                        `
+                        : ""
+                    }
+
+                </div>
+
+            `;
+
+
+            results.appendChild(div);
+
+        });
+
+
+        if(!found){
+
+            results.innerHTML = `
+                <div style="
+                    text-align:center;
+                    color:#777;
+                    padding:30px;
+                ">
+                    😔 কোনো User পাওয়া যায়নি।
+                </div>
+            `;
+
+        }
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "USER SEARCH ERROR:",
+            error
+        );
+
+        results.innerHTML = `
+            <div style="
+                text-align:center;
+                color:red;
+                padding:30px;
+            ">
+                ❌ Search করা যায়নি।<br>
+                <small>
+                    ${escapeHTML(
+                        error.message
+                    )}
+                </small>
+            </div>
+        `;
+
+    });
+
+}
 </script>
 
 </body>
