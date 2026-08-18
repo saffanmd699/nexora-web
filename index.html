@@ -1177,15 +1177,88 @@ button{
 
             <div class="nx-stories">
 
-                <div
-                    class="nx-story create-story"
-                    onclick="createStory()"
-                >
-                    <div class="story-plus">+</div>
-                    <b>Create Story</b>
-                </div>
+               <div class="nx-stories">
 
-                <div
+    <div
+        class="nx-story create-story"
+        onclick="createStory()"
+        style="
+            position:relative;
+            overflow:hidden;
+            cursor:pointer;
+        "
+    >
+
+        <div
+            id="createStoryProfile"
+            style="
+                width:100%;
+                height:100%;
+                position:absolute;
+                inset:0;
+                background:#e4e6eb;
+            "
+        >
+            <div style="
+                width:100%;
+                height:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:45px;
+            ">
+                👤
+            </div>
+        </div>
+
+        <div style="
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            background:#1877f2;
+            border:4px solid #fff;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:30px;
+            font-weight:bold;
+            z-index:5;
+        ">
+            +
+        </div>
+
+        <div style="
+            position:absolute;
+            left:0;
+            right:0;
+            bottom:0;
+            padding:35px 5px 10px;
+            text-align:center;
+            color:#fff;
+            font-weight:bold;
+            font-size:13px;
+            background:linear-gradient(
+                transparent,
+                rgba(0,0,0,.75)
+            );
+            z-index:4;
+        ">
+            Create Story
+        </div>
+
+    </div>
+
+    <div
+        id="storiesFeed"
+        class="nx-story-list"
+    ></div>
+
+</div>
                     id="storiesFeed"
                     class="nx-story-list"
                 ></div>
@@ -1439,7 +1512,7 @@ auth.onAuthStateChanged(function(user){
 
         login.style.display = "none";
         home.style.display = "block";
-
+updateCreateStoryProfile();
         const message =
             document.getElementById("message");
 
@@ -1954,8 +2027,68 @@ function sharePost(postId){
 
 let nexoraStories = [];
 let currentStoryIndex = 0;
+/* ================= STORIES START ================= */
+
+let nexoraStories = [];
+let currentStoryIndex = 0;
 
 
+/* ================= CREATE STORY PROFILE ================= */
+
+function updateCreateStoryProfile(){
+
+    const box =
+        document.getElementById(
+            "createStoryProfile"
+        );
+
+    const user =
+        auth.currentUser;
+
+    if(!box || !user)
+        return;
+
+    const photo =
+        user.photoURL || "";
+
+    if(photo){
+
+        box.innerHTML = `
+            <img
+                src="${escapeHTML(photo)}"
+                alt="Profile"
+                style="
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;
+                    display:block;
+                "
+            >
+        `;
+
+    }else{
+
+        box.innerHTML = `
+            <div style="
+                width:100%;
+                height:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:45px;
+            ">
+                👤
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ================= LOAD STORIES ================= */
+
+function loadStories(){
 /* ================= LOAD STORIES ================= */
 
 function loadStories(){
