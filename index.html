@@ -1037,20 +1037,54 @@ const CLOUDINARY_CLOUD =
 const CLOUDINARY_PRESET =
     "NEXORA _Reels";
 
-
 /* ================= LOGIN ================= */
 
 function googleLogin(){
-
-    alert("Google Login Button কাজ করছে!");
 
     auth.signInWithPopup(provider)
 
         .then(function(result){
 
+            const user =
+                result.user;
+
+            return db
+                .collection("Users")
+                .doc(user.uid)
+                .set({
+
+                    name:
+                        user.displayName ||
+                        "NEXORA User",
+
+                    email:
+                        user.email ||
+                        "",
+
+                    photoURL:
+                        user.photoURL ||
+                        "",
+
+                    uid:
+                        user.uid,
+
+                    updatedAt:
+                        firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+                }, {
+
+                    merge:true
+
+                });
+
+        })
+
+        .then(function(){
+
             console.log(
-                "Google Login সফল:",
-                result.user
+                "Google Login সফল এবং User Save হয়েছে।"
             );
 
         })
@@ -1063,14 +1097,13 @@ function googleLogin(){
             );
 
             alert(
-                "Login Error: " +
+                "Login করা যায়নি: " +
                 error.message
             );
 
         });
 
 }
-
 /* ================= LOGOUT ================= */
 
 function logout(){
