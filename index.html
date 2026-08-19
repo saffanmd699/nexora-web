@@ -1051,6 +1051,179 @@ button{
 }
 
 /* ================= STORIES CSS END ================= */
+/* =====================================================
+   NEXORA STORY REACTION ANIMATION
+   ===================================================== */
+
+.nexora-reaction-animation{
+
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+    top:0;
+
+    pointer-events:none;
+
+    overflow:hidden;
+
+    z-index:9999;
+}
+
+
+/* =====================================================
+   FLOATING REACTION
+   ===================================================== */
+
+.nexora-floating-reaction{
+
+    position:absolute;
+
+    bottom:70px;
+
+    transform:
+        translate3d(0,0,0)
+        scale(.6)
+        rotate(0deg);
+
+    opacity:0;
+
+    line-height:1;
+
+    user-select:none;
+
+    pointer-events:none;
+
+    will-change:
+        transform,
+        opacity;
+
+    animation-name:
+        nexoraFloatingReaction;
+
+    animation-timing-function:
+        cubic-bezier(.22,.61,.36,1);
+
+    animation-fill-mode:
+        forwards;
+
+    text-shadow:
+        0 2px 5px
+        rgba(0,0,0,.25);
+
+}
+
+
+/* =====================================================
+   MAIN ANIMATION
+   ===================================================== */
+
+@keyframes nexoraFloatingReaction{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            translate3d(
+                0,
+                40px,
+                0
+            )
+            scale(.45)
+            rotate(0deg);
+
+    }
+
+
+    12%{
+
+        opacity:1;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            scale(1.15)
+            rotate(
+                var(--reaction-rotate)
+            );
+
+    }
+
+
+    35%{
+
+        opacity:1;
+
+        transform:
+            translate3d(
+                calc(
+                    var(--reaction-drift) * .25
+                ),
+                -25vh,
+                0
+            )
+            scale(1);
+
+    }
+
+
+    65%{
+
+        opacity:.95;
+
+        transform:
+            translate3d(
+                calc(
+                    var(--reaction-drift) * .65
+                ),
+                -52vh,
+                0
+            )
+            scale(.92);
+
+    }
+
+
+    85%{
+
+        opacity:.65;
+
+        transform:
+            translate3d(
+                var(--reaction-drift),
+                -72vh,
+                0
+            )
+            scale(.82);
+
+    }
+
+
+    100%{
+
+        opacity:0;
+
+        transform:
+            translate3d(
+                var(--reaction-drift),
+                -100vh,
+                0
+            )
+            scale(.65)
+            rotate(
+                calc(
+                    var(--reaction-rotate) * 2
+                )
+            );
+
+    }
+
+}
 </style>
 </head>
 
@@ -2774,28 +2947,32 @@ function closeNexoraStory(){
 
 }
 
+/* =====================================================
+   STORY REACTION — NEXORA
+   ===================================================== */
 
-/* ================= STORY REACTION ================= */
+function reactToNexoraStory(storyId, emoji){
 
-function reactToNexoraStory(
-    storyId,
-    emoji
-){
-
-    const user =
-        auth.currentUser;
-
+    const user = auth.currentUser;
 
     if(!user){
 
-        alert(
-            "Reaction দিতে আগে Login করুন।"
-        );
+        alert("Reaction দিতে আগে Login করুন।");
 
         return;
-
     }
 
+
+    /* ===============================
+       REACTION ANIMATION
+       =============================== */
+
+    createNexoraReactionAnimation(emoji);
+
+
+    /* ===============================
+       SAVE REACTION
+       =============================== */
 
     db.collection("Stories")
       .doc(storyId)
@@ -2803,7 +2980,7 @@ function reactToNexoraStory(
       .doc(user.uid)
       .set({
 
-          uid:user.uid,
+          uid: user.uid,
 
           name:
               user.displayName ||
@@ -2813,7 +2990,7 @@ function reactToNexoraStory(
               user.photoURL ||
               "",
 
-          emoji:emoji,
+          emoji: emoji,
 
           createdAt:
               firebase.firestore
@@ -2825,28 +3002,190 @@ function reactToNexoraStory(
       .then(function(){
 
           console.log(
-              "Story Reaction:",
+              "Story Reaction সফল:",
               emoji
           );
 
       })
-.catch(function(error){
 
-    console.error(
-        "STORY REACTION ERROR:",
-        error
-    );
+      .catch(function(error){
 
-    alert(
-        "Reaction দেওয়া যায়নি।"
-    );
-      alert(
-    "✅ Reaction সফল হয়েছে: " + emoji
-);
+          console.error(
+              "STORY REACTION ERROR:",
+              error
+          );
 
-});
-      
+          alert(
+              "Reaction দেওয়া যায়নি: " +
+              error.message
+          );
+
+      });
+
 }
+
+
+/* =====================================================
+   CREATE REACTION ANIMATION
+   ===================================================== */
+
+function createNexoraReactionAnimation(emoji){
+
+    const viewer =
+        document.getElementById(
+            "nexoraStoryViewer"
+        );
+
+    if(!viewer)
+        return;
+
+
+    let container =
+        document.getElementById(
+            "nexoraReactionAnimation"
+        );
+
+
+    if(!container){
+
+        container =
+            document.createElement("div");
+
+        container.id =
+            "nexoraReactionAnimation";
+
+        container.className =
+            "nexora-reaction-animation";
+
+        viewer.appendChild(container);
+
+    }
+
+
+    /* ===============================
+       25–30 EMOJIS
+       =============================== */
+
+    const total =
+        Math.floor(
+            Math.random() * 6
+        ) + 25;
+
+
+    for(
+        let i = 0;
+        i < total;
+        i++
+    ){
+
+        setTimeout(function(){
+
+            createSingleNexoraReaction(
+                emoji,
+                container
+            );
+
+        }, i * 45);
+
+    }
+
+}
+
+
+/* =====================================================
+   SINGLE REACTION
+   ===================================================== */
+
+function createSingleNexoraReaction(
+    emoji,
+    container
+){
+
+    const reaction =
+        document.createElement("div");
+
+
+    reaction.className =
+        "nexora-floating-reaction";
+
+
+    reaction.innerText =
+        emoji;
+
+
+    /* ===============================
+       RANDOM POSITION
+       =============================== */
+
+    const left =
+        Math.random() * 80 + 10;
+
+
+    const size =
+        Math.random() * 22 + 28;
+
+
+    const duration =
+        Math.random() * 1.2 + 2.2;
+
+
+    const rotate =
+        Math.random() * 50 - 25;
+
+
+    const drift =
+        Math.random() * 160 - 80;
+
+
+    reaction.style.left =
+        left + "%";
+
+
+    reaction.style.fontSize =
+        size + "px";
+
+
+    reaction.style.setProperty(
+        "--reaction-drift",
+        drift + "px"
+    );
+
+
+    reaction.style.setProperty(
+        "--reaction-rotate",
+        rotate + "deg"
+    );
+
+
+    reaction.style.animationDuration =
+        duration + "s";
+
+
+    container.appendChild(
+        reaction
+    );
+
+
+    /* ===============================
+       REMOVE AFTER ANIMATION
+       =============================== */
+
+    setTimeout(function(){
+
+        if(
+            reaction &&
+            reaction.parentNode
+        ){
+
+            reaction.remove();
+
+        }
+
+    }, duration * 1000 + 300);
+
+}
+   
+
 
 
 /* ================= STORY REPLY ================= */
