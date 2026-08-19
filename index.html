@@ -2830,7 +2830,18 @@ function reactToNexoraStory(
           );
 
       })
+.catch(function(error){
 
+    console.error(
+        "STORY REACTION ERROR:",
+        error
+    );
+
+    alert(
+        "Reaction দেওয়া যায়নি।"
+    );
+
+});
       
 }
 
