@@ -301,6 +301,7 @@ button{
     gap:10px;
     overflow-x:auto;
     scrollbar-width:none;
+    align-items:flex-start;
 }
 
 .nx-stories::-webkit-scrollbar{
@@ -311,8 +312,11 @@ button{
     display:flex;
     gap:10px;
     align-items:flex-start;
+    margin:0 !important;
+    padding:0 !important;
+    position:relative;
+    top:0;
 }
-
 
 .nx-story{
     min-width:108px;
@@ -324,6 +328,8 @@ button{
     background:#ddd;
     flex-shrink:0;
     box-shadow:0 2px 6px rgba(0,0,0,.15);
+    margin:0 !important;
+    padding:0 !important;
 }
 
 .nx-story img,
@@ -341,6 +347,8 @@ button{
     align-items:center;
     justify-content:flex-end;
     padding-bottom:15px;
+    margin:0 !important;
+    top:0 !important;
 }
 
 .story-plus{
@@ -355,7 +363,6 @@ button{
     font-size:34px;
     margin-bottom:8px;
 }
-
 /* ================= HEADINGS ================= */
 
 .nx-section-heading{
