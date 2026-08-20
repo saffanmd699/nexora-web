@@ -1846,160 +1846,109 @@ const CLOUDINARY_CLOUD =
 
 const CLOUDINARY_PRESET =
     "NEXORA _Reels";
-
-/* =====================================================
-   NEXORA GOOGLE LOGIN — UPDATED & SAFE
-   ===================================================== */
+/* ================= NEXORA GOOGLE LOGIN ================= */
 
 function googleLogin(){
 
-    console.log("NEXORA Google Login শুরু হচ্ছে...");
+    const user =
+        auth.currentUser;
 
-    if(!auth){
+    if(user){
 
-        alert("Firebase Authentication পাওয়া যাচ্ছে না।");
-
-        return;
-    }
-
-
-    if(!provider){
-
-        alert("Google Login Provider পাওয়া যাচ্ছে না।");
+        console.log(
+            "Already logged in:",
+            user.email
+        );
 
         return;
     }
 
 
-    auth.signInWithPopup(provider)
-
-        .then(function(result){
-
-            console.log(
-                "Google Login সফল:",
-                result.user
-            );
-
-            const user =
-                result.user;
+    console.log(
+        "NEXORA Google Redirect Login শুরু..."
+    );
 
 
-            /* ================= SAVE USER ================= */
-
-            return db
-                .collection("Users")
-                .doc(user.uid)
-                .set({
-
-                    name:
-                        user.displayName ||
-                        "NEXORA User",
-
-                    email:
-                        user.email ||
-                        "",
-
-                    photoURL:
-                        user.photoURL ||
-                        "",
-
-                    uid:
-                        user.uid,
-
-                    updatedAt:
-                        firebase.firestore
-                        .FieldValue
-                        .serverTimestamp()
-
-                },{
-
-                    merge:true
-
-                });
-
-        })
-
-        .then(function(){
-
-            console.log(
-                "NEXORA User Firestore-এ সফলভাবে Save হয়েছে।"
-            );
-
-            /* ================= LOGIN SUCCESS ================= */
-
-            alert(
-                "🎉 NEXORA Login সফল হয়েছে!"
-            );
-
-        })
-
-        .catch(function(error){
-
-            console.error(
-                "NEXORA GOOGLE LOGIN ERROR:",
-                error
-            );
-
-
-            /* ================= ERROR DETAILS ================= */
-
-            let message =
-                error.message ||
-                "Unknown Login Error";
-
-
-            if(
-                error.code ===
-                "auth/popup-blocked"
-            ){
-
-                message =
-                    "Google Login Popup Block হয়েছে। Browser-এর Popup অনুমতি দিন।";
-
-            }
-
-
-            else if(
-                error.code ===
-                "auth/popup-closed-by-user"
-            ){
-
-                message =
-                    "Google Login window বন্ধ হয়ে গেছে।";
-
-            }
-
-
-            else if(
-                error.code ===
-                "auth/unauthorized-domain"
-            ){
-
-                message =
-                    "এই Website Firebase Authentication-এ অনুমোদিত নয়। Firebase Console → Authentication → Settings → Authorized domains-এ Website domain যোগ করুন।";
-
-            }
-
-
-            else if(
-                error.code ===
-                "auth/operation-not-allowed"
-            ){
-
-                message =
-                    "Firebase-এ Google Sign-in চালু করা নেই।";
-
-            }
-
-
-            alert(
-                "❌ Google Login করা যায়নি:\n\n" +
-                message
-            );
-
-        });
+    auth.signInWithRedirect(provider);
 
 }
+
+
+/* ================= CHECK REDIRECT LOGIN ================= */
+
+auth.getRedirectResult()
+
+    .then(function(result){
+
+        if(!result || !result.user)
+            return;
+
+
+        const user =
+            result.user;
+
+
+        console.log(
+            "Google Redirect Login সফল:",
+            user.email
+        );
+
+
+        return db
+            .collection("Users")
+            .doc(user.uid)
+            .set({
+
+                name:
+                    user.displayName ||
+                    "NEXORA User",
+
+                email:
+                    user.email ||
+                    "",
+
+                photoURL:
+                    user.photoURL ||
+                    "",
+
+                uid:
+                    user.uid,
+
+                updatedAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            },{
+
+                merge:true
+
+            });
+
+    })
+
+    .then(function(){
+
+        console.log(
+            "NEXORA User Firestore-এ Save হয়েছে।"
+        );
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA GOOGLE REDIRECT ERROR:",
+            error
+        );
+
+
+        alert(
+            "Google Login করা যায়নি:\n\n" +
+            error.message
+        );
+
+    });
 /* ================= LOGOUT ================= */
 
 function logout(){
