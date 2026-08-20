@@ -1482,7 +1482,12 @@ button{
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+
+
+<!-- =====================================================
+     NEXORA WELCOME + ACCOUNT CREATE
+     পুরোনো LOGIN HTML-এর জায়গায় পুরোটা বসাবেন
+     ===================================================== -->
 
 <div class="login-box">
 
@@ -1490,17 +1495,23 @@ button{
 
         <div class="logo">NEXORA</div>
 
-        <h2>Login to NEXORA</h2>
+        <h2>Welcome to NEXORA</h2>
 
         <p class="subtitle">
-            Gmail দিয়ে Login করুন
+            আপনার নিজের Social World-এ স্বাগতম
         </p>
 
-        <button onclick="googleLogin()">
-            Sign in with Google
+        <button
+            type="button"
+            onclick="startNexoraAccountCreate()"
+        >
+            🚀 Create Account
         </button>
 
-        <div id="message"></div>
+        <div
+            id="message"
+            style="margin-top:15px;"
+        ></div>
 
     </div>
 
@@ -1874,81 +1885,488 @@ function googleLogin(){
 }
 
 
-/* ================= CHECK REDIRECT LOGIN ================= */
+/* =====================================================
+   NEXORA ACCOUNT CREATE SYSTEM
+   Welcome → Google → Profile Setup
+   ===================================================== */
 
-auth.getRedirectResult()
+function startNexoraAccountCreate(){
 
-    .then(function(result){
+    const user =
+        auth.currentUser;
 
-        if(!result || !result.user)
-            return;
+    if(user){
+
+        showNexoraProfileSetup(user);
+
+        return;
+    }
+
+    googleLoginForNexora();
+
+}
 
 
-        const user =
-            result.user;
+/* =====================================================
+   GOOGLE ACCOUNT CONNECT
+   ===================================================== */
+
+function googleLoginForNexora(){
+
+    auth.signInWithPopup(provider)
+
+        .then(function(result){
+
+            const user =
+                result.user;
+
+            return db
+                .collection("Users")
+                .doc(user.uid)
+                .get()
+
+                .then(function(doc){
+
+                    if(doc.exists){
+
+                        console.log(
+                            "Existing NEXORA User"
+                        );
+
+                        return;
+
+                    }
+
+                    showNexoraProfileSetup(user);
+
+                });
+
+        })
+
+        .catch(function(error){
+
+            console.error(
+                "NEXORA ACCOUNT ERROR:",
+                error
+            );
+
+            alert(
+                "Account Create করা যায়নি:\n\n" +
+                error.message
+            );
+
+        });
+
+}
 
 
-        console.log(
-            "Google Redirect Login সফল:",
-            user.email
+/* =====================================================
+   NEXORA PROFILE SETUP
+   ===================================================== */
+
+function showNexoraProfileSetup(user){
+
+    const old =
+        document.getElementById(
+            "nexoraAccountSetup"
         );
 
+    if(old)
+        old.remove();
 
-        return db
-            .collection("Users")
-            .doc(user.uid)
-            .set({
 
-                name:
-                    user.displayName ||
-                    "NEXORA User",
+    const page =
+        document.createElement("div");
 
-                email:
-                    user.email ||
-                    "",
 
-                photoURL:
-                    user.photoURL ||
-                    "",
+    page.id =
+        "nexoraAccountSetup";
 
-                uid:
-                    user.uid,
 
-                updatedAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
+    page.className =
+        "nx-modal-page";
 
-            },{
 
-                merge:true
+    page.innerHTML = `
 
-            });
+        <div class="nx-modal-header">
 
-    })
+            <b style="
+                margin-left:15px;
+                font-size:20px;
+            ">
+                Create Your NEXORA Account
+            </b>
 
-    .then(function(){
+        </div>
 
-        console.log(
-            "NEXORA User Firestore-এ Save হয়েছে।"
-        );
 
-    })
+        <div style="
+            max-width:500px;
+            margin:30px auto;
+            padding:20px;
+        ">
 
-    .catch(function(error){
 
-        console.error(
-            "NEXORA GOOGLE REDIRECT ERROR:",
-            error
-        );
+            <div style="
+                text-align:center;
+                margin-bottom:25px;
+            ">
 
+                ${
+                    user.photoURL
+                    ?
+                    `
+                    <img
+                        src="${escapeHTML(
+                            user.photoURL
+                        )}"
+                        style="
+                            width:85px;
+                            height:85px;
+                            border-radius:50%;
+                            object-fit:cover;
+                        "
+                    >
+                    `
+                    :
+                    `
+                    <div style="
+                        width:85px;
+                        height:85px;
+                        border-radius:50%;
+                        margin:auto;
+                        background:#1877f2;
+                        color:white;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:35px;
+                    ">
+                        👤
+                    </div>
+                    `
+                }
+
+            </div>
+
+
+            <label>
+                আপনার নাম
+            </label>
+
+            <input
+                id="nexoraAccountName"
+                type="text"
+                value="${escapeHTML(
+                    user.displayName || ""
+                )}"
+                placeholder="আপনার নাম লিখুন"
+                style="
+                    width:100%;
+                    padding:13px;
+                    margin:7px 0 15px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    box-sizing:border-box;
+                "
+            >
+
+
+            <label>
+                Gmail
+            </label>
+
+            <input
+                type="email"
+                value="${escapeHTML(
+                    user.email || ""
+                )}"
+                readonly
+                style="
+                    width:100%;
+                    padding:13px;
+                    margin:7px 0 15px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    background:#f3f3f3;
+                    box-sizing:border-box;
+                "
+            >
+
+
+            <label>
+                আপনার বয়স
+            </label>
+
+            <input
+                id="nexoraAccountAge"
+                type="number"
+                min="13"
+                max="120"
+                placeholder="যেমন: 25"
+                style="
+                    width:100%;
+                    padding:13px;
+                    margin:7px 0 15px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    box-sizing:border-box;
+                "
+            >
+
+
+            <label>
+                আপনি
+            </label>
+
+            <select
+                id="nexoraAccountGender"
+                style="
+                    width:100%;
+                    padding:13px;
+                    margin:7px 0 20px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    background:white;
+                    box-sizing:border-box;
+                "
+            >
+
+                <option value="">
+                    নির্বাচন করুন
+                </option>
+
+                <option value="Male">
+                    👨 ছেলে
+                </option>
+
+                <option value="Female">
+                    👩 মেয়ে
+                </option>
+
+                <option value="Other">
+                    অন্য
+                </option>
+
+            </select>
+
+
+            <button
+                type="button"
+                onclick="completeNexoraAccount()"
+                style="
+                    width:100%;
+                    padding:14px;
+                    border:none;
+                    border-radius:10px;
+                    background:#1877f2;
+                    color:white;
+                    font-size:16px;
+                    font-weight:bold;
+                "
+            >
+                🎉 Create My NEXORA Account
+            </button>
+
+
+            <div
+                id="nexoraAccountMessage"
+                style="
+                    margin-top:15px;
+                    text-align:center;
+                "
+            ></div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(page);
+
+}
+
+
+/* =====================================================
+   COMPLETE NEXORA ACCOUNT
+   ===================================================== */
+
+function completeNexoraAccount(){
+
+    const user =
+        auth.currentUser;
+
+
+    if(!user){
 
         alert(
-            "Google Login করা যায়নি:\n\n" +
-            error.message
+            "আগে Google Account নির্বাচন করুন।"
         );
 
-    });
+        return;
+
+    }
+
+
+    const name =
+        document
+            .getElementById(
+                "nexoraAccountName"
+            )
+            .value
+            .trim();
+
+
+    const age =
+        document
+            .getElementById(
+                "nexoraAccountAge"
+            )
+            .value
+            .trim();
+
+
+    const gender =
+        document
+            .getElementById(
+                "nexoraAccountGender"
+            )
+            .value;
+
+
+    if(!name){
+
+        alert(
+            "আপনার নাম লিখুন।"
+        );
+
+        return;
+
+    }
+
+
+    if(!age){
+
+        alert(
+            "আপনার বয়স দিন।"
+        );
+
+        return;
+
+    }
+
+
+    if(!gender){
+
+        alert(
+            "আপনার লিঙ্গ নির্বাচন করুন।"
+        );
+
+        return;
+
+    }
+
+
+    const message =
+        document.getElementById(
+            "nexoraAccountMessage"
+        );
+
+
+    if(message){
+
+        message.innerText =
+            "Account তৈরি হচ্ছে... ⏳";
+
+    }
+
+
+    db.collection("Users")
+      .doc(user.uid)
+      .set({
+
+          uid:
+              user.uid,
+
+          name:
+              name,
+
+          email:
+              user.email || "",
+
+          photoURL:
+              user.photoURL || "",
+
+          age:
+              Number(age),
+
+          gender:
+              gender,
+
+          accountCreatedAt:
+              firebase.firestore
+              .FieldValue
+              .serverTimestamp(),
+
+          updatedAt:
+              firebase.firestore
+              .FieldValue
+              .serverTimestamp()
+
+      }, {
+
+          merge:true
+
+      })
+
+      .then(function(){
+
+          console.log(
+              "NEXORA Account Created Successfully"
+          );
+
+
+          const setup =
+              document.getElementById(
+                  "nexoraAccountSetup"
+              );
+
+
+          if(setup)
+              setup.remove();
+
+
+          alert(
+              "🎉 Welcome to NEXORA!\n\nআপনার Account সফলভাবে তৈরি হয়েছে।"
+          );
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA ACCOUNT SAVE ERROR:",
+              error
+          );
+
+
+          if(message){
+
+              message.innerText =
+                  "Account তৈরি করা যায়নি।";
+
+          }
+
+
+          alert(
+              "Account তৈরি করা যায়নি:\n\n" +
+              error.message
+          );
+
+      });
+
+}
 /* ================= LOGOUT ================= */
 
 function logout(){
