@@ -1224,6 +1224,259 @@ button{
     }
 
 }
+/* =====================================================
+   NEXORA STORY REACTION BUTTONS
+   ===================================================== */
+
+.nexora-story-reactions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:12px 8px;
+    flex-wrap:wrap;
+}
+
+.nx-story-reaction-btn{
+    position:relative;
+    border:none;
+    background:rgba(255,255,255,.10);
+    color:#fff;
+    border-radius:20px;
+    min-width:42px;
+    height:40px;
+    padding:0 9px;
+    font-size:20px;
+    cursor:pointer;
+    transition:
+        transform .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
+}
+
+.nx-story-reaction-btn:hover{
+    transform:translateY(-3px) scale(1.08);
+    background:rgba(255,255,255,.20);
+}
+
+.nx-story-reaction-btn:active{
+    transform:scale(.88);
+}
+
+
+/* =====================================================
+   MY REACTION
+   ===================================================== */
+
+.nx-story-reaction-btn.nx-my-reaction{
+    background:rgba(255,255,255,.25);
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,.65),
+        0 4px 15px rgba(0,0,0,.25);
+
+    transform:scale(1.08);
+}
+
+
+.nx-reaction-count{
+    font-size:11px;
+    font-weight:bold;
+    margin-left:2px;
+    color:#fff;
+}
+
+
+/* =====================================================
+   TOTAL REACTION
+   ===================================================== */
+
+.nx-story-reaction-total{
+    text-align:center;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    min-height:18px;
+}
+
+
+/* =====================================================
+   NORMAL REACTION ANIMATION
+   ===================================================== */
+
+.nexora-reaction-animation{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:99999;
+}
+
+
+.nexora-floating-reaction{
+    position:absolute;
+    bottom:80px;
+    opacity:0;
+    animation:
+        nexoraReactionFloat
+        ease-out
+        forwards;
+    will-change:
+        transform,
+        opacity;
+}
+
+
+@keyframes nexoraReactionFloat{
+
+    0%{
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            rotate(0deg)
+            scale(.6);
+
+        opacity:0;
+    }
+
+    12%{
+        opacity:1;
+    }
+
+    100%{
+        transform:
+            translate3d(
+                var(--reaction-drift),
+                -75vh,
+                0
+            )
+            rotate(var(--reaction-rotate))
+            scale(1.25);
+
+        opacity:0;
+    }
+
+}
+
+
+/* =====================================================
+   SPECIAL LOVE ANIMATION
+   ===================================================== */
+
+.nexora-love-animation{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:100000;
+}
+
+
+.nexora-love-heart{
+    position:absolute;
+    bottom:70px;
+
+    opacity:0;
+
+    filter:
+        drop-shadow(
+            0 3px 5px
+            rgba(0,0,0,.25)
+        );
+
+    animation:
+        nexoraLoveFloat
+        ease-out
+        forwards;
+
+    will-change:
+        transform,
+        opacity;
+}
+
+
+/* =====================================================
+   LOVE FLOAT
+   ===================================================== */
+
+@keyframes nexoraLoveFloat{
+
+    0%{
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            scale(.25)
+            rotate(0deg);
+
+        opacity:0;
+
+    }
+
+
+    10%{
+
+        opacity:1;
+
+        transform:
+            translate3d(
+                0,
+                -20px,
+                0
+            )
+            scale(1.15)
+            rotate(
+                var(--love-rotate)
+            );
+
+    }
+
+
+    45%{
+
+        transform:
+            translate3d(
+                var(--love-drift),
+                -38vh,
+                0
+            )
+            scale(1.35)
+            rotate(
+                calc(
+                    var(--love-rotate) * -1
+                )
+            );
+
+        opacity:1;
+
+    }
+
+
+    100%{
+
+        transform:
+            translate3d(
+                calc(
+                    var(--love-drift) * .65
+                ),
+                -82vh,
+                0
+            )
+            scale(.85)
+            rotate(
+                var(--love-rotate)
+            );
+
+        opacity:0;
+
+    }
+
+}
 </style>
 </head>
 
@@ -2818,73 +3071,102 @@ function renderNexoraStories(){
 
             </div>
 
+<!-- =====================================================
+     NEXORA STORY REACTIONS
+     ===================================================== -->
 
-            <div class="nexora-story-reactions">
+<div
+    class="nexora-story-reactions"
+    id="storyReactionBox-${story.id}"
+>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '❤️'
-                    )"
-                >❤️</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="❤️"
+        onclick="reactToNexoraStory('${story.id}','❤️')"
+    >
+        ❤️
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '😂'
-                    )"
-                >😂</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="😂"
+        onclick="reactToNexoraStory('${story.id}','😂')"
+    >
+        😂
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '😍'
-                    )"
-                >😍</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="😍"
+        onclick="reactToNexoraStory('${story.id}','😍')"
+    >
+        😍
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '😮'
-                    )"
-                >😮</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="😮"
+        onclick="reactToNexoraStory('${story.id}','😮')"
+    >
+        😮
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '😢'
-                    )"
-                >😢</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="😢"
+        onclick="reactToNexoraStory('${story.id}','😢')"
+    >
+        😢
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '😡'
-                    )"
-                >😡</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="😡"
+        onclick="reactToNexoraStory('${story.id}','😡')"
+    >
+        😡
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '👍'
-                    )"
-                >👍</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="👍"
+        onclick="reactToNexoraStory('${story.id}','👍')"
+    >
+        👍
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '🔥'
-                    )"
-                >🔥</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="🔥"
+        onclick="reactToNexoraStory('${story.id}','🔥')"
+    >
+        🔥
+        <span class="nx-reaction-count"></span>
+    </button>
 
-                <button
-                    onclick="reactToNexoraStory(
-                        '${story.id}',
-                        '🎉'
-                    )"
-                >🎉</button>
+    <button
+        class="nx-story-reaction-btn"
+        data-emoji="🎉"
+        onclick="reactToNexoraStory('${story.id}','🎉')"
+    >
+        🎉
+        <span class="nx-reaction-count"></span>
+    </button>
 
-            </div>
+</div>
+
+<div
+    id="storyReactionTotal-${story.id}"
+    class="nx-story-reaction-total"
+></div>
 
 
             <div class="nexora-story-chat">
@@ -2953,7 +3235,7 @@ function closeNexoraStory(){
 }
 
 /* =====================================================
-   STORY REACTION — NEXORA
+   NEXORA STORY REACTION SYSTEM
    ===================================================== */
 
 function reactToNexoraStory(storyId, emoji){
@@ -2968,61 +3250,252 @@ function reactToNexoraStory(storyId, emoji){
     }
 
 
-    /* ===============================
-       REACTION ANIMATION
-       =============================== */
+    /* ================= LOVE SPECIAL ANIMATION ================= */
 
-    createNexoraReactionAnimation(emoji);
+    if(emoji === "❤️"){
+
+        createNexoraLoveAnimation();
+
+    }else{
+
+        createNexoraReactionAnimation(emoji);
+
+    }
 
 
-    /* ===============================
-       SAVE REACTION
-       =============================== */
+    const reactionRef =
+        db.collection("Stories")
+          .doc(storyId)
+          .collection("Reactions")
+          .doc(user.uid);
+
+
+    reactionRef.get()
+
+        .then(function(doc){
+
+            /* ================= SAME REACTION = REMOVE ================= */
+
+            if(
+                doc.exists &&
+                doc.data().emoji === emoji
+            ){
+
+                return reactionRef.delete();
+
+            }
+
+
+            /* ================= NEW / CHANGED REACTION ================= */
+
+            return reactionRef.set({
+
+                uid:user.uid,
+
+                name:
+                    user.displayName ||
+                    "NEXORA User",
+
+                photoURL:
+                    user.photoURL ||
+                    "",
+
+                emoji:emoji,
+
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            });
+
+        })
+
+        .then(function(){
+
+            console.log(
+                "NEXORA Reaction Updated:",
+                emoji
+            );
+
+            loadNexoraStoryReactionUI(
+                storyId
+            );
+
+        })
+
+        .catch(function(error){
+
+            console.error(
+                "STORY REACTION ERROR:",
+                error
+            );
+
+            alert(
+                "Reaction দেওয়া যায়নি: " +
+                error.message
+            );
+
+        });
+
+}
+
+
+/* =====================================================
+   LOAD STORY REACTIONS
+   ===================================================== */
+
+function loadNexoraStoryReactionUI(storyId){
+
+    const box =
+        document.getElementById(
+            "storyReactionBox-" + storyId
+        );
+
+    if(!box)
+        return;
+
 
     db.collection("Stories")
       .doc(storyId)
       .collection("Reactions")
-      .doc(user.uid)
-      .set({
+      .get()
 
-          uid: user.uid,
+      .then(function(snapshot){
 
-          name:
-              user.displayName ||
-              "NEXORA User",
+          const counts = {
 
-          photoURL:
-              user.photoURL ||
-              "",
+              "❤️":0,
+              "😂":0,
+              "😍":0,
+              "😮":0,
+              "😢":0,
+              "😡":0,
+              "👍":0,
+              "🔥":0,
+              "🎉":0
 
-          emoji: emoji,
+          };
 
-          createdAt:
-              firebase.firestore
-              .FieldValue
-              .serverTimestamp()
 
-      })
+          let myReaction = "";
 
-      .then(function(){
 
-          console.log(
-              "Story Reaction সফল:",
-              emoji
-          );
+          snapshot.forEach(function(doc){
+
+              const reaction =
+                  doc.data();
+
+              const emoji =
+                  reaction.emoji;
+
+
+              if(
+                  Object.prototype
+                  .hasOwnProperty
+                  .call(counts,emoji)
+              ){
+
+                  counts[emoji]++;
+
+              }
+
+
+              if(
+                  auth.currentUser &&
+                  reaction.uid ===
+                  auth.currentUser.uid
+              ){
+
+                  myReaction = emoji;
+
+              }
+
+          });
+
+
+          const buttons =
+              box.querySelectorAll(
+                  ".nx-story-reaction-btn"
+              );
+
+
+          buttons.forEach(function(button){
+
+              const emoji =
+                  button.dataset.emoji;
+
+
+              const count =
+                  counts[emoji] || 0;
+
+
+              const countElement =
+                  button.querySelector(
+                      ".nx-reaction-count"
+                  );
+
+
+              if(countElement){
+
+                  countElement.innerText =
+                      count > 0
+                      ? count
+                      : "";
+
+              }
+
+
+              /* ================= MY REACTION ================= */
+
+              if(
+                  myReaction === emoji
+              ){
+
+                  button.classList.add(
+                      "nx-my-reaction"
+                  );
+
+              }else{
+
+                  button.classList.remove(
+                      "nx-my-reaction"
+                  );
+
+              }
+
+          });
+
+
+          /* ================= TOTAL ================= */
+
+          const total =
+              snapshot.size;
+
+
+          const totalElement =
+              document.getElementById(
+                  "storyReactionTotal-" +
+                  storyId
+              );
+
+
+          if(totalElement){
+
+              totalElement.innerText =
+                  total > 0
+                  ? total + " Reaction"
+                  : "";
+
+          }
 
       })
 
       .catch(function(error){
 
           console.error(
-              "STORY REACTION ERROR:",
+              "REACTION LOAD ERROR:",
               error
-          );
-
-          alert(
-              "Reaction দেওয়া যায়নি: " +
-              error.message
           );
 
       });
@@ -3031,7 +3504,7 @@ function reactToNexoraStory(storyId, emoji){
 
 
 /* =====================================================
-   CREATE REACTION ANIMATION
+   NORMAL REACTION ANIMATION
    ===================================================== */
 
 function createNexoraReactionAnimation(emoji){
@@ -3062,19 +3535,17 @@ function createNexoraReactionAnimation(emoji){
         container.className =
             "nexora-reaction-animation";
 
-        viewer.appendChild(container);
+        viewer.appendChild(
+            container
+        );
 
     }
 
 
-    /* ===============================
-       25–30 EMOJIS
-       =============================== */
-
     const total =
         Math.floor(
             Math.random() * 6
-        ) + 25;
+        ) + 15;
 
 
     for(
@@ -3098,7 +3569,7 @@ function createNexoraReactionAnimation(emoji){
 
 
 /* =====================================================
-   SINGLE REACTION
+   NORMAL FLOATING REACTION
    ===================================================== */
 
 function createSingleNexoraReaction(
@@ -3118,16 +3589,12 @@ function createSingleNexoraReaction(
         emoji;
 
 
-    /* ===============================
-       RANDOM POSITION
-       =============================== */
-
     const left =
         Math.random() * 80 + 10;
 
 
     const size =
-        Math.random() * 22 + 28;
+        Math.random() * 20 + 28;
 
 
     const duration =
@@ -3171,10 +3638,6 @@ function createSingleNexoraReaction(
     );
 
 
-    /* ===============================
-       REMOVE AFTER ANIMATION
-       =============================== */
-
     setTimeout(function(){
 
         if(
@@ -3189,10 +3652,162 @@ function createSingleNexoraReaction(
     }, duration * 1000 + 300);
 
 }
-   
 
 
+/* =====================================================
+   NEXORA LOVE BURST
+   বিশেষ ❤️ LOVE ANIMATION
+   ===================================================== */
 
+function createNexoraLoveAnimation(){
+
+    const viewer =
+        document.getElementById(
+            "nexoraStoryViewer"
+        );
+
+    if(!viewer)
+        return;
+
+
+    let container =
+        document.getElementById(
+            "nexoraLoveAnimation"
+        );
+
+
+    if(!container){
+
+        container =
+            document.createElement("div");
+
+        container.id =
+            "nexoraLoveAnimation";
+
+        container.className =
+            "nexora-love-animation";
+
+        viewer.appendChild(
+            container
+        );
+
+    }
+
+
+    /* ================= 25–30 LOVE HEARTS ================= */
+
+    const total =
+        Math.floor(
+            Math.random() * 6
+        ) + 25;
+
+
+    for(
+        let i = 0;
+        i < total;
+        i++
+    ){
+
+        setTimeout(function(){
+
+            createNexoraSingleLove(
+                container
+            );
+
+        }, i * 45);
+
+    }
+
+}
+
+
+/* =====================================================
+   SINGLE LOVE HEART
+   ===================================================== */
+
+function createNexoraSingleLove(
+    container
+){
+
+    const heart =
+        document.createElement("div");
+
+
+    heart.className =
+        "nexora-love-heart";
+
+
+    heart.innerText =
+        "❤️";
+
+
+    /* ================= RANDOM POSITION ================= */
+
+    const left =
+        Math.random() * 80 + 10;
+
+
+    const size =
+        Math.random() * 25 + 25;
+
+
+    const duration =
+        Math.random() * 1.5 + 2.5;
+
+
+    const drift =
+        Math.random() * 220 - 110;
+
+
+    const rotate =
+        Math.random() * 70 - 35;
+
+
+    heart.style.left =
+        left + "%";
+
+
+    heart.style.fontSize =
+        size + "px";
+
+
+    heart.style.setProperty(
+        "--love-drift",
+        drift + "px"
+    );
+
+
+    heart.style.setProperty(
+        "--love-rotate",
+        rotate + "deg"
+    );
+
+
+    heart.style.animationDuration =
+        duration + "s";
+
+
+    container.appendChild(
+        heart
+    );
+
+
+    /* ================= REMOVE ================= */
+
+    setTimeout(function(){
+
+        if(
+            heart &&
+            heart.parentNode
+        ){
+
+            heart.remove();
+
+        }
+
+    }, duration * 1000 + 500);
+
+}
 /* ================= STORY REPLY ================= */
 
 function replyToNexoraStory(storyId){
