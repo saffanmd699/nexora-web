@@ -1847,16 +1847,44 @@ const CLOUDINARY_CLOUD =
 const CLOUDINARY_PRESET =
     "NEXORA _Reels";
 
-/* ================= LOGIN ================= */
+/* =====================================================
+   NEXORA GOOGLE LOGIN — UPDATED & SAFE
+   ===================================================== */
 
 function googleLogin(){
+
+    console.log("NEXORA Google Login শুরু হচ্ছে...");
+
+    if(!auth){
+
+        alert("Firebase Authentication পাওয়া যাচ্ছে না।");
+
+        return;
+    }
+
+
+    if(!provider){
+
+        alert("Google Login Provider পাওয়া যাচ্ছে না।");
+
+        return;
+    }
+
 
     auth.signInWithPopup(provider)
 
         .then(function(result){
 
+            console.log(
+                "Google Login সফল:",
+                result.user
+            );
+
             const user =
                 result.user;
+
+
+            /* ================= SAVE USER ================= */
 
             return db
                 .collection("Users")
@@ -1883,7 +1911,7 @@ function googleLogin(){
                         .FieldValue
                         .serverTimestamp()
 
-                }, {
+                },{
 
                     merge:true
 
@@ -1894,7 +1922,13 @@ function googleLogin(){
         .then(function(){
 
             console.log(
-                "Google Login সফল এবং User Save হয়েছে।"
+                "NEXORA User Firestore-এ সফলভাবে Save হয়েছে।"
+            );
+
+            /* ================= LOGIN SUCCESS ================= */
+
+            alert(
+                "🎉 NEXORA Login সফল হয়েছে!"
             );
 
         })
@@ -1902,13 +1936,65 @@ function googleLogin(){
         .catch(function(error){
 
             console.error(
-                "Google Login Error:",
+                "NEXORA GOOGLE LOGIN ERROR:",
                 error
             );
 
+
+            /* ================= ERROR DETAILS ================= */
+
+            let message =
+                error.message ||
+                "Unknown Login Error";
+
+
+            if(
+                error.code ===
+                "auth/popup-blocked"
+            ){
+
+                message =
+                    "Google Login Popup Block হয়েছে। Browser-এর Popup অনুমতি দিন।";
+
+            }
+
+
+            else if(
+                error.code ===
+                "auth/popup-closed-by-user"
+            ){
+
+                message =
+                    "Google Login window বন্ধ হয়ে গেছে।";
+
+            }
+
+
+            else if(
+                error.code ===
+                "auth/unauthorized-domain"
+            ){
+
+                message =
+                    "এই Website Firebase Authentication-এ অনুমোদিত নয়। Firebase Console → Authentication → Settings → Authorized domains-এ Website domain যোগ করুন।";
+
+            }
+
+
+            else if(
+                error.code ===
+                "auth/operation-not-allowed"
+            ){
+
+                message =
+                    "Firebase-এ Google Sign-in চালু করা নেই।";
+
+            }
+
+
             alert(
-                "Login করা যায়নি: " +
-                error.message
+                "❌ Google Login করা যায়নি:\n\n" +
+                message
             );
 
         });
