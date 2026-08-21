@@ -1857,12 +1857,19 @@ const CLOUDINARY_CLOUD =
 
 const CLOUDINARY_PRESET =
     "NEXORA _Reels";
-/* ================= NEXORA GOOGLE LOGIN ================= */
+/* =====================================================
+   NEXORA MODERN ACCOUNT SYSTEM
+   Google → Profile Setup → Firebase → Welcome → Home
+   ===================================================== */
+
+
+/* =====================================================
+   NEXORA GOOGLE LOGIN
+   ===================================================== */
 
 function googleLogin(){
 
-    const user =
-        auth.currentUser;
+    const user = auth.currentUser;
 
     if(user){
 
@@ -1871,14 +1878,14 @@ function googleLogin(){
             user.email
         );
 
+        checkNexoraUserAccount(user);
+
         return;
     }
-
 
     console.log(
         "NEXORA Google Redirect Login শুরু..."
     );
-
 
     auth.signInWithRedirect(provider);
 
@@ -1886,25 +1893,19 @@ function googleLogin(){
 
 
 /* =====================================================
-   NEXORA ACCOUNT CREATE SYSTEM — NEW
-   Welcome → Google → Profile Setup → Home
+   NEXORA CREATE ACCOUNT START
    ===================================================== */
 
 function startNexoraAccountCreate(){
 
     const user = auth.currentUser;
 
-    /* ================= ALREADY LOGIN CHECK ================= */
-
     if(user){
 
         checkNexoraUserAccount(user);
 
         return;
-
     }
-
-    /* ================= GOOGLE ACCOUNT SELECT ================= */
 
     googleLoginForNexora();
 
@@ -1953,30 +1954,59 @@ function checkNexoraUserAccount(user){
     if(!user)
         return;
 
+
     db.collection("Users")
       .doc(user.uid)
       .get()
 
       .then(function(doc){
 
+        /* ================= NEW ACCOUNT ================= */
+
+        if(!doc.exists){
+
+            showNexoraModernProfileSetup(user);
+
+            return;
+        }
+
+
         /* ================= EXISTING ACCOUNT ================= */
 
-        if(doc.exists){
+        const data =
+            doc.data() || {};
+
+
+        /* ================= COMPLETE PROFILE CHECK ================= */
+
+        if(
+            data.profileComplete === true &&
+            data.username &&
+            data.name &&
+            data.gender &&
+            data.dateOfBirth
+        ){
 
             console.log(
-                "Existing NEXORA Account Found"
+                "Complete NEXORA Profile Found"
             );
 
             openNexoraHomeAfterAccount();
 
             return;
-
         }
 
 
-        /* ================= NEW ACCOUNT ================= */
+        /* ================= INCOMPLETE PROFILE ================= */
 
-        showNexoraProfileSetup(user);
+        console.log(
+            "NEXORA Profile Incomplete"
+        );
+
+        showNexoraModernProfileSetup(
+            user,
+            data
+        );
 
       })
 
@@ -1998,260 +2028,920 @@ function checkNexoraUserAccount(user){
 
 
 /* =====================================================
-   NEXORA PROFILE SETUP
+   MODERN NEXORA PROFILE SETUP
    ===================================================== */
 
-function showNexoraProfileSetup(user){
+function showNexoraModernProfileSetup(
+    user,
+    oldData = {}
+){
+
+    /* ================= REMOVE OLD PAGE ================= */
 
     const old =
         document.getElementById(
-            "nexoraAccountSetup"
+            "nexoraModernProfileSetup"
         );
 
     if(old)
         old.remove();
 
 
+    /* ================= TEMP PROFILE DATA ================= */
+
+    window.nexoraTempProfile = {
+
+        uid:
+            user.uid,
+
+        name:
+            oldData.name ||
+            user.displayName ||
+            "",
+
+        username:
+            oldData.username ||
+            "",
+
+        email:
+            user.email ||
+            oldData.email ||
+            "",
+
+        photoURL:
+            oldData.photoURL ||
+            user.photoURL ||
+            "",
+
+        dateOfBirth:
+            oldData.dateOfBirth ||
+            "",
+
+        age:
+            oldData.age ||
+            "",
+
+        gender:
+            oldData.gender ||
+            "",
+
+        bio:
+            oldData.bio ||
+            "",
+
+        location:
+            oldData.location ||
+            "",
+
+        portfolio:
+            oldData.portfolio ||
+            ""
+
+    };
+
+
+    /* ================= CREATE FULL SCREEN PAGE ================= */
+
     const page =
         document.createElement("div");
 
 
     page.id =
-        "nexoraAccountSetup";
+        "nexoraModernProfileSetup";
 
 
-    page.className =
-        "nx-modal-page";
+    page.style.cssText = `
+        position:fixed;
+        inset:0;
+        z-index:999999;
+        background:#ffffff;
+        overflow-y:auto;
+        font-family:Arial,sans-serif;
+    `;
 
 
     page.innerHTML = `
 
-        <!-- ================= ACCOUNT SETUP HEADER ================= -->
+        <style>
 
-        <div class="nx-modal-header">
+            #nexoraModernProfileSetup input:focus,
+            #nexoraModernProfileSetup select:focus,
+            #nexoraModernProfileSetup textarea:focus{
 
-            <b style="
-                margin-left:15px;
-                font-size:20px;
-            ">
-                Create Your NEXORA Account
-            </b>
+                border-color:#1877f2 !important;
 
-        </div>
+                box-shadow:
+                    0 0 0 3px
+                    rgba(24,119,242,.10);
+
+            }
 
 
-        <!-- ================= ACCOUNT FORM ================= -->
+            @keyframes nexoraPageIn{
+
+                from{
+                    opacity:0;
+                    transform:translateY(15px);
+                }
+
+                to{
+                    opacity:1;
+                    transform:translateY(0);
+                }
+
+            }
+
+
+            #nexoraProfileContent{
+
+                animation:
+                    nexoraPageIn .45s ease;
+
+            }
+
+        </style>
+
+
+        <!-- ================= TOP HEADER ================= -->
 
         <div style="
-            max-width:500px;
-            margin:30px auto;
-            padding:20px;
+            position:sticky;
+            top:0;
+            z-index:20;
+            background:rgba(255,255,255,.96);
+            backdrop-filter:blur(15px);
+            border-bottom:1px solid #eeeeee;
+            padding:15px 18px;
         ">
 
-
-            <!-- ================= GOOGLE PROFILE ================= -->
-
             <div style="
-                text-align:center;
-                margin-bottom:25px;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
             ">
 
-                ${
-                    user.photoURL
-                    ?
-                    `
-                    <img
-                        src="${escapeHTML(
-                            user.photoURL
-                        )}"
-                        alt="Profile"
-                        style="
-                            width:90px;
-                            height:90px;
-                            border-radius:50%;
-                            object-fit:cover;
-                            border:3px solid #1877f2;
-                        "
-                    >
-                    `
-                    :
-                    `
+                <div>
+
                     <div style="
-                        width:90px;
-                        height:90px;
-                        margin:auto;
-                        border-radius:50%;
-                        background:#1877f2;
-                        color:#fff;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:38px;
+                        font-size:23px;
+                        font-weight:900;
+                        letter-spacing:.5px;
                     ">
-                        👤
+                        NEXORA
                     </div>
-                    `
-                }
+
+                    <div style="
+                        color:#777;
+                        font-size:12px;
+                        margin-top:3px;
+                    ">
+                        Create your digital identity
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="nexoraStepIndicator"
+                    style="
+                        font-size:12px;
+                        font-weight:800;
+                        color:#1877f2;
+                    "
+                >
+                    STEP 1 / 3
+                </div>
 
             </div>
 
 
-            <!-- ================= NAME ================= -->
+            <!-- ================= PROGRESS BAR ================= -->
 
-            <label style="
-                font-weight:bold;
+            <div style="
+                height:5px;
+                background:#eeeeee;
+                border-radius:20px;
+                margin-top:14px;
+                overflow:hidden;
             ">
-                আপনার নাম
-            </label>
 
-            <input
-                id="nexoraAccountName"
-                type="text"
-                value="${escapeHTML(
-                    user.displayName || ""
-                )}"
-                placeholder="আপনার নাম লিখুন"
-                style="
-                    width:100%;
-                    padding:13px;
-                    margin:7px 0 15px;
-                    border:1px solid #ddd;
-                    border-radius:10px;
-                    box-sizing:border-box;
-                    font-size:15px;
-                "
-            >
+                <div
+                    id="nexoraProgressBar"
+                    style="
+                        width:33%;
+                        height:100%;
+                        background:#1877f2;
+                        border-radius:20px;
+                        transition:.35s;
+                    "
+                ></div>
+
+            </div>
+
+        </div>
 
 
-            <!-- ================= GMAIL ================= -->
+        <!-- ================= MAIN CONTENT ================= -->
 
-            <label style="
-                font-weight:bold;
-            ">
-                Gmail
-            </label>
-
-            <input
-                id="nexoraAccountEmail"
-                type="email"
-                value="${escapeHTML(
-                    user.email || ""
-                )}"
-                readonly
-                style="
-                    width:100%;
-                    padding:13px;
-                    margin:7px 0 15px;
-                    border:1px solid #ddd;
-                    border-radius:10px;
-                    background:#f3f3f3;
-                    box-sizing:border-box;
-                    font-size:15px;
-                "
-            >
+        <div
+            id="nexoraProfileContent"
+            style="
+                max-width:560px;
+                margin:auto;
+                padding:30px 20px 60px;
+            "
+        >
 
 
-            <!-- ================= AGE ================= -->
+            <!-- =================================================
+                 STEP 1
+                 ================================================= -->
 
-            <label style="
-                font-weight:bold;
-            ">
-                আপনার বয়স
-            </label>
+            <div id="nexoraStep1">
 
-            <input
-                id="nexoraAccountAge"
-                type="number"
-                min="13"
-                max="120"
-                placeholder="যেমন: 25"
-                style="
-                    width:100%;
-                    padding:13px;
-                    margin:7px 0 15px;
-                    border:1px solid #ddd;
-                    border-radius:10px;
-                    box-sizing:border-box;
-                    font-size:15px;
-                "
-            >
+                <div style="
+                    text-align:center;
+                    margin-bottom:30px;
+                ">
 
+                    <div style="
+                        font-size:34px;
+                        margin-bottom:8px;
+                    ">
+                        ✨
+                    </div>
 
-            <!-- ================= GENDER ================= -->
+                    <h1 style="
+                        margin:0;
+                        font-size:27px;
+                        font-weight:900;
+                    ">
+                        Welcome to NEXORA
+                    </h1>
 
-            <label style="
-                font-weight:bold;
-            ">
-                আপনি
-            </label>
+                    <p style="
+                        color:#777;
+                        font-size:14px;
+                        line-height:1.6;
+                        margin-top:10px;
+                    ">
+                        আপনার NEXORA identity তৈরি করুন।
+                        কয়েকটি তথ্য দিলেই আপনার profile প্রস্তুত।
+                    </p>
 
-            <select
-                id="nexoraAccountGender"
-                style="
-                    width:100%;
-                    padding:13px;
-                    margin:7px 0 20px;
-                    border:1px solid #ddd;
-                    border-radius:10px;
-                    background:#fff;
-                    box-sizing:border-box;
-                    font-size:15px;
-                "
-            >
-
-                <option value="">
-                    নির্বাচন করুন
-                </option>
-
-                <option value="Male">
-                    👨 ছেলে
-                </option>
-
-                <option value="Female">
-                    👩 মেয়ে
-                </option>
-
-                <option value="Other">
-                    অন্য
-                </option>
-
-            </select>
+                </div>
 
 
-            <!-- ================= CREATE BUTTON ================= -->
+                <!-- ================= PROFILE PHOTO ================= -->
 
-            <button
-                id="nexoraCreateAccountButton"
-                type="button"
-                onclick="completeNexoraAccount()"
-                style="
-                    width:100%;
-                    padding:14px;
-                    border:none;
-                    border-radius:10px;
-                    background:#1877f2;
-                    color:#fff;
-                    font-size:16px;
-                    font-weight:bold;
-                    cursor:pointer;
-                "
-            >
-                🎉 Create My NEXORA Account
-            </button>
+                <div style="
+                    text-align:center;
+                    margin-bottom:28px;
+                ">
+
+                    <div style="
+                        width:110px;
+                        height:110px;
+                        margin:auto;
+                        border-radius:50%;
+                        overflow:hidden;
+                        background:#f1f3f5;
+                        border:4px solid white;
+                        box-shadow:0 7px 25px rgba(0,0,0,.12);
+                    ">
+
+                        ${
+                            window.nexoraTempProfile.photoURL
+                            ?
+                            `
+                            <img
+                                src="${escapeHTML(
+                                    window.nexoraTempProfile.photoURL
+                                )}"
+                                style="
+                                    width:100%;
+                                    height:100%;
+                                    object-fit:cover;
+                                "
+                            >
+                            `
+                            :
+                            `
+                            <div style="
+                                width:100%;
+                                height:100%;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:45px;
+                            ">
+                                👤
+                            </div>
+                            `
+                        }
+
+                    </div>
 
 
-            <!-- ================= MESSAGE ================= -->
+                    <div style="
+                        margin-top:10px;
+                        font-size:13px;
+                        color:#1877f2;
+                        font-weight:bold;
+                    ">
+                        Google Profile Photo
+                    </div>
+
+                </div>
+
+
+                <!-- ================= FULL NAME ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    আপনার পুরো নাম *
+                </label>
+
+                <input
+                    id="nexoraProfileName"
+                    type="text"
+                    value="${escapeHTML(
+                        window.nexoraTempProfile.name
+                    )}"
+                    placeholder="যেমন: Md Saffan"
+                    maxlength="80"
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:1px solid #ddd;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        font-size:15px;
+                        margin-bottom:18px;
+                        outline:none;
+                    "
+                >
+
+
+                <!-- ================= USERNAME ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Username *
+                </label>
+
+                <div style="
+                    position:relative;
+                ">
+
+                    <span style="
+                        position:absolute;
+                        left:15px;
+                        top:15px;
+                        color:#777;
+                        font-weight:bold;
+                    ">
+                        @
+                    </span>
+
+                    <input
+                        id="nexoraProfileUsername"
+                        type="text"
+                        value="${escapeHTML(
+                            window.nexoraTempProfile.username
+                        )}"
+                        placeholder="yourname"
+                        maxlength="20"
+                        oninput="nexoraCheckUsernameTyping()"
+                        style="
+                            width:100%;
+                            padding:15px 15px 15px 34px;
+                            border:1px solid #ddd;
+                            border-radius:14px;
+                            box-sizing:border-box;
+                            font-size:15px;
+                            outline:none;
+                        "
+                    >
+
+                </div>
+
+
+                <div
+                    id="nexoraUsernameStatus"
+                    style="
+                        min-height:20px;
+                        margin:7px 0 18px;
+                        font-size:13px;
+                    "
+                ></div>
+
+
+                <!-- ================= GMAIL ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Gmail
+                </label>
+
+                <input
+                    type="email"
+                    value="${escapeHTML(
+                        window.nexoraTempProfile.email
+                    )}"
+                    readonly
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:1px solid #eee;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        background:#f7f7f7;
+                        color:#777;
+                        font-size:15px;
+                        margin-bottom:25px;
+                    "
+                >
+
+
+                <!-- ================= STEP 1 BUTTON ================= -->
+
+                <button
+                    type="button"
+                    onclick="nexoraGoStep2()"
+                    style="
+                        width:100%;
+                        padding:16px;
+                        border:none;
+                        border-radius:15px;
+                        background:#1877f2;
+                        color:#fff;
+                        font-size:16px;
+                        font-weight:800;
+                        cursor:pointer;
+                        box-shadow:
+                            0 8px 22px
+                            rgba(24,119,242,.18);
+                    "
+                >
+                    Continue →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 STEP 2
+                 ================================================= -->
 
             <div
-                id="nexoraAccountMessage"
-                style="
-                    margin-top:15px;
-                    text-align:center;
-                    color:#1877f2;
-                    font-size:14px;
-                "
-            ></div>
+                id="nexoraStep2"
+                style="display:none;"
+            >
 
+                <h2 style="
+                    margin:0 0 8px;
+                    font-size:25px;
+                    font-weight:900;
+                ">
+                    About You
+                </h2>
+
+                <p style="
+                    color:#777;
+                    font-size:14px;
+                    margin-bottom:25px;
+                    line-height:1.6;
+                ">
+                    আপনার সম্পর্কে কিছু তথ্য দিন।
+                </p>
+
+
+                <!-- ================= DATE OF BIRTH ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Date of Birth *
+                </label>
+
+                <input
+                    id="nexoraDateOfBirth"
+                    type="date"
+                    value="${escapeHTML(
+                        window.nexoraTempProfile.dateOfBirth
+                    )}"
+                    onchange="nexoraCalculateAge()"
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:1px solid #ddd;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        font-size:15px;
+                        margin-bottom:8px;
+                    "
+                >
+
+
+                <div
+                    id="nexoraAgeText"
+                    style="
+                        font-size:13px;
+                        min-height:20px;
+                        margin-bottom:20px;
+                    "
+                ></div>
+
+
+                <!-- ================= GENDER ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Gender *
+                </label>
+
+                <select
+                    id="nexoraGender"
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:1px solid #ddd;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        font-size:15px;
+                        background:white;
+                        margin-bottom:20px;
+                    "
+                >
+
+                    <option value="">
+                        নির্বাচন করুন
+                    </option>
+
+                    <option
+                        value="Male"
+                        ${
+                            window.nexoraTempProfile.gender === "Male"
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        👨 Male
+                    </option>
+
+                    <option
+                        value="Female"
+                        ${
+                            window.nexoraTempProfile.gender === "Female"
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        👩 Female
+                    </option>
+
+                    <option
+                        value="Other"
+                        ${
+                            window.nexoraTempProfile.gender === "Other"
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+
+                <!-- ================= BIO ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Short Bio
+                </label>
+
+                <textarea
+                    id="nexoraBio"
+                    maxlength="160"
+                    placeholder="নিজের সম্পর্কে ছোট করে লিখুন..."
+                    style="
+                        width:100%;
+                        min-height:100px;
+                        padding:15px;
+                        border:1px solid #ddd;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        font-size:15px;
+                        resize:none;
+                        margin-bottom:20px;
+                    "
+                >${escapeHTML(
+                    window.nexoraTempProfile.bio
+                )}</textarea>
+
+
+                <!-- ================= LOCATION ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Location
+                </label>
+
+                <input
+                    id="nexoraLocation"
+                    type="text"
+                    value="${escapeHTML(
+                        window.nexoraTempProfile.location
+                    )}"
+                    placeholder="যেমন: Dhaka, Bangladesh"
+                    maxlength="100"
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:1px solid #ddd;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        font-size:15px;
+                        margin-bottom:25px;
+                    "
+                >
+
+
+                <!-- ================= NAVIGATION ================= -->
+
+                <div style="
+                    display:flex;
+                    gap:10px;
+                ">
+
+                    <button
+                        type="button"
+                        onclick="nexoraGoStep1()"
+                        style="
+                            flex:1;
+                            padding:15px;
+                            border:1px solid #ddd;
+                            border-radius:14px;
+                            background:#fff;
+                            font-weight:700;
+                            font-size:15px;
+                        "
+                    >
+                        ← Back
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="nexoraGoStep3()"
+                        style="
+                            flex:2;
+                            padding:15px;
+                            border:none;
+                            border-radius:14px;
+                            background:#1877f2;
+                            color:#fff;
+                            font-weight:800;
+                            font-size:15px;
+                        "
+                    >
+                        Continue →
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 STEP 3
+                 ================================================= -->
+
+            <div
+                id="nexoraStep3"
+                style="display:none;"
+            >
+
+                <h2 style="
+                    margin:0 0 8px;
+                    font-size:25px;
+                    font-weight:900;
+                ">
+                    Your NEXORA Profile
+                </h2>
+
+                <p style="
+                    color:#777;
+                    font-size:14px;
+                    margin-bottom:25px;
+                    line-height:1.6;
+                ">
+                    Profile সম্পূর্ণ করুন এবং তৈরি করার আগে
+                    আপনার তথ্য Preview করে দেখুন।
+                </p>
+
+
+                <!-- ================= PORTFOLIO ================= -->
+
+                <label style="
+                    display:block;
+                    font-weight:700;
+                    margin-bottom:7px;
+                ">
+                    Portfolio / Website
+                </label>
+
+                <input
+                    id="nexoraPortfolio"
+                    type="url"
+                    value="${escapeHTML(
+                        window.nexoraTempProfile.portfolio
+                    )}"
+                    placeholder="https://example.com"
+                    maxlength="300"
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:1px solid #ddd;
+                        border-radius:14px;
+                        box-sizing:border-box;
+                        font-size:15px;
+                        margin-bottom:25px;
+                    "
+                >
+
+
+                <!-- ================= PROFILE PREVIEW ================= -->
+
+                <div style="
+                    border:1px solid #eee;
+                    border-radius:20px;
+                    padding:22px;
+                    margin-bottom:25px;
+                    background:#fafafa;
+                ">
+
+                    <div style="
+                        text-align:center;
+                        margin-bottom:15px;
+                    ">
+
+                        ${
+                            window.nexoraTempProfile.photoURL
+                            ?
+                            `
+                            <img
+                                src="${escapeHTML(
+                                    window.nexoraTempProfile.photoURL
+                                )}"
+                                style="
+                                    width:80px;
+                                    height:80px;
+                                    border-radius:50%;
+                                    object-fit:cover;
+                                "
+                            >
+                            `
+                            :
+                            `
+                            <div style="
+                                width:80px;
+                                height:80px;
+                                border-radius:50%;
+                                margin:auto;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                background:#1877f2;
+                                color:white;
+                                font-size:35px;
+                            ">
+                                👤
+                            </div>
+                            `
+                        }
+
+                    </div>
+
+
+                    <div
+                        id="nexoraPreviewName"
+                        style="
+                            text-align:center;
+                            font-size:20px;
+                            font-weight:800;
+                            white-space:pre-line;
+                        "
+                    ></div>
+
+
+                    <div
+                        id="nexoraPreviewUsername"
+                        style="
+                            text-align:center;
+                            color:#1877f2;
+                            font-size:14px;
+                            margin-top:5px;
+                        "
+                    ></div>
+
+
+                    <div
+                        id="nexoraPreviewAbout"
+                        style="
+                            text-align:center;
+                            color:#777;
+                            font-size:13px;
+                            margin-top:12px;
+                            line-height:1.6;
+                            white-space:pre-line;
+                        "
+                    ></div>
+
+                </div>
+
+
+                <!-- ================= FINAL BUTTONS ================= -->
+
+                <div style="
+                    display:flex;
+                    gap:10px;
+                ">
+
+                    <button
+                        type="button"
+                        onclick="nexoraGoStep2()"
+                        style="
+                            flex:1;
+                            padding:15px;
+                            border:1px solid #ddd;
+                            border-radius:14px;
+                            background:#fff;
+                            font-weight:700;
+                            font-size:15px;
+                        "
+                    >
+                        ← Back
+                    </button>
+
+
+                    <button
+                        id="nexoraFinalCreateButton"
+                        type="button"
+                        onclick="completeNexoraAccount()"
+                        style="
+                            flex:2;
+                            padding:15px;
+                            border:none;
+                            border-radius:14px;
+                            background:#1877f2;
+                            color:#fff;
+                            font-weight:800;
+                            font-size:15px;
+                            box-shadow:
+                                0 8px 22px
+                                rgba(24,119,242,.18);
+                        "
+                    >
+                        🚀 Create NEXORA Profile
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="nexoraFinalMessage"
+                    style="
+                        text-align:center;
+                        margin-top:15px;
+                        font-size:13px;
+                        color:#1877f2;
+                    "
+                ></div>
+
+            </div>
 
         </div>
 
@@ -2261,24 +2951,736 @@ function showNexoraProfileSetup(user){
     document.body.appendChild(page);
 
 
-    /* ================= NAME AUTO FOCUS ================= */
+    /* ================= INITIAL AGE ================= */
 
-    setTimeout(function(){
+    nexoraCalculateAge();
 
-        const nameInput =
-            document.getElementById(
-                "nexoraAccountName"
+}
+
+
+/* =====================================================
+   USERNAME LIVE CHECK
+   ===================================================== */
+
+function nexoraCheckUsernameTyping(){
+
+    const input =
+        document.getElementById(
+            "nexoraProfileUsername"
+        );
+
+    const status =
+        document.getElementById(
+            "nexoraUsernameStatus"
+        );
+
+
+    if(!input || !status)
+        return;
+
+
+    const value =
+        input.value
+            .toLowerCase()
+            .replace(
+                /[^a-z0-9._]/g,
+                ""
             );
 
-        if(nameInput){
 
-            nameInput.focus();
+    input.value =
+        value;
 
-            nameInput.select();
+
+    if(!value){
+
+        status.innerText =
+            "";
+
+        return;
+    }
+
+
+    if(
+        !/^[a-z0-9._]{3,20}$/.test(value)
+    ){
+
+        status.style.color =
+            "#e53935";
+
+        status.innerText =
+            "Username 3-20 অক্ষরের হতে হবে।";
+
+        return;
+    }
+
+
+    status.style.color =
+        "#777";
+
+    status.innerText =
+        "Username check করা হচ্ছে...";
+
+
+    db.collection("Users")
+      .where(
+          "usernameLower",
+          "==",
+          value
+      )
+      .limit(1)
+      .get()
+
+      .then(function(snapshot){
+
+        const currentUser =
+            auth.currentUser;
+
+
+        if(
+            snapshot.empty ||
+            (
+                snapshot.docs.length &&
+                currentUser &&
+                snapshot.docs[0].id ===
+                currentUser.uid
+            )
+        ){
+
+            status.style.color =
+                "#159447";
+
+            status.innerText =
+                "✓ Username Available";
+
+        }
+        else{
+
+            status.style.color =
+                "#e53935";
+
+            status.innerText =
+                "✕ এই Username ইতিমধ্যে ব্যবহার করা হয়েছে।";
 
         }
 
-    },200);
+      })
+
+      .catch(function(error){
+
+        console.error(
+            "USERNAME CHECK ERROR:",
+            error
+        );
+
+        status.style.color =
+            "#e53935";
+
+        status.innerText =
+            "Username check করা যায়নি।";
+
+      });
+
+}
+
+
+/* =====================================================
+   STEP 1 → STEP 2
+   ===================================================== */
+
+function nexoraGoStep2(){
+
+    const name =
+        document.getElementById(
+            "nexoraProfileName"
+        );
+
+    const username =
+        document.getElementById(
+            "nexoraProfileUsername"
+        );
+
+
+    if(!name || !username)
+        return;
+
+
+    const fullName =
+        name.value.trim();
+
+
+    const userName =
+        username.value
+            .trim()
+            .toLowerCase();
+
+
+    /* ================= NAME VALIDATION ================= */
+
+    if(fullName.length < 2){
+
+        alert(
+            "আপনার পুরো নাম লিখুন।"
+        );
+
+        name.focus();
+
+        return;
+    }
+
+
+    /* ================= USERNAME VALIDATION ================= */
+
+    if(
+        !/^[a-z0-9._]{3,20}$/.test(
+            userName
+        )
+    ){
+
+        alert(
+            "Username 3-20 অক্ষরের হতে হবে।\n\n" +
+            "শুধু ইংরেজি ছোট হাতের অক্ষর, সংখ্যা, . এবং _ ব্যবহার করুন।"
+        );
+
+        username.focus();
+
+        return;
+    }
+
+
+    /* ================= FINAL USERNAME CHECK ================= */
+
+    db.collection("Users")
+      .where(
+          "usernameLower",
+          "==",
+          userName
+      )
+      .limit(1)
+      .get()
+
+      .then(function(snapshot){
+
+        const currentUser =
+            auth.currentUser;
+
+
+        if(
+            !snapshot.empty &&
+            currentUser &&
+            snapshot.docs[0].id !==
+            currentUser.uid
+        ){
+
+            alert(
+                "এই Username ইতিমধ্যে ব্যবহার করা হয়েছে।\n\n" +
+                "অন্য Username দিন।"
+            );
+
+            username.focus();
+
+            return;
+        }
+
+
+        /* ================= SAVE STEP 1 ================= */
+
+        window.nexoraTempProfile.name =
+            fullName;
+
+        window.nexoraTempProfile.username =
+            userName;
+
+
+        /* ================= STEP 2 SHOW ================= */
+
+        document.getElementById(
+            "nexoraStep1"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "nexoraStep2"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "nexoraStepIndicator"
+        ).innerText =
+            "STEP 2 / 3";
+
+
+        document.getElementById(
+            "nexoraProgressBar"
+        ).style.width =
+            "66%";
+
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+      })
+
+      .catch(function(error){
+
+        console.error(
+            "USERNAME FINAL CHECK ERROR:",
+            error
+        );
+
+        alert(
+            "Username Check করা যায়নি:\n\n" +
+            error.message
+        );
+
+      });
+
+}
+
+
+/* =====================================================
+   STEP 2 → STEP 1
+   ===================================================== */
+
+function nexoraGoStep1(){
+
+    document.getElementById(
+        "nexoraStep2"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "nexoraStep3"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "nexoraStep1"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "nexoraStepIndicator"
+    ).innerText =
+        "STEP 1 / 3";
+
+
+    document.getElementById(
+        "nexoraProgressBar"
+    ).style.width =
+        "33%";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   CALCULATE AGE
+   ===================================================== */
+
+function nexoraCalculateAge(){
+
+    const input =
+        document.getElementById(
+            "nexoraDateOfBirth"
+        );
+
+    const text =
+        document.getElementById(
+            "nexoraAgeText"
+        );
+
+
+    if(!input || !text)
+        return;
+
+
+    if(!input.value){
+
+        text.innerText =
+            "";
+
+        return;
+    }
+
+
+    const birth =
+        new Date(
+            input.value + "T00:00:00"
+        );
+
+
+    const today =
+        new Date();
+
+
+    if(
+        isNaN(
+            birth.getTime()
+        )
+    ){
+
+        text.innerText =
+            "";
+
+        return;
+    }
+
+
+    if(birth > today){
+
+        text.style.color =
+            "#e53935";
+
+        text.innerText =
+            "ভবিষ্যতের Date of Birth দেওয়া যাবে না।";
+
+        return;
+    }
+
+
+    let age =
+        today.getFullYear() -
+        birth.getFullYear();
+
+
+    const month =
+        today.getMonth() -
+        birth.getMonth();
+
+
+    if(
+        month < 0 ||
+        (
+            month === 0 &&
+            today.getDate() <
+            birth.getDate()
+        )
+    ){
+
+        age--;
+
+    }
+
+
+    if(age < 13){
+
+        text.style.color =
+            "#e53935";
+
+        text.innerText =
+            "NEXORA ব্যবহার করতে আপনার বয়স কমপক্ষে ১৩ বছর হতে হবে।";
+
+        return;
+    }
+
+
+    if(age > 120){
+
+        text.style.color =
+            "#e53935";
+
+        text.innerText =
+            "সঠিক জন্মতারিখ দিন।";
+
+        return;
+    }
+
+
+    text.style.color =
+        "#1877f2";
+
+    text.innerText =
+        "আপনার বয়স: " +
+        age +
+        " বছর";
+
+}
+
+
+/* =====================================================
+   STEP 2 → STEP 3
+   ===================================================== */
+
+function nexoraGoStep3(){
+
+    const dob =
+        document.getElementById(
+            "nexoraDateOfBirth"
+        );
+
+    const gender =
+        document.getElementById(
+            "nexoraGender"
+        );
+
+    const bio =
+        document.getElementById(
+            "nexoraBio"
+        );
+
+    const location =
+        document.getElementById(
+            "nexoraLocation"
+        );
+
+
+    if(!dob || !gender)
+        return;
+
+
+    /* ================= DOB REQUIRED ================= */
+
+    if(!dob.value){
+
+        alert(
+            "আপনার Date of Birth দিন।"
+        );
+
+        dob.focus();
+
+        return;
+    }
+
+
+    const birth =
+        new Date(
+            dob.value + "T00:00:00"
+        );
+
+
+    const today =
+        new Date();
+
+
+    if(birth > today){
+
+        alert(
+            "ভবিষ্যতের Date of Birth দেওয়া যাবে না।"
+        );
+
+        dob.focus();
+
+        return;
+    }
+
+
+    let age =
+        today.getFullYear() -
+        birth.getFullYear();
+
+
+    const month =
+        today.getMonth() -
+        birth.getMonth();
+
+
+    if(
+        month < 0 ||
+        (
+            month === 0 &&
+            today.getDate() <
+            birth.getDate()
+        )
+    ){
+
+        age--;
+
+    }
+
+
+    if(age < 13 || age > 120){
+
+        alert(
+            "আপনার বয়স ১৩ থেকে ১২০ বছরের মধ্যে হতে হবে।"
+        );
+
+        dob.focus();
+
+        return;
+    }
+
+
+    /* ================= GENDER ================= */
+
+    if(!gender.value){
+
+        alert(
+            "আপনার Gender নির্বাচন করুন।"
+        );
+
+        gender.focus();
+
+        return;
+    }
+
+
+    /* ================= SAVE STEP 2 ================= */
+
+    window.nexoraTempProfile.dateOfBirth =
+        dob.value;
+
+    window.nexoraTempProfile.age =
+        age;
+
+    window.nexoraTempProfile.gender =
+        gender.value;
+
+    window.nexoraTempProfile.bio =
+        bio
+        ?
+        bio.value.trim()
+        :
+        "";
+
+    window.nexoraTempProfile.location =
+        location
+        ?
+        location.value.trim()
+        :
+        "";
+
+
+    /* ================= PORTFOLIO ================= */
+
+    const portfolio =
+        document.getElementById(
+            "nexoraPortfolio"
+        );
+
+    if(portfolio){
+
+        window.nexoraTempProfile.portfolio =
+            portfolio.value.trim();
+
+    }
+
+
+    /* ================= STEP 3 ================= */
+
+    document.getElementById(
+        "nexoraStep2"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "nexoraStep3"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "nexoraStepIndicator"
+    ).innerText =
+        "STEP 3 / 3";
+
+
+    document.getElementById(
+        "nexoraProgressBar"
+    ).style.width =
+        "100%";
+
+
+    /* ================= PREVIEW NAME ================= */
+
+    const previewName =
+        document.getElementById(
+            "nexoraPreviewName"
+        );
+
+
+    const previewUsername =
+        document.getElementById(
+            "nexoraPreviewUsername"
+        );
+
+
+    const previewAbout =
+        document.getElementById(
+            "nexoraPreviewAbout"
+        );
+
+
+    if(previewName){
+
+        previewName.innerText =
+            window.nexoraTempProfile.name;
+
+    }
+
+
+    if(previewUsername){
+
+        previewUsername.innerText =
+            "@" +
+            window.nexoraTempProfile.username;
+
+    }
+
+
+    if(previewAbout){
+
+        let about =
+            window.nexoraTempProfile.age +
+            " years";
+
+
+        if(
+            window.nexoraTempProfile.gender
+        ){
+
+            about +=
+                " • " +
+                window.nexoraTempProfile.gender;
+
+        }
+
+
+        if(
+            window.nexoraTempProfile.location
+        ){
+
+            about +=
+                " • " +
+                window.nexoraTempProfile.location;
+
+        }
+
+
+        if(
+            window.nexoraTempProfile.bio
+        ){
+
+            about +=
+                "\n" +
+                window.nexoraTempProfile.bio;
+
+        }
+
+
+        previewAbout.innerText =
+            about;
+
+    }
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
 }
 
@@ -2293,160 +3695,89 @@ function completeNexoraAccount(){
         auth.currentUser;
 
 
-    /* ================= LOGIN CHECK ================= */
-
     if(!user){
 
         alert(
-            "আগে Google Account নির্বাচন করুন।"
+            "Google Account পাওয়া যায়নি। আবার Login করুন।"
         );
 
         return;
+    }
+
+
+    /* ================= GET PORTFOLIO ================= */
+
+    const portfolio =
+        document.getElementById(
+            "nexoraPortfolio"
+        );
+
+
+    if(portfolio){
+
+        window.nexoraTempProfile.portfolio =
+            portfolio.value.trim();
 
     }
 
 
-    /* ================= GET FORM DATA ================= */
+    /* ================= PROFILE DATA ================= */
 
-    const nameInput =
-        document.getElementById(
-            "nexoraAccountName"
+    const profile =
+        window.nexoraTempProfile;
+
+
+    if(!profile){
+
+        alert(
+            "Profile data পাওয়া যায়নি।"
         );
 
-    const ageInput =
-        document.getElementById(
-            "nexoraAccountAge"
-        );
+        return;
+    }
 
-    const genderInput =
-        document.getElementById(
-            "nexoraAccountGender"
-        );
 
+    /* ================= REQUIRED DATA ================= */
 
     if(
-        !nameInput ||
-        !ageInput ||
-        !genderInput
+        !profile.name ||
+        !profile.username ||
+        !profile.dateOfBirth ||
+        !profile.gender
     ){
 
         alert(
-            "Account Setup Form পাওয়া যায়নি।"
+            "দয়া করে Profile-এর প্রয়োজনীয় তথ্য সম্পূর্ণ করুন।"
         );
 
         return;
-
     }
 
 
-    const name =
-        nameInput.value.trim();
-
-
-    const age =
-        ageInput.value.trim();
-
-
-    const gender =
-        genderInput.value;
-
-
-    /* ================= VALIDATION ================= */
-
-    if(!name){
-
-        alert(
-            "আপনার নাম লিখুন।"
-        );
-
-        nameInput.focus();
-
-        return;
-
-    }
-
-
-    if(name.length < 2){
-
-        alert(
-            "নাম কমপক্ষে ২ অক্ষরের হতে হবে।"
-        );
-
-        nameInput.focus();
-
-        return;
-
-    }
-
-
-    if(!age){
-
-        alert(
-            "আপনার বয়স দিন।"
-        );
-
-        ageInput.focus();
-
-        return;
-
-    }
-
-
-    const numericAge =
-        Number(age);
-
-
-    if(
-        numericAge < 13 ||
-        numericAge > 120
-    ){
-
-        alert(
-            "বয়স ১৩ থেকে ১২০-এর মধ্যে দিন।"
-        );
-
-        ageInput.focus();
-
-        return;
-
-    }
-
-
-    if(!gender){
-
-        alert(
-            "আপনি ছেলে / মেয়ে / অন্য নির্বাচন করুন।"
-        );
-
-        genderInput.focus();
-
-        return;
-
-    }
-
-
-    /* ================= BUTTON / MESSAGE ================= */
+    /* ================= FINAL BUTTON ================= */
 
     const button =
         document.getElementById(
-            "nexoraCreateAccountButton"
+            "nexoraFinalCreateButton"
         );
 
 
     const message =
         document.getElementById(
-            "nexoraAccountMessage"
+            "nexoraFinalMessage"
         );
 
 
     if(button){
 
-        button.disabled = true;
+        button.disabled =
+            true;
 
-        button.style.opacity = "0.6";
+        button.style.opacity =
+            "0.6";
 
         button.innerText =
-            "⏳ Account তৈরি হচ্ছে...";
+            "⏳ Profile তৈরি হচ্ছে...";
 
     }
 
@@ -2454,12 +3785,13 @@ function completeNexoraAccount(){
     if(message){
 
         message.innerText =
-            "আপনার NEXORA Account তৈরি করা হচ্ছে...";
+            "আপনার NEXORA Profile নিরাপদে তৈরি করা হচ্ছে...";
+
     }
 
 
     /* =====================================================
-       SAVE ACCOUNT TO FIRESTORE
+       SAVE TO FIRESTORE
        ===================================================== */
 
     db.collection("Users")
@@ -2470,19 +3802,42 @@ function completeNexoraAccount(){
               user.uid,
 
           name:
-              name,
+              profile.name,
+
+          username:
+              profile.username,
+
+          usernameLower:
+              profile.username.toLowerCase(),
 
           email:
               user.email || "",
 
           photoURL:
-              user.photoURL || "",
+              profile.photoURL ||
+              user.photoURL ||
+              "",
+
+          dateOfBirth:
+              profile.dateOfBirth,
 
           age:
-              numericAge,
+              Number(profile.age),
 
           gender:
-              gender,
+              profile.gender,
+
+          bio:
+              profile.bio || "",
+
+          location:
+              profile.location || "",
+
+          portfolio:
+              profile.portfolio || "",
+
+          profileComplete:
+              true,
 
           accountCreatedAt:
               firebase.firestore
@@ -2495,23 +3850,21 @@ function completeNexoraAccount(){
               .serverTimestamp()
 
       },{
-
           merge:true
-
       })
 
       .then(function(){
 
           console.log(
-              "NEXORA Account Created Successfully"
+              "NEXORA Profile Created Successfully"
           );
 
 
-          /* ================= CLOSE SETUP ================= */
+          /* ================= CLOSE PROFILE SETUP ================= */
 
           const setup =
               document.getElementById(
-                  "nexoraAccountSetup"
+                  "nexoraModernProfileSetup"
               );
 
 
@@ -2519,50 +3872,47 @@ function completeNexoraAccount(){
               setup.remove();
 
 
-          /* ================= WELCOME MESSAGE ================= */
+          /* ================= SHOW SUCCESS WELCOME ================= */
 
-          alert(
-              "🎉 Welcome to NEXORA!\n\n" +
-              "আপনার Account সফলভাবে তৈরি হয়েছে।"
-          );
-
-
-          /* ================= OPEN HOME ================= */
-
-          openNexoraHomeAfterAccount();
+          showNexoraAccountSuccessWelcome();
 
       })
 
       .catch(function(error){
 
           console.error(
-              "NEXORA ACCOUNT SAVE ERROR:",
+              "NEXORA PROFILE SAVE ERROR:",
               error
           );
 
 
           if(button){
 
-              button.disabled = false;
+              button.disabled =
+                  false;
 
-              button.style.opacity = "1";
+              button.style.opacity =
+                  "1";
 
               button.innerText =
-                  "🎉 Create My NEXORA Account";
+                  "🚀 Create NEXORA Profile";
 
           }
 
 
           if(message){
 
+              message.style.color =
+                  "#e53935";
+
               message.innerText =
-                  "❌ Account তৈরি করা যায়নি।";
+                  "❌ Profile তৈরি করা যায়নি।";
 
           }
 
 
           alert(
-              "Account তৈরি করা যায়নি:\n\n" +
+              "Profile Save করা যায়নি:\n\n" +
               error.message
           );
 
@@ -2572,7 +3922,312 @@ function completeNexoraAccount(){
 
 
 /* =====================================================
-   OPEN NEXORA HOME AFTER ACCOUNT CREATE
+   ACCOUNT CREATED → WELCOME SCREEN
+   ===================================================== */
+
+function showNexoraAccountSuccessWelcome(){
+
+    /* ================= REMOVE OLD WELCOME ================= */
+
+    const old =
+        document.getElementById(
+            "nexoraAccountSuccessWelcome"
+        );
+
+
+    if(old)
+        old.remove();
+
+
+    /* ================= CREATE WELCOME ================= */
+
+    const welcome =
+        document.createElement("div");
+
+
+    welcome.id =
+        "nexoraAccountSuccessWelcome";
+
+
+    welcome.style.cssText = `
+        position:fixed;
+        inset:0;
+        z-index:99999999;
+        background:#ffffff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        font-family:Arial,sans-serif;
+        opacity:1;
+        transition:opacity .4s ease;
+    `;
+
+
+    welcome.innerHTML = `
+
+        <style>
+
+            @keyframes nexoraSuccessIcon{
+
+                0%{
+                    opacity:0;
+                    transform:scale(.5);
+                }
+
+                70%{
+                    transform:scale(1.12);
+                }
+
+                100%{
+                    opacity:1;
+                    transform:scale(1);
+                }
+
+            }
+
+
+            @keyframes nexoraSuccessText{
+
+                from{
+                    opacity:0;
+                    transform:translateY(15px);
+                }
+
+                to{
+                    opacity:1;
+                    transform:translateY(0);
+                }
+
+            }
+
+
+            @keyframes nexoraLoading{
+
+                from{
+                    transform:translateX(-100%);
+                }
+
+                to{
+                    transform:translateX(0);
+                }
+
+            }
+
+        </style>
+
+
+        <div style="
+            width:100%;
+            max-width:520px;
+            padding:30px;
+            box-sizing:border-box;
+        ">
+
+
+            <!-- ================= SUCCESS ICON ================= -->
+
+            <div style="
+                width:90px;
+                height:90px;
+                margin:0 auto 25px;
+                border-radius:50%;
+                background:#1877f2;
+                color:#ffffff;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:43px;
+                font-weight:bold;
+                box-shadow:
+                    0 12px 35px
+                    rgba(24,119,242,.25);
+                animation:
+                    nexoraSuccessIcon .7s ease;
+            ">
+                ✓
+            </div>
+
+
+            <!-- ================= ACCOUNT CREATED ================= -->
+
+            <div style="
+                color:#1877f2;
+                font-size:13px;
+                font-weight:800;
+                letter-spacing:1px;
+                margin-bottom:10px;
+                animation:
+                    nexoraSuccessText .6s ease;
+            ">
+                ACCOUNT CREATED
+            </div>
+
+
+            <!-- ================= WELCOME ================= -->
+
+            <h1 style="
+                margin:0;
+                font-size:34px;
+                font-weight:900;
+                animation:
+                    nexoraSuccessText .7s ease;
+            ">
+                Welcome to NEXORA
+            </h1>
+
+
+            <p style="
+                margin:14px auto 0;
+                max-width:380px;
+                color:#777;
+                font-size:15px;
+                line-height:1.7;
+                animation:
+                    nexoraSuccessText .8s ease;
+            ">
+                আপনার NEXORA Profile সফলভাবে তৈরি হয়েছে।
+                এখন আপনার নতুন NEXORA journey শুরু হচ্ছে।
+            </p>
+
+
+            <!-- ================= USER NAME ================= -->
+
+            <div
+                id="nexoraSuccessUserName"
+                style="
+                    margin-top:24px;
+                    font-size:18px;
+                    font-weight:800;
+                    animation:
+                        nexoraSuccessText .9s ease;
+                "
+            >
+            </div>
+
+
+            <!-- ================= LOADING TEXT ================= -->
+
+            <div style="
+                margin-top:30px;
+                color:#999;
+                font-size:13px;
+            ">
+                NEXORA Home প্রস্তুত হচ্ছে...
+            </div>
+
+
+            <!-- ================= LOADING BAR ================= -->
+
+            <div style="
+                width:180px;
+                height:4px;
+                margin:12px auto 0;
+                background:#eeeeee;
+                border-radius:20px;
+                overflow:hidden;
+            ">
+
+                <div style="
+                    width:100%;
+                    height:100%;
+                    background:#1877f2;
+                    border-radius:20px;
+                    animation:
+                        nexoraLoading 2.2s linear;
+                ">
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(welcome);
+
+
+    /* ================= USER NAME ================= */
+
+    const user =
+        auth.currentUser;
+
+
+    const userName =
+        document.getElementById(
+            "nexoraSuccessUserName"
+        );
+
+
+    if(
+        userName &&
+        window.nexoraTempProfile &&
+        window.nexoraTempProfile.name
+    ){
+
+        userName.innerText =
+            "👋 " +
+            window.nexoraTempProfile.name;
+
+    }
+    else if(
+        userName &&
+        user &&
+        user.displayName
+    ){
+
+        userName.innerText =
+            "👋 " +
+            user.displayName;
+
+    }
+
+
+    /* ================= REDIRECT HOME ================= */
+
+    setTimeout(function(){
+
+        const screen =
+            document.getElementById(
+                "nexoraAccountSuccessWelcome"
+            );
+
+
+        if(screen){
+
+            screen.style.opacity =
+                "0";
+
+        }
+
+
+        setTimeout(function(){
+
+            if(screen)
+                screen.remove();
+
+
+            /* ================= CLEAR TEMP ================= */
+
+            window.nexoraTempProfile =
+                null;
+
+
+            /* ================= OPEN HOME ================= */
+
+            openNexoraHomeAfterAccount();
+
+        },450);
+
+
+    },2200);
+
+}
+
+
+/* =====================================================
+   OPEN NEXORA HOME
    ===================================================== */
 
 function openNexoraHomeAfterAccount(){
@@ -2617,11 +4272,11 @@ function openNexoraHomeAfterAccount(){
     }
 
 
-    /* ================= CLOSE ACCOUNT SETUP ================= */
+    /* ================= CLOSE PROFILE PAGE ================= */
 
     const setup =
         document.getElementById(
-            "nexoraAccountSetup"
+            "nexoraModernProfileSetup"
         );
 
 
