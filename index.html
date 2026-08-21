@@ -4324,8 +4324,10 @@ function logout(){
 
 }
 
-
-/* ================= AUTH STATE ================= */
+/* =====================================================
+   NEXORA AUTH STATE — FACEBOOK STYLE ACCOUNT ROUTING
+   Login → Own UID → Own Profile → Own Home
+   ===================================================== */
 
 auth.onAuthStateChanged(function(user){
 
@@ -4335,27 +4337,62 @@ auth.onAuthStateChanged(function(user){
     const home =
         document.getElementById("homeSection");
 
-    if(user){
 
-        login.style.display = "none";
-        home.style.display = "block";
+    /* ================= NO USER LOGGED IN ================= */
 
-        const message =
-            document.getElementById("message");
+    if(!user){
 
-        if(message){
-            message.innerText = "";
+        if(login){
+
+            login.style.display =
+                "flex";
+
         }
 
-    }else{
+        if(home){
 
-        login.style.display = "flex";
-        home.style.display = "none";
+            home.style.display =
+                "none";
+
+        }
+
+        return;
+    }
+
+
+    /* ================= USER LOGGED IN ================= */
+
+    console.log(
+        "NEXORA USER LOGIN:",
+        user.uid
+    );
+
+
+    /* ================= HIDE LOGIN ================= */
+
+    if(login){
+
+        login.style.display =
+            "none";
 
     }
 
-});
 
+    /* ================= HIDE HOME TEMPORARILY ================= */
+
+    if(home){
+
+        home.style.display =
+            "none";
+
+    }
+
+
+    /* ================= CHECK THIS USER ACCOUNT ================= */
+
+    checkNexoraUserAccount(user);
+
+});
 
 /* ================= POSTS ================= */
 
