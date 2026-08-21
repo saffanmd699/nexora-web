@@ -1891,7 +1891,53 @@ function googleLogin(){
 
 }
 
+/* =====================================================
+   NEXORA GOOGLE REDIRECT RESULT
+   Google → NEXORA Return Handler
+   ===================================================== */
 
+auth.getRedirectResult()
+
+    .then(function(result){
+
+        /* ================= NO REDIRECT RESULT ================= */
+
+        if(!result || !result.user){
+            return;
+        }
+
+
+        /* ================= GOOGLE USER ================= */
+
+        const user =
+            result.user;
+
+
+        console.log(
+            "NEXORA Google Redirect সফল:",
+            user.email
+        );
+
+
+        /* ================= CHECK NEXORA ACCOUNT ================= */
+
+        checkNexoraUserAccount(user);
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA GOOGLE REDIRECT ERROR:",
+            error
+        );
+
+        alert(
+            "Google Login করা যায়নি:\n\n" +
+            error.message
+        );
+
+    });
 /* =====================================================
    NEXORA CREATE ACCOUNT START
    ===================================================== */
@@ -1907,42 +1953,10 @@ function startNexoraAccountCreate(){
         return;
     }
 
-    googleLoginForNexora();
+    googleLogin();
 
 }
 
-
-/* =====================================================
-   NEXORA GOOGLE ACCOUNT CONNECT
-   ===================================================== */
-
-function googleLoginForNexora(){
-
-    auth.signInWithPopup(provider)
-
-        .then(function(result){
-
-            const user = result.user;
-
-            return checkNexoraUserAccount(user);
-
-        })
-
-        .catch(function(error){
-
-            console.error(
-                "NEXORA GOOGLE LOGIN ERROR:",
-                error
-            );
-
-            alert(
-                "Google Account Connect করা যায়নি:\n\n" +
-                error.message
-            );
-
-        });
-
-}
 
 
 /* =====================================================
