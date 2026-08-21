@@ -4595,8 +4595,12 @@ function likePost(postId){
 
 }
 
+/* ================= NEXORA COMMENTS SYSTEM ================= */
 
-/* ================= COMMENTS ================= */
+
+/* =====================================================
+   SHOW COMMENT BOX
+   ===================================================== */
 
 function showCommentBox(postId){
 
@@ -4606,9 +4610,13 @@ function showCommentBox(postId){
         );
 
     if(old){
+
         old.remove();
+
         return;
+
     }
+
 
     const box =
         document.createElement("div");
@@ -4619,21 +4627,32 @@ function showCommentBox(postId){
     box.className =
         "comment-box";
 
+
     box.innerHTML = `
+
+        <!-- ================= COMMENT INPUT ================= -->
 
         <input
             id="commentInput-${postId}"
             class="comment-input"
             type="text"
             placeholder="আপনার Comment লিখুন..."
+            autocomplete="off"
         >
+
+
+        <!-- ================= COMMENT BUTTON ================= -->
 
         <button
             class="comment-submit"
             onclick="addComment('${postId}')"
+            type="button"
         >
             Comment করুন
         </button>
+
+
+        <!-- ================= COMMENTS AREA ================= -->
 
         <div
             id="commentsArea-${postId}"
@@ -4641,62 +4660,151 @@ function showCommentBox(postId){
 
     `;
 
+
     const button =
         document.querySelector(
             `button[onclick="showCommentBox('${postId}')"]`
         );
+
 
     if(button){
 
         const post =
             button.closest(".post");
 
-        post.appendChild(box);
 
-        loadComments(
-            postId,
-            box
-        );
+        if(post){
+
+            post.appendChild(box);
+
+
+            loadComments(
+                postId,
+                box
+            );
+
+        }
 
     }
+
+
+    /* ================= AUTO FOCUS ================= */
+
+    setTimeout(function(){
+
+        const input =
+            document.getElementById(
+                "commentInput-" + postId
+            );
+
+        if(input){
+
+            input.focus();
+
+        }
+
+    },100);
 
 }
 
 
+/* =====================================================
+   ADD COMMENT
+   IMPORTANT:
+   USER যেভাবে লিখবে ঠিক সেভাবেই SAVE হবে
+   ===================================================== */
 
 function addComment(postId){
 
     const user =
         auth.currentUser;
 
+
     if(!user){
-        alert("আগে Login করুন।");
+
+        alert(
+            "আগে Login করুন।"
+        );
+
         return;
+
     }
+
 
     const input =
         document.getElementById(
             "commentInput-" + postId
         );
 
-    if(!input) return;
+
+    if(!input)
+        return;
+
+
+    /*
+       IMPORTANT:
+       এখানে কোনো translation,
+       conversion অথবা English করার
+       code নেই।
+    */
 
     const text =
         input.value.trim();
 
+
     if(!text){
-        alert("Comment লিখুন।");
+
+        alert(
+            "Comment লিখুন।"
+        );
+
+        input.focus();
+
         return;
+
     }
+
+
+    /* ================= DISABLE BUTTON ================= */
+
+    const submitButton =
+        input.parentElement
+        ?
+        input.parentElement
+        .querySelector(
+            ".comment-submit"
+        )
+        :
+        null;
+
+
+    if(submitButton){
+
+        submitButton.disabled =
+            true;
+
+        submitButton.innerText =
+            "⏳ Posting...";
+
+    }
+
+
+    /* =================================================
+       SAVE ORIGINAL COMMENT
+       ================================================= */
 
     db.collection("Posts")
       .doc(postId)
       .collection("Comments")
       .add({
 
-        // Comment যে ভাষায় লেখা হবে,
-        // ঠিক সেই ভাষাতেই সংরক্ষণ হবে
-        text: text,
+        /*
+           এখানে text-এর ভিতরে
+           user যেটা লিখেছে সেটাই থাকবে।
+        */
+
+        text:
+            text,
 
         name:
             user.displayName ||
@@ -4705,29 +4813,75 @@ function addComment(postId){
         uid:
             user.uid,
 
+        photoURL:
+            user.photoURL ||
+            "",
+
         createdAt:
             firebase.firestore
             .FieldValue
             .serverTimestamp()
 
       })
+
+
       .then(function(){
+
+        /*
+           Comment successfully save.
+           Input খালি করা হবে।
+        */
 
         input.value = "";
 
+        input.focus();
+
+
+        if(submitButton){
+
+            submitButton.disabled =
+                false;
+
+            submitButton.innerText =
+                "Comment করুন";
+
+        }
+
       })
+
+
       .catch(function(error){
 
-        console.error(error);
+        console.error(
+            "NEXORA COMMENT ERROR:",
+            error
+        );
+
+
+        if(submitButton){
+
+            submitButton.disabled =
+                false;
+
+            submitButton.innerText =
+                "Comment করুন";
+
+        }
+
 
         alert(
-            "Comment করা যায়নি: " +
+            "Comment করা যায়নি:\n\n" +
             error.message
         );
 
       });
 
 }
+
+
+/* =====================================================
+   COMMENT COUNT
+   ===================================================== */
 
 function loadCommentCount(postId){
 
@@ -4741,9 +4895,12 @@ function loadCommentCount(postId){
                 "commentCount-" + postId
             );
 
+
         if(el){
+
             el.innerText =
                 snapshot.size;
+
         }
 
       });
@@ -4751,12 +4908,19 @@ function loadCommentCount(postId){
 }
 
 
+/* =====================================================
+   LOAD COMMENTS
+   ===================================================== */
+
 function loadComments(postId,box){
 
     db.collection("Posts")
       .doc(postId)
       .collection("Comments")
-      .orderBy("createdAt","asc")
+      .orderBy(
+          "createdAt",
+          "asc"
+      )
       .onSnapshot(function(snapshot){
 
         const area =
@@ -4764,44 +4928,327 @@ function loadComments(postId,box){
                 "#commentsArea-" + postId
             );
 
-        if(!area) return;
+
+        if(!area)
+            return;
+
 
         area.innerHTML = "";
+
 
         snapshot.forEach(function(doc){
 
             const comment =
                 doc.data();
 
+
             const div =
                 document.createElement("div");
+
 
             div.className =
                 "comment-item";
 
-            div.innerHTML = `
-                <b>
-                    👤 ${escapeHTML(
-                        comment.name ||
-                        "NEXORA User"
-                    )}
-                </b>
 
-                <div style="margin-top:3px;">
+            const originalText =
+                comment.text ||
+                "";
+
+
+            /* =================================================
+               COMMENT HTML
+               ================================================= */
+
+            div.innerHTML = `
+
+                <!-- ================= USER NAME ================= -->
+
+                <div>
+
+                    <b>
+                        👤 ${escapeHTML(
+                            comment.name ||
+                            "NEXORA User"
+                        )}
+                    </b>
+
+                </div>
+
+
+                <!-- ================= ORIGINAL COMMENT ================= -->
+
+                <div
+                    class="nexora-comment-original"
+                    style="
+                        margin-top:4px;
+                        line-height:1.5;
+                        word-break:break-word;
+                    "
+                >
                     ${escapeHTML(
-                        comment.text || ""
+                        originalText
                     )}
                 </div>
+
+
+                <!-- ================= TRANSLATED COMMENT ================= -->
+
+                <div
+                    class="nexora-comment-translation"
+                    style="
+                        display:none;
+                        margin-top:7px;
+                        padding:8px 10px;
+                        background:#f5f6f7;
+                        border-radius:8px;
+                        line-height:1.5;
+                        word-break:break-word;
+                    "
+                ></div>
+
+
+                <!-- ================= TRANSLATE BUTTON ================= -->
+
+                <button
+                    type="button"
+                    class="nexora-translate-button"
+                    onclick="translateNexoraComment(this)"
+                    style="
+                        margin-top:6px;
+                        padding:0;
+                        border:none;
+                        background:none;
+                        color:#1877f2;
+                        font-size:13px;
+                        font-weight:600;
+                        cursor:pointer;
+                    "
+                >
+                    🌐 Translate
+                </button>
+
             `;
+
 
             area.appendChild(div);
 
         });
 
+      })
+
+      .catch(function(error){
+
+        console.error(
+            "NEXORA LOAD COMMENTS ERROR:",
+            error
+        );
+
       });
 
 }
 
+
+/* =====================================================
+   NEXORA COMMENT TRANSLATION
+   Original Comment কখনো পরিবর্তন হবে না
+   ===================================================== */
+
+async function translateNexoraComment(button){
+
+    const commentBox =
+        button.closest(
+            ".comment-item"
+        );
+
+
+    if(!commentBox)
+        return;
+
+
+    const originalElement =
+        commentBox.querySelector(
+            ".nexora-comment-original"
+        );
+
+
+    const translationElement =
+        commentBox.querySelector(
+            ".nexora-comment-translation"
+        );
+
+
+    if(
+        !originalElement ||
+        !translationElement
+    ){
+
+        return;
+
+    }
+
+
+    /* ================= ORIGINAL TOGGLE ================= */
+
+    if(
+        translationElement.style.display ===
+        "block"
+    ){
+
+        translationElement.style.display =
+            "none";
+
+
+        button.innerText =
+            "🌐 Translate";
+
+
+        return;
+
+    }
+
+
+    const text =
+        originalElement.innerText.trim();
+
+
+    if(!text)
+        return;
+
+
+    /* ================= LOADING ================= */
+
+    button.disabled =
+        true;
+
+
+    button.innerText =
+        "⏳ Translating...";
+
+
+    translationElement.style.display =
+        "block";
+
+
+    translationElement.innerText =
+        "অনুবাদ করা হচ্ছে...";
+
+
+    try{
+
+        /*
+           Translation শুধুমাত্র
+           display করার জন্য।
+
+           Firestore-এর original text
+           কখনো পরিবর্তন করা হবে না।
+        */
+
+        const targetLanguage =
+            "bn";
+
+
+        const url =
+            "https://translate.googleapis.com/translate_a/single" +
+            "?client=gtx" +
+            "&sl=auto" +
+            "&tl=" +
+            targetLanguage +
+            "&dt=t" +
+            "&q=" +
+            encodeURIComponent(text);
+
+
+        const response =
+            await fetch(url);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Translation service unavailable"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        let translatedText =
+            "";
+
+
+        if(
+            Array.isArray(data) &&
+            Array.isArray(data[0])
+        ){
+
+            data[0].forEach(function(item){
+
+                if(
+                    Array.isArray(item) &&
+                    item[0]
+                ){
+
+                    translatedText +=
+                        item[0];
+
+                }
+
+            });
+
+        }
+
+
+        if(!translatedText){
+
+            throw new Error(
+                "Translation পাওয়া যায়নি"
+            );
+
+        }
+
+
+        translationElement.innerText =
+            translatedText;
+
+
+        button.disabled =
+            false;
+
+
+        button.innerText =
+            "↩ Original";
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "NEXORA TRANSLATION ERROR:",
+            error
+        );
+
+
+        translationElement.innerText =
+            "❌ Translation করা যায়নি।";
+
+
+        button.disabled =
+            false;
+
+
+        button.innerText =
+            "🌐 Translate";
+
+    }
+
+}
+
+
+/* ================= END NEXORA COMMENTS SYSTEM ================= */
 
 /* ================= SHARE POST ================= */
 
