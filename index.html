@@ -5983,7 +5983,10 @@ function openMyNexoraProfile(){
 
 }
 
-/* ================= LOAD PROFILE ================= */
+/* =====================================================
+   NEXORA COMPLETE PROFILE
+   Own UID → Users/{UID} → Full Profile
+   ===================================================== */
 
 function loadNexoraProfile(uid){
 
@@ -5994,6 +5997,40 @@ function loadNexoraProfile(uid){
 
     if(!content)
         return;
+
+
+    /* ================= CHECK UID ================= */
+
+    if(!uid){
+
+        content.innerHTML = `
+            <div style="
+                text-align:center;
+                padding:40px;
+                color:#777;
+            ">
+                😔 User পাওয়া যায়নি।
+            </div>
+        `;
+
+        return;
+    }
+
+
+    /* ================= LOADING ================= */
+
+    content.innerHTML = `
+        <div style="
+            text-align:center;
+            padding:50px;
+            color:#777;
+        ">
+            ⏳ Profile লোড হচ্ছে...
+        </div>
+    `;
+
+
+    /* ================= GET USER PROFILE ================= */
 
     db.collection("Users")
       .doc(uid)
@@ -6016,83 +6053,287 @@ function loadNexoraProfile(uid){
             return;
         }
 
+
+        /* ================= USER DATA ================= */
+
         const user =
             doc.data();
+
 
         const name =
             user.name ||
             user.displayName ||
             "NEXORA User";
 
+
+        const username =
+            user.username ||
+            "";
+
+
         const photo =
             user.photoURL ||
             user.photo ||
             "";
 
+
+        const email =
+            user.email ||
+            "";
+
+
+        const age =
+            user.age ||
+            "";
+
+
+        const gender =
+            user.gender ||
+            "";
+
+
+        const bio =
+            user.bio ||
+            "";
+
+
+        const location =
+            user.location ||
+            "";
+
+
+        const portfolio =
+            user.portfolio ||
+            "";
+
+
+        /* ================= PROFILE ================= */
+
         content.innerHTML = `
 
             <div style="
                 background:#fff;
-                border-radius:16px;
-                padding:20px;
-                text-align:center;
-                box-shadow:0 2px 10px rgba(0,0,0,.08);
+                border-radius:20px;
+                padding:25px;
+                box-shadow:
+                    0 4px 20px
+                    rgba(0,0,0,.08);
             ">
 
-                ${
-                    photo
-                    ?
-                    `
-                    <img
-                        src="${escapeHTML(photo)}"
-                        style="
-                            width:110px;
-                            height:110px;
+
+                <!-- ================= PHOTO ================= -->
+
+                <div style="
+                    text-align:center;
+                ">
+
+                    ${
+                        photo
+                        ?
+                        `
+                        <img
+                            src="${escapeHTML(photo)}"
+                            alt="Profile"
+                            style="
+                                width:120px;
+                                height:120px;
+                                border-radius:50%;
+                                object-fit:cover;
+                                border:4px solid #1877f2;
+                            "
+                        >
+                        `
+                        :
+                        `
+                        <div style="
+                            width:120px;
+                            height:120px;
+                            margin:auto;
                             border-radius:50%;
-                            object-fit:cover;
-                            border:4px solid #1877f2;
-                        "
-                    >
-                    `
-                    :
-                    `
-                    <div style="
-                        width:110px;
-                        height:110px;
-                        margin:auto;
-                        border-radius:50%;
-                        background:#1877f2;
-                        color:#fff;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:45px;
-                    ">
-                        👤
-                    </div>
-                    `
-                }
+                            background:#1877f2;
+                            color:#fff;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:50px;
+                        ">
+                            👤
+                        </div>
+                        `
+                    }
+
+                </div>
+
+
+                <!-- ================= NAME ================= -->
 
                 <h2 style="
-                    margin:12px 0 5px;
+                    text-align:center;
+                    margin:15px 0 5px;
+                    font-size:25px;
+                    font-weight:900;
                 ">
                     ${escapeHTML(name)}
                 </h2>
 
+
+                <!-- ================= USERNAME ================= -->
+
                 ${
-                    user.email
+                    username
                     ?
                     `
                     <div style="
-                        color:#777;
-                        font-size:14px;
+                        text-align:center;
+                        color:#1877f2;
+                        font-size:15px;
+                        font-weight:700;
                     ">
-                        ${escapeHTML(user.email)}
+                        @${escapeHTML(username)}
                     </div>
                     `
                     :
                     ""
                 }
+
+
+                <!-- ================= BIO ================= -->
+
+                ${
+                    bio
+                    ?
+                    `
+                    <div style="
+                        text-align:center;
+                        margin-top:15px;
+                        color:#555;
+                        font-size:15px;
+                        line-height:1.6;
+                    ">
+                        ${escapeHTML(bio)}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+                <!-- ================= ABOUT ================= -->
+
+                <div style="
+                    margin-top:22px;
+                    padding:18px;
+                    background:#f8f9fa;
+                    border-radius:15px;
+                ">
+
+                    ${
+                        age
+                        ?
+                        `
+                        <div style="
+                            margin-bottom:10px;
+                            color:#555;
+                        ">
+                            🎂 Age: ${escapeHTML(String(age))}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        gender
+                        ?
+                        `
+                        <div style="
+                            margin-bottom:10px;
+                            color:#555;
+                        ">
+                            👤 Gender: ${escapeHTML(gender)}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        location
+                        ?
+                        `
+                        <div style="
+                            margin-bottom:10px;
+                            color:#555;
+                        ">
+                            📍 Location: ${escapeHTML(location)}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        email
+                        ?
+                        `
+                        <div style="
+                            color:#555;
+                            word-break:break-word;
+                        ">
+                            📧 ${escapeHTML(email)}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+
+                <!-- ================= PORTFOLIO ================= -->
+
+                ${
+                    portfolio
+                    ?
+                    `
+                    <div style="
+                        margin-top:18px;
+                        text-align:center;
+                    ">
+                        <a
+                            href="${escapeHTML(portfolio)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style="
+                                color:#1877f2;
+                                font-weight:700;
+                                text-decoration:none;
+                            "
+                        >
+                            🌐 Visit Website
+                        </a>
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+                <!-- ================= USER ID ================= -->
+
+                <div style="
+                    margin-top:20px;
+                    text-align:center;
+                    color:#aaa;
+                    font-size:11px;
+                    word-break:break-all;
+                ">
+                    UID: ${escapeHTML(uid)}
+                </div>
+
 
             </div>
 
@@ -6100,10 +6341,13 @@ function loadNexoraProfile(uid){
 
       })
 
+
+      /* ================= ERROR ================= */
+
       .catch(function(error){
 
         console.error(
-            "PROFILE LOAD ERROR:",
+            "NEXORA PROFILE LOAD ERROR:",
             error
         );
 
@@ -6111,17 +6355,17 @@ function loadNexoraProfile(uid){
             <div style="
                 text-align:center;
                 padding:40px;
-                color:red;
+                color:#e53935;
             ">
                 ❌ Profile লোড করা যায়নি।
+                <br><br>
+                ${escapeHTML(error.message)}
             </div>
         `;
 
       });
 
 }
-
-
 /* ================= CLOSE PROFILE ================= */
 
 function closeNexoraProfile(){
