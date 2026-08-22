@@ -1864,30 +1864,25 @@ const CLOUDINARY_PRESET =
    Google → Profile Setup → Firebase → Welcome → Home
    ===================================================== */
 
-
 /* =====================================================
    NEXORA GOOGLE LOGIN
+   নতুন Account-এর জন্য Google Account নির্বাচন
    ===================================================== */
 
 function googleLogin(){
 
-    const user = auth.currentUser;
-
-    if(user){
-
-        console.log(
-            "Already logged in:",
-            user.email
-        );
-
-        checkNexoraUserAccount(user);
-
-        return;
-    }
-
     console.log(
-        "NEXORA Google Redirect Login শুরু..."
+        "NEXORA নতুন Google Account Login শুরু..."
     );
+
+    /*
+     * Google-কে Account নির্বাচন করার জন্য বলা হচ্ছে।
+     * আগের login করা account সরাসরি ব্যবহার করবে না।
+     */
+
+    provider.setCustomParameters({
+        prompt: "select_account"
+    });
 
     auth.signInWithRedirect(provider);
 
@@ -1942,24 +1937,34 @@ auth.getRedirectResult()
     });
 /* =====================================================
    NEXORA CREATE ACCOUNT START
+   নতুন User-এর জন্য নতুন Google Account নির্বাচন
    ===================================================== */
 
 function startNexoraAccountCreate(){
 
-    const user = auth.currentUser;
+    /*
+     * আগের account login থাকলেও
+     * সেটাকে ব্যবহার করা হবে না।
+     */
 
-    if(user){
+    auth.signOut()
+        .then(function(){
 
-        checkNexoraUserAccount(user);
+            googleLogin();
 
-        return;
-    }
+        })
+        .catch(function(error){
 
-    googleLogin();
+            console.error(
+                "NEXORA SIGN OUT ERROR:",
+                error
+            );
+
+            googleLogin();
+
+        });
 
 }
-
-
 
 /* =====================================================
    CHECK NEXORA USER ACCOUNT
