@@ -5623,8 +5623,10 @@ function sharePost(postId){
 let nexoraStories = [];
 let currentStoryIndex = 0;
 
-
-/* ================= CREATE STORY PROFILE ================= */
+/* =====================================================
+   NEXORA CREATE STORY PROFILE — CURRENT USER
+   Firebase Users/{uid} থেকে নিজের profile photo
+   ===================================================== */
 
 function updateCreateStoryProfile(){
 
@@ -5636,43 +5638,98 @@ function updateCreateStoryProfile(){
     const user =
         auth.currentUser;
 
+
+    /* ================= USER CHECK ================= */
+
     if(!box || !user)
         return;
 
-    const photo =
-        user.photoURL || "";
 
-    if(photo){
+    /* ================= DEFAULT PROFILE ================= */
 
-        box.innerHTML = `
-            <img
-                src="${escapeHTML(photo)}"
-                alt="Profile"
-                style="
-                    width:100%;
-                    height:100%;
-                    object-fit:cover;
-                    display:block;
-                "
-            >
-        `;
+    box.innerHTML = `
+        <div style="
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:45px;
+            background:#e4e6eb;
+        ">
+            👤
+        </div>
+    `;
 
-    }else{
 
-        box.innerHTML = `
-            <div style="
-                width:100%;
-                height:100%;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:45px;
-            ">
-                👤
-            </div>
-        `;
+    /* =================================================
+       CURRENT USER'S OWN FIRESTORE PROFILE
+       Users/{currentUser.uid}
+       ================================================= */
 
-    }
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+        if(!doc.exists){
+
+            console.log(
+                "NEXORA: Own profile not found"
+            );
+
+            return;
+        }
+
+
+        const profile =
+            doc.data() || {};
+
+
+        /* ================= PROFILE PHOTO ================= */
+
+        const photo =
+            profile.photoURL ||
+            user.photoURL ||
+            "";
+
+
+        if(photo){
+
+            box.innerHTML = `
+                <img
+                    src="${escapeHTML(photo)}"
+                    alt="Profile"
+                    style="
+                        width:100%;
+                        height:100%;
+                        object-fit:cover;
+                        display:block;
+                    "
+                >
+            `;
+
+        }
+
+
+        console.log(
+            "NEXORA STORY PROFILE:",
+            profile.name,
+            profile.username,
+            profile.uid
+        );
+
+      })
+
+      .catch(function(error){
+
+        console.error(
+            "NEXORA STORY PROFILE ERROR:",
+            error
+        );
+
+      });
 
 }
 
