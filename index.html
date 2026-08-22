@@ -6335,11 +6335,230 @@ function loadNexoraProfile(uid){
                 </div>
 
 
+                        </div>
+
+        `;
+
+
+        /* =====================================================
+           NEXORA PROFILE POSTS
+           Show only this user's own posts
+           ===================================================== */
+
+        const postsSection =
+            document.createElement("div");
+
+        postsSection.id =
+            "nexoraProfilePosts";
+
+        postsSection.style.cssText = `
+            margin-top:20px;
+        `;
+
+        postsSection.innerHTML = `
+
+            <div style="
+                background:#ffffff;
+                border-radius:20px;
+                padding:18px;
+                box-shadow:
+                    0 4px 20px
+                    rgba(0,0,0,.06);
+            ">
+
+                <div style="
+                    font-size:20px;
+                    font-weight:900;
+                    margin-bottom:15px;
+                ">
+                    Posts
+                </div>
+
+                <div
+                    id="nexoraProfilePostsList"
+                    style="
+                        display:flex;
+                        flex-direction:column;
+                        gap:15px;
+                    "
+                >
+                    ⏳ Posts লোড হচ্ছে...
+                </div>
+
             </div>
 
         `;
 
+        content.appendChild(postsSection);
+
+
+        /* ================= LOAD USER POSTS ================= */
+
+        const postsList =
+            document.getElementById(
+                "nexoraProfilePostsList"
+            );
+
+        if(postsList){
+
+            db.collection("Posts")
+              .where(
+                  "uid",
+                  "==",
+                  uid
+              )
+              .get()
+
+              .then(function(snapshot){
+
+                  postsList.innerHTML = "";
+
+                  if(snapshot.empty){
+
+                      postsList.innerHTML = `
+                          <div style="
+                              text-align:center;
+                              padding:35px;
+                              color:#999;
+                          ">
+                              📝 এখনো কোনো Post নেই।
+                          </div>
+                      `;
+
+                      return;
+                  }
+
+
+                  snapshot.forEach(function(postDoc){
+
+                      const post =
+                          postDoc.data();
+
+                      const text =
+                          post.text || "";
+
+                      const name =
+                          post.name ||
+                          user.name ||
+                          "NEXORA User";
+
+                      const photoURL =
+                          post.photoURL ||
+                          post.userPhotoURL ||
+                          user.photoURL ||
+                          "";
+
+                      const postCard =
+                          document.createElement("div");
+
+                      postCard.style.cssText = `
+                          background:#fafafa;
+                          border:1px solid #eee;
+                          border-radius:18px;
+                          overflow:hidden;
+                      `;
+
+
+                      postCard.innerHTML = `
+
+                          <div style="
+                              display:flex;
+                              align-items:center;
+                              gap:10px;
+                              padding:15px;
+                          ">
+
+                              ${
+                                  photoURL
+                                  ?
+                                  `
+                                  <img
+                                      src="${escapeHTML(photoURL)}"
+                                      style="
+                                          width:42px;
+                                          height:42px;
+                                          border-radius:50%;
+                                          object-fit:cover;
+                                      "
+                                  >
+                                  `
+                                  :
+                                  `
+                                  <div style="
+                                      width:42px;
+                                      height:42px;
+                                      border-radius:50%;
+                                      background:#1877f2;
+                                      color:white;
+                                      display:flex;
+                                      align-items:center;
+                                      justify-content:center;
+                                  ">
+                                      👤
+                                  </div>
+                                  `
+                              }
+
+                              <b>
+                                  ${escapeHTML(name)}
+                              </b>
+
+                          </div>
+
+
+                          ${
+                              text
+                              ?
+                              `
+                              <div style="
+                                  padding:0 15px 15px;
+                                  line-height:1.6;
+                                  white-space:pre-wrap;
+                              ">
+                                  ${escapeHTML(text)}
+                              </div>
+                              `
+                              :
+                              ""
+                          }
+
+                      `;
+
+                      postsList.appendChild(
+                          postCard
+                      );
+
+                  });
+
+              })
+
+              .catch(function(error){
+
+                  console.error(
+                      "PROFILE POSTS ERROR:",
+                      error
+                  );
+
+                  postsList.innerHTML = `
+                      <div style="
+                          text-align:center;
+                          padding:30px;
+                          color:#e53935;
+                      ">
+                          ❌ Posts লোড করা যায়নি।
+                      </div>
+                  `;
+
+              });
+
+        }
+
+
       })
+
+        
+
+      
 
 
       /* ================= ERROR ================= */
