@@ -6371,61 +6371,66 @@ function loadNexoraProfile(uid){
 
         `;
 
+/* =====================================================
+   NEXORA PROFILE POSTS
+   Show only this user's own posts
+   ===================================================== */
 
-        /* =====================================================
-           NEXORA PROFILE POSTS
-           Show only this user's own posts
-           ===================================================== */
+const postsSection =
+    document.createElement("div");
 
-        const postsSection =
-            document.createElement("div");
+postsSection.id =
+    "nexoraProfilePosts";
 
-        postsSection.id =
-            "nexoraProfilePosts";
-
-        postsSection.style.cssText = `
-            margin-top:20px;
-        `;
-
-        postsSection.innerHTML = `
-
-          <div style="
+postsSection.style.cssText = `
+    margin-top:20px;
     width:100%;
+    padding:0;
+    margin-left:0;
+    margin-right:0;
     box-sizing:border-box;
-    background:#ffffff;
-    border-radius:0px;
-    padding:12px;
-                box-shadow:
-                    0 4px 20px
-                    rgba(0,0,0,.06);
-            ">
+`;
 
-                <div style="
-                    font-size:20px;
-                    font-weight:900;
-                    margin-bottom:15px;
-                ">
-                    Posts
-                </div>
+postsSection.innerHTML = `
 
-                <div
-                    id="nexoraProfilePostsList"
-                    style="
-                        display:flex;
-                        flex-direction:column;
-                        gap:15px;
-                    "
-                >
-                    ⏳ Posts লোড হচ্ছে...
-                </div>
+    <div style="
+        width:100%;
+        box-sizing:border-box;
+        background:#ffffff;
+        border-radius:0;
+        padding:5px;
+        margin:0;
+        box-shadow:
+            0 4px 20px
+            rgba(0,0,0,.06);
+    ">
 
-            </div>
+        <div style="
+            font-size:20px;
+            font-weight:900;
+            margin-bottom:15px;
+        ">
+            Posts
+        </div>
 
-        `;
+        <div
+            id="nexoraProfilePostsList"
+            style="
+                display:flex;
+                flex-direction:column;
+                gap:15px;
+                width:100%;
+            "
+        >
+            ⏳ Posts লোড হচ্ছে...
+        </div>
 
-        content.appendChild(postsSection);
+    </div>
 
+`;
 
+content.appendChild(postsSection);
+ 
         /* ================= LOAD USER POSTS ================= */
 
         const postsList =
