@@ -4330,10 +4330,9 @@ function logout(){
         });
 
 }
-
 /* =====================================================
-   NEXORA AUTH STATE — FACEBOOK STYLE ACCOUNT ROUTING
-   Login → Own UID → Own Profile → Own Home
+   NEXORA USER ACCOUNT ROUTING — FINAL FIX
+   প্রত্যেক User → নিজের UID → নিজের Profile → নিজের Home
    ===================================================== */
 
 auth.onAuthStateChanged(function(user){
@@ -4345,9 +4344,15 @@ auth.onAuthStateChanged(function(user){
         document.getElementById("homeSection");
 
 
-    /* ================= NO USER LOGGED IN ================= */
+    /* =====================================================
+       NO USER LOGGED IN
+       ===================================================== */
 
     if(!user){
+
+        console.log(
+            "NEXORA: No user logged in"
+        );
 
         if(login){
 
@@ -4367,15 +4372,24 @@ auth.onAuthStateChanged(function(user){
     }
 
 
-    /* ================= USER LOGGED IN ================= */
+    /* =====================================================
+       CURRENT GOOGLE USER
+       ===================================================== */
 
     console.log(
-        "NEXORA USER LOGIN:",
+        "NEXORA CURRENT USER UID:",
         user.uid
     );
 
+    console.log(
+        "NEXORA CURRENT USER EMAIL:",
+        user.email
+    );
 
-    /* ================= HIDE LOGIN ================= */
+
+    /* =====================================================
+       HIDE LOGIN
+       ===================================================== */
 
     if(login){
 
@@ -4385,7 +4399,9 @@ auth.onAuthStateChanged(function(user){
     }
 
 
-    /* ================= HIDE HOME TEMPORARILY ================= */
+    /* =====================================================
+       HOME TEMPORARILY HIDDEN
+       ===================================================== */
 
     if(home){
 
@@ -4395,11 +4411,272 @@ auth.onAuthStateChanged(function(user){
     }
 
 
-    /* ================= CHECK THIS USER ACCOUNT ================= */
+    /* =====================================================
+       FIND ONLY THIS USER'S PROFILE
+       Users/{currentUser.uid}
+       ===================================================== */
 
-    checkNexoraUserAccount(user);
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+        console.log(
+            "NEXORA PROFILE CHECK:",
+            user.uid,
+            doc.exists
+        );
+
+
+        /* =================================================
+           PROFILE EXISTS
+           ================================================= */
+
+        if(doc.exists){
+
+            const profile =
+                doc.data() || {};
+
+
+            console.log(
+                "NEXORA OWN PROFILE:",
+                profile
+            );
+
+
+            /* =============================================
+               CHECK PROFILE BELONGS TO CURRENT USER
+               ============================================= */
+
+            if(
+                profile.uid === user.uid &&
+                profile.profileComplete === true &&
+                profile.name &&
+                profile.username
+            ){
+
+                window.nexoraCurrentProfile =
+                    profile;
+
+
+                console.log(
+                    "NEXORA OWN ACCOUNT FOUND:",
+                    profile.name,
+                    profile.username
+                );
+
+
+                /* =========================================
+                   OPEN THIS USER'S OWN HOME
+                   ========================================= */
+
+                openNexoraHomeAfterAccount();
+
+                return;
+
+            }
+
+
+            /* =============================================
+               PROFILE EXISTS BUT INCOMPLETE
+               ============================================= */
+
+            console.log(
+                "NEXORA: Profile incomplete"
+            );
+
+
+            showNexoraModernProfileSetup(
+                user,
+                profile
+            );
+
+            return;
+
+        }
+
+
+        /* =================================================
+           PROFILE DOES NOT EXIST
+           NEW USER
+           ================================================= */
+
+        console.log(
+            "NEXORA: New user profile not found"
+        );
+
+
+        showNexoraModernProfileSetup(
+            user,
+            {}
+        );
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA ACCOUNT ROUTING ERROR:",
+            error
+        );
+
+        alert(
+            "আপনার NEXORA Profile খুঁজে পাওয়া যায়নি:\n\n" +
+            error.message
+        );
+
+    });
 
 });
+
+
+/* =====================================================
+   OPEN CURRENT USER'S OWN HOME
+   ===================================================== */
+
+function openNexoraHomeAfterAccount(){
+
+    const login =
+        document.getElementById(
+            "loginSection"
+        );
+
+    const home =
+        document.getElementById(
+            "homeSection"
+        );
+
+
+    /* =====================================================
+       HIDE LOGIN
+       ===================================================== */
+
+    if(login){
+
+        login.style.display =
+            "none";
+
+    }
+
+
+    /* =====================================================
+       SHOW HOME
+       ===================================================== */
+
+    if(home){
+
+        home.style.display =
+            "block";
+
+    }
+
+
+    /* =====================================================
+       CURRENT USER
+       ===================================================== */
+
+    const user =
+        auth.currentUser;
+
+
+    if(!user){
+
+        console.error(
+            "NEXORA: Current user not found"
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       LOAD ONLY CURRENT USER PROFILE
+       ===================================================== */
+
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+        if(!doc.exists){
+
+            console.error(
+                "NEXORA OWN PROFILE NOT FOUND:",
+                user.uid
+            );
+
+            return;
+
+        }
+
+
+        const profile =
+            doc.data() || {};
+
+
+        window.nexoraCurrentProfile =
+            profile;
+
+
+        console.log(
+            "NEXORA CURRENT PROFILE:",
+            profile.name,
+            profile.username,
+            profile.uid
+        );
+
+
+        /* =================================================
+           UPDATE CREATE STORY PROFILE
+           ================================================= */
+
+        if(
+            typeof updateCreateStoryProfile ===
+            "function"
+        ){
+
+            updateCreateStoryProfile();
+
+        }
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA OWN PROFILE LOAD ERROR:",
+            error
+        );
+
+    });
+
+
+    /* =====================================================
+       CLOSE PROFILE SETUP
+       ===================================================== */
+
+    const setup =
+        document.getElementById(
+            "nexoraModernProfileSetup"
+        );
+
+
+    if(setup){
+
+        setup.remove();
+
+    }
+
+
+    console.log(
+        "NEXORA OWN HOME OPENED:",
+        user.uid
+    );
+
+}
 
 /* ================= POSTS ================= */
 
