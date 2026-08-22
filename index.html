@@ -549,13 +549,24 @@ button{
 }
 
 /* ================= CREATE POST PAGE ================= */
-
 .nx-modal-page{
     position:fixed;
-    inset:0;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    width:100%;
+    max-width:100vw;
+
     background:#f0f2f5;
+
     z-index:5000;
+
     overflow-y:auto;
+    overflow-x:hidden;
+
+    box-sizing:border-box;
 }
 
 .nx-modal-header{
