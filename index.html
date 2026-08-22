@@ -1792,7 +1792,7 @@ button{
             <small>Reels</small>
         </button>
 
-        <button onclick="alert('Profile system পরবর্তী ধাপে তৈরি করা হবে।')">
+        <button onclick="openMyNexoraProfile()">
             <span>👤</span>
             <small>Profile</small>
         </button>
@@ -5962,7 +5962,26 @@ function openNexoraProfile(uid){
 
     loadNexoraProfile(uid);
 }
+/* =====================================================
+   NEXORA MY PROFILE
+   ===================================================== */
 
+function openMyNexoraProfile(){
+
+    const user = auth.currentUser;
+
+    if(!user){
+
+        alert("আগে NEXORA-তে Login করুন।");
+
+        return;
+    }
+
+    const ownUID = user.uid;
+
+    openNexoraProfile(ownUID);
+
+}
 
 /* ================= LOAD PROFILE ================= */
 
