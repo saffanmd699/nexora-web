@@ -6594,21 +6594,19 @@ function loadNexoraProfile(uid){
 
                   /* ================= POST CARD ================= */
 
-                  const postCard =
-                      document.createElement("div");
+const postCard =
+    document.createElement("div");
 
-
-                  postCard.style.cssText = `
-                      width:100%;
-                      box-sizing:border-box;
-                      background:#fafafa;
-                      border:1px solid #eee;
-                      border-radius:15px;
-                      overflow:hidden;
-                      padding:0;
-                      margin:0;
-                  `;
-
+postCard.style.cssText = `
+    width:100%;
+    box-sizing:border-box;
+    background:#fafafa;
+    border:1px solid #eee;
+    border-radius:15px 15px 0 0;
+    overflow:hidden;
+    padding:0;
+    margin:0;
+`;
 
                   /* =================================================
                      POST HTML
@@ -6692,29 +6690,31 @@ function loadNexoraProfile(uid){
                       }
 
 
-                      <!-- ================= FULL WIDTH MEDIA ================= -->
+                     /* ================= FULL SCREEN IMAGE + VIDEO ================= */
 
-                      ${
-                          mediaHTML
-                          ?
-                          `
-                          <div style="
-    width:calc(100% + 30px);
-    max-width:none;
-    box-sizing:border-box;
-    margin-left:-15px;
-    margin-right:-15px;
-    padding:0;
-    overflow:hidden;
-    background:#000;
-">
-                              ${mediaHTML}
-                          </div>
-                          `
-                          :
-                          ""
-                      }
-
+${
+    mediaHTML
+    ?
+    `
+    <div style="
+        width:100vw;
+        max-width:100vw;
+        box-sizing:border-box;
+        position:relative;
+        left:50%;
+        transform:translateX(-50%);
+        margin:0;
+        padding:0;
+        overflow:hidden;
+        background:#000;
+        line-height:0;
+    ">
+        ${mediaHTML}
+    </div>
+    `
+    :
+    ""
+}
 
                   `;
 
