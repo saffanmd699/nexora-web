@@ -6874,7 +6874,9 @@ ${
 
 function toggleNexoraProfileLock(uid){
 
-    const currentUser = auth.currentUser;
+    const currentUser =
+        auth.currentUser;
+
 
     if(!currentUser){
 
@@ -6883,9 +6885,12 @@ function toggleNexoraProfileLock(uid){
         return;
     }
 
+
     if(currentUser.uid !== uid){
 
-        alert("শুধু নিজের Profile Lock বা Unlock করতে পারবেন।");
+        alert(
+            "শুধু নিজের Profile Lock বা Unlock করতে পারবেন।"
+        );
 
         return;
     }
@@ -6895,13 +6900,16 @@ function toggleNexoraProfileLock(uid){
         db.collection("Users").doc(uid);
 
 
-    userRef.get().then(function(doc){
+    userRef.get()
+
+    .then(function(doc){
 
         if(!doc.exists){
 
-            alert("Profile পাওয়া যায়নি।");
+            throw new Error(
+                "Profile পাওয়া যায়নি।"
+            );
 
-            return;
         }
 
 
@@ -6930,22 +6938,22 @@ function toggleNexoraProfileLock(uid){
                 : "🔓 Profile Unlock করা হয়েছে।"
             );
 
-            closeNexoraProfile();
 
-            setTimeout(function(){
+            /* ================= REFRESH PROFILE ================= */
 
-                loadNexoraProfile(uid);
-
-            }, 300);
+            loadNexoraProfile(uid);
 
         });
 
-    }).catch(function(error){
+    })
+
+    .catch(function(error){
 
         console.error(
             "PROFILE LOCK ERROR:",
             error
         );
+
 
         alert(
             "Profile Lock পরিবর্তন করা যায়নি.\n\n" +
@@ -7488,7 +7496,8 @@ function saveNexoraProfile(uid){
 
           setTimeout(function(){
 
-              loadNexoraProfile(uid);
+          loadNexoraProfile(uid);
+
 
           }, 300);
 
