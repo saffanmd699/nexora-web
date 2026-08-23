@@ -1887,30 +1887,8 @@ const CLOUDINARY_PRESET =
 function googleLogin(){
 
     console.log(
-        "NEXORA GOOGLE LOGIN BUTTON WORKING"
+        "NEXORA Google Login শুরু..."
     );
-
-    alert(
-        "Google Login Function কাজ করছে"
-    );
-
-    if(!auth){
-
-        alert(
-            "Firebase Auth পাওয়া যায়নি।"
-        );
-
-        return;
-    }
-
-    if(!provider){
-
-        alert(
-            "Google Provider পাওয়া যায়নি।"
-        );
-
-        return;
-    }
 
     provider.setCustomParameters({
         prompt: "select_account"
@@ -1980,22 +1958,8 @@ auth.getRedirectResult()
         );
 
     });
+
 /* =====================================================
-   NEXORA CREATE ACCOUNT START
-   নতুন User-এর জন্য Google Account নির্বাচন
-   ===================================================== */
-
-function startNexoraAccountCreate(){
-
-    console.log(
-        "NEXORA: Create Account → Google Account Selection"
-    );
-
-    googleLogin();
-
-}
-
-/*/* =====================================================
    NEXORA CREATE ACCOUNT START
    নতুন User-এর জন্য Google Account নির্বাচন
    ===================================================== */
