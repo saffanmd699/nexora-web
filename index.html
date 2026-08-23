@@ -6762,29 +6762,6 @@ function loadNexoraProfile(uid){
 }
 
 
-      /* ================= PROFILE ERROR ================= */
-
-      .catch(function(error){
-
-          console.error(
-              "PROFILE LOAD ERROR:",
-              error
-          );
-
-          content.innerHTML = `
-              <div style="
-                  text-align:center;
-                  padding:40px;
-                  color:#e53935;
-              ">
-                  ❌ Profile লোড করা যায়নি।
-              </div>
-          `;
-
-      });
-
-}
-
 /* ================= CLOSE PROFILE ================= */
 
 function closeNexoraProfile(){
