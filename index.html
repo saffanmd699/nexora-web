@@ -1951,36 +1951,24 @@ auth.getRedirectResult()
 
     });
 /* =====================================================
-   NEXORA CREATE ACCOUNT START
-   নতুন User-এর জন্য নতুন Google Account নির্বাচন
+   NEXORA CREATE ACCOUNT START — FIXED
    ===================================================== */
 
 function startNexoraAccountCreate(){
 
+    console.log(
+        "NEXORA: Create Account শুরু..."
+    );
+
     /*
-     * আগের account login থাকলেও
-     * সেটাকে ব্যবহার করা হবে না।
+     * এখানে auth.signOut() ব্যবহার করা হবে না।
+     * Google Account নির্বাচন করার জন্য
+     * googleLogin() সরাসরি চালু হবে।
      */
 
-    auth.signOut()
-        .then(function(){
-
-            googleLogin();
-
-        })
-        .catch(function(error){
-
-            console.error(
-                "NEXORA SIGN OUT ERROR:",
-                error
-            );
-
-            googleLogin();
-
-        });
+    googleLogin();
 
 }
-
 /* =====================================================
    CHECK NEXORA USER ACCOUNT
    ===================================================== */
