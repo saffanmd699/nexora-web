@@ -6458,7 +6458,8 @@ function loadNexoraProfile(uid){
 
                   return;
               }
-/* ================= POSTS + IMAGE + VIDEO ================= */
+
+/* ================= POSTS + FULL WIDTH IMAGE + VIDEO ================= */
 
 snapshot.forEach(function(postDoc){
 
@@ -6520,11 +6521,12 @@ snapshot.forEach(function(postDoc){
                             width:100%;
                             max-width:100%;
                             height:auto;
-                            max-height:500px;
+                            max-height:none;
                             object-fit:contain;
-                            border-radius:12px;
-                            margin-top:10px;
-                            background:#f0f2f5;
+                            border-radius:0;
+                            margin:0;
+                            padding:0;
+                            background:#000;
                         "
                     >
                 `;
@@ -6546,9 +6548,13 @@ snapshot.forEach(function(postDoc){
                             display:block;
                             width:100%;
                             max-width:100%;
-                            max-height:500px;
-                            border-radius:12px;
-                            margin-top:10px;
+                            height:auto;
+                            max-height:none;
+                            min-height:220px;
+                            object-fit:contain;
+                            border-radius:0;
+                            margin:0;
+                            padding:0;
                             background:#000;
                         "
                     ></video>
@@ -6574,6 +6580,8 @@ snapshot.forEach(function(postDoc){
         border:1px solid #eee;
         border-radius:15px;
         overflow:hidden;
+        padding:0;
+        margin:0;
     `;
 
 
@@ -6655,7 +6663,7 @@ snapshot.forEach(function(postDoc){
         }
 
 
-        <!-- ================= POST IMAGE / VIDEO ================= -->
+        <!-- ================= FULL WIDTH MEDIA ================= -->
 
         ${
             mediaHTML
@@ -6663,8 +6671,12 @@ snapshot.forEach(function(postDoc){
             `
             <div style="
                 width:100%;
+                max-width:100%;
                 box-sizing:border-box;
-                padding:0 10px 10px;
+                padding:0;
+                margin:0;
+                overflow:hidden;
+                background:#000;
             ">
                 ${mediaHTML}
             </div>
@@ -6682,31 +6694,6 @@ snapshot.forEach(function(postDoc){
     postsList.appendChild(postCard);
 
 });
-
-          })
-
-
-          /* ================= POSTS ERROR ================= */
-
-          .catch(function(error){
-
-              console.error(
-                  "PROFILE POSTS ERROR:",
-                  error
-              );
-
-              postsList.innerHTML = `
-                  <div style="
-                      text-align:center;
-                      padding:30px;
-                      color:#e53935;
-                  ">
-                      ❌ Posts লোড করা যায়নি।
-                  </div>
-              `;
-
-          });
-
       })
 
 
