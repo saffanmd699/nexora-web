@@ -6010,10 +6010,10 @@ function openMyNexoraProfile(){
     openNexoraProfile(ownUID);
 
 }
-
 /* =====================================================
    NEXORA COMPLETE PROFILE + USER POSTS
-   IMAGE + VIDEO + FULL WIDTH
+   PROFILE + IMAGE + VIDEO
+   FULL WIDTH MEDIA
    ===================================================== */
 
 function loadNexoraProfile(uid){
@@ -6126,19 +6126,21 @@ function loadNexoraProfile(uid){
 
 
         /* =================================================
-           PROFILE + POSTS CONTAINER
+           PROFILE MAIN
            ================================================= */
 
         content.innerHTML = `
-<div style="
-    width:100%;
-    max-width:650px;
-    margin:0 auto;
-    padding:15px;
-    box-sizing:border-box;
-    background:#fff;
-    overflow:hidden;
-">
+
+            <div style="
+                width:100%;
+                max-width:650px;
+                margin:0 auto;
+                padding:15px;
+                box-sizing:border-box;
+                background:#fff;
+                overflow:hidden;
+            ">
+
 
                 <!-- ================= PROFILE PHOTO ================= -->
 
@@ -6210,6 +6212,7 @@ function loadNexoraProfile(uid){
                         color:#1877f2;
                         font-size:15px;
                         font-weight:700;
+                        word-break:break-word;
                     ">
                         @${escapeHTML(username)}
                     </div>
@@ -6263,6 +6266,7 @@ function loadNexoraProfile(uid){
                             <div style="
                                 margin-bottom:10px;
                                 color:#555;
+                                word-break:break-word;
                             ">
                                 🎂 Age:
                                 ${escapeHTML(String(age))}
@@ -6280,6 +6284,7 @@ function loadNexoraProfile(uid){
                             <div style="
                                 margin-bottom:10px;
                                 color:#555;
+                                word-break:break-word;
                             ">
                                 👤 Gender:
                                 ${escapeHTML(gender)}
@@ -6297,6 +6302,7 @@ function loadNexoraProfile(uid){
                             <div style="
                                 margin-bottom:10px;
                                 color:#555;
+                                word-break:break-word;
                             ">
                                 📍 Location:
                                 ${escapeHTML(location)}
@@ -6392,18 +6398,26 @@ function loadNexoraProfile(uid){
                     width:100%;
                     box-sizing:border-box;
                     background:#fff;
-                    padding:15px;
+                    padding:0;
                     margin:0;
+                    overflow:hidden;
                 ">
+
+
+                    <!-- ================= POSTS TITLE ================= -->
 
                     <div style="
                         font-size:20px;
                         font-weight:900;
-                        margin-bottom:15px;
+                        margin:0;
+                        padding:15px 15px 15px;
+                        box-sizing:border-box;
                     ">
                         Posts
                     </div>
 
+
+                    <!-- ================= POSTS LIST ================= -->
 
                     <div
                         id="nexoraProfilePostsList"
@@ -6596,6 +6610,10 @@ function loadNexoraProfile(uid){
                   `;
 
 
+                  /* =================================================
+                     POST HTML
+                     ================================================= */
+
                   postCard.innerHTML = `
 
 
@@ -6673,36 +6691,36 @@ function loadNexoraProfile(uid){
                           ""
                       }
 
-/* ================= FULL WIDTH IMAGE + VIDEO ================= */
 
-${
-    mediaHTML
-    ?
-    `
-    <div style="
-        width:calc(100% + 30px);
-        max-width:none;
-        box-sizing:border-box;
-        margin-left:-15px;
-        margin-right:-15px;
-        padding:0;
-        overflow:hidden;
-        background:#000;
-    ">
-        ${mediaHTML}
-    </div>
-    `
-    :
-    ""
-}
+                      <!-- ================= FULL WIDTH MEDIA ================= -->
 
-`;
+                      ${
+                          mediaHTML
+                          ?
+                          `
+                          <div style="
+                              width:100%;
+                              max-width:100%;
+                              box-sizing:border-box;
+                              margin:0;
+                              padding:0;
+                              overflow:hidden;
+                              background:#000;
+                          ">
+                              ${mediaHTML}
+                          </div>
+                          `
+                          :
+                          ""
+                      }
 
 
+                  `;
 
-/* ================= ADD POST ================= */
 
-postsList.appendChild(postCard);
+                  /* ================= ADD POST ================= */
+
+                  postsList.appendChild(postCard);
 
               });
 
@@ -6774,6 +6792,7 @@ function closeNexoraProfile(){
         page.remove();
 
 }
+
 /* ================= OPEN STORY ================= */
 
 function openNexoraStory(index){
