@@ -1881,28 +1881,58 @@ const CLOUDINARY_PRESET =
 
 /* =====================================================
    NEXORA GOOGLE LOGIN
-   নতুন Account-এর জন্য Google Account নির্বাচন
+   Google Account নির্বাচন
    ===================================================== */
 
 function googleLogin(){
 
     console.log(
-        "NEXORA নতুন Google Account Login শুরু..."
+        "NEXORA GOOGLE LOGIN BUTTON WORKING"
     );
 
-    /*
-     * Google-কে Account নির্বাচন করার জন্য বলা হচ্ছে।
-     * আগের login করা account সরাসরি ব্যবহার করবে না।
-     */
+    alert(
+        "Google Login Function কাজ করছে"
+    );
+
+    if(!auth){
+
+        alert(
+            "Firebase Auth পাওয়া যায়নি।"
+        );
+
+        return;
+    }
+
+    if(!provider){
+
+        alert(
+            "Google Provider পাওয়া যায়নি।"
+        );
+
+        return;
+    }
 
     provider.setCustomParameters({
         prompt: "select_account"
     });
 
-    auth.signInWithRedirect(provider);
+    auth.signInWithRedirect(provider)
+
+        .catch(function(error){
+
+            console.error(
+                "NEXORA GOOGLE LOGIN ERROR:",
+                error
+            );
+
+            alert(
+                "Google Login শুরু করা যায়নি:\n\n" +
+                error.message
+            );
+
+        });
 
 }
-
 /* =====================================================
    NEXORA GOOGLE REDIRECT RESULT
    Google → NEXORA Return Handler
