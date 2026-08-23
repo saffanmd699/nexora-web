@@ -6458,126 +6458,230 @@ function loadNexoraProfile(uid){
 
                   return;
               }
+/* ================= POSTS + IMAGE + VIDEO ================= */
+
+snapshot.forEach(function(postDoc){
+
+    const post =
+        postDoc.data();
 
 
-              /* ================= POSTS ================= */
+    /* ================= POST TEXT ================= */
 
-              snapshot.forEach(function(postDoc){
-
-                  const post =
-                      postDoc.data();
-
-                  const text =
-                      post.text || "";
-
-                  const postName =
-                      post.name ||
-                      user.name ||
-                      user.displayName ||
-                      "NEXORA User";
-
-                  const photoURL =
-                      post.photoURL ||
-                      post.userPhotoURL ||
-                      user.photoURL ||
-                      user.photo ||
-                      "";
+    const text =
+        post.text || "";
 
 
-                  const postCard =
-                      document.createElement("div");
+    /* ================= POST NAME ================= */
+
+    const postName =
+        post.name ||
+        user.name ||
+        user.displayName ||
+        "NEXORA User";
 
 
-                  postCard.style.cssText = `
-                      width:100%;
-                      box-sizing:border-box;
-                      background:#fafafa;
-                      border:1px solid #eee;
-                      border-radius:15px;
-                      overflow:hidden;
-                  `;
+    /* ================= POST PROFILE PHOTO ================= */
+
+    const photoURL =
+        post.photoURL ||
+        post.userPhotoURL ||
+        user.photoURL ||
+        user.photo ||
+        "";
 
 
-                  postCard.innerHTML = `
+    /* ================= POST MEDIA ================= */
 
-                      <!-- ================= POST USER ================= -->
-
-                      <div style="
-                          display:flex;
-                          align-items:center;
-                          gap:10px;
-                          padding:15px;
-                          box-sizing:border-box;
-                      ">
-
-                          ${
-                              photoURL
-                              ?
-                              `
-                              <img
-                                  src="${escapeHTML(photoURL)}"
-                                  style="
-                                      width:42px;
-                                      height:42px;
-                                      border-radius:50%;
-                                      object-fit:cover;
-                                      flex-shrink:0;
-                                  "
-                              >
-                              `
-                              :
-                              `
-                              <div style="
-                                  width:42px;
-                                  height:42px;
-                                  border-radius:50%;
-                                  background:#1877f2;
-                                  color:white;
-                                  display:flex;
-                                  align-items:center;
-                                  justify-content:center;
-                                  flex-shrink:0;
-                              ">
-                                  👤
-                              </div>
-                              `
-                          }
-
-                          <b style="
-                              word-break:break-word;
-                          ">
-                              ${escapeHTML(postName)}
-                          </b>
-
-                      </div>
+    let mediaHTML = "";
 
 
-                      <!-- ================= POST TEXT ================= -->
+    if(
+        post.media &&
+        Array.isArray(post.media)
+    ){
 
-                      ${
-                          text
-                          ?
-                          `
-                          <div style="
-                              padding:0 15px 15px;
-                              line-height:1.6;
-                              white-space:pre-wrap;
-                              word-break:break-word;
-                              box-sizing:border-box;
-                          ">
-                              ${escapeHTML(text)}
-                          </div>
-                          `
-                          :
-                          ""
-                      }
+        post.media.forEach(function(media){
 
-                  `;
+            if(!media || !media.url)
+                return;
 
 
-                  postsList.appendChild(postCard);
+            /* ================= IMAGE ================= */
 
-              });
+            if(media.type === "image"){
+
+                mediaHTML += `
+                    <img
+                        src="${escapeHTML(media.url)}"
+                        alt="NEXORA Post Image"
+                        style="
+                            display:block;
+                            width:100%;
+                            max-width:100%;
+                            height:auto;
+                            max-height:500px;
+                            object-fit:contain;
+                            border-radius:12px;
+                            margin-top:10px;
+                            background:#f0f2f5;
+                        "
+                    >
+                `;
+
+            }
+
+
+            /* ================= VIDEO ================= */
+
+            else if(media.type === "video"){
+
+                mediaHTML += `
+                    <video
+                        src="${escapeHTML(media.url)}"
+                        controls
+                        playsinline
+                        preload="metadata"
+                        style="
+                            display:block;
+                            width:100%;
+                            max-width:100%;
+                            max-height:500px;
+                            border-radius:12px;
+                            margin-top:10px;
+                            background:#000;
+                        "
+                    ></video>
+                `;
+
+            }
+
+        });
+
+    }
+
+
+    /* ================= CREATE POST CARD ================= */
+
+    const postCard =
+        document.createElement("div");
+
+
+    postCard.style.cssText = `
+        width:100%;
+        box-sizing:border-box;
+        background:#fafafa;
+        border:1px solid #eee;
+        border-radius:15px;
+        overflow:hidden;
+    `;
+
+
+    postCard.innerHTML = `
+
+
+        <!-- ================= POST USER ================= -->
+
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:15px;
+            box-sizing:border-box;
+        ">
+
+            ${
+                photoURL
+                ?
+                `
+                <img
+                    src="${escapeHTML(photoURL)}"
+                    alt="Profile"
+                    style="
+                        width:42px;
+                        height:42px;
+                        border-radius:50%;
+                        object-fit:cover;
+                        flex-shrink:0;
+                    "
+                >
+                `
+                :
+                `
+                <div style="
+                    width:42px;
+                    height:42px;
+                    border-radius:50%;
+                    background:#1877f2;
+                    color:white;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    flex-shrink:0;
+                ">
+                    👤
+                </div>
+                `
+            }
+
+
+            <b style="
+                word-break:break-word;
+            ">
+                ${escapeHTML(postName)}
+            </b>
+
+        </div>
+
+
+        <!-- ================= POST TEXT ================= -->
+
+        ${
+            text
+            ?
+            `
+            <div style="
+                padding:0 15px 10px;
+                line-height:1.6;
+                white-space:pre-wrap;
+                word-break:break-word;
+                box-sizing:border-box;
+            ">
+                ${escapeHTML(text)}
+            </div>
+            `
+            :
+            ""
+        }
+
+
+        <!-- ================= POST IMAGE / VIDEO ================= -->
+
+        ${
+            mediaHTML
+            ?
+            `
+            <div style="
+                width:100%;
+                box-sizing:border-box;
+                padding:0 10px 10px;
+            ">
+                ${mediaHTML}
+            </div>
+            `
+            :
+            ""
+        }
+
+
+    `;
+
+
+    /* ================= ADD POST ================= */
+
+    postsList.appendChild(postCard);
+
+});
 
           })
 
