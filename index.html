@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -551,13 +549,24 @@ button{
 }
 
 /* ================= CREATE POST PAGE ================= */
-
 .nx-modal-page{
     position:fixed;
-    inset:0;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    width:100%;
+    max-width:100vw;
+
     background:#f0f2f5;
+
     z-index:5000;
+
     overflow-y:auto;
+    overflow-x:hidden;
+
+    box-sizing:border-box;
 }
 
 .nx-modal-header{
@@ -582,9 +591,12 @@ button{
 }
 
 .nx-create-container{
-    max-width:650px;
-    margin:15px auto;
-    padding:5px 10px 100px;
+    width:100%;
+    max-width:100%;
+    margin:0;
+    padding:5px 3px 100px;
+    box-sizing:border-box;
+
 }
 
 .nx-create-box{
@@ -1479,6 +1491,41 @@ button{
     }
 
 }
+/* =====================================================
+   NEXORA MOBILE PROFILE FIX
+   ===================================================== */
+
+#nexoraProfilePage,
+#nexoraProfilePage *{
+    box-sizing:border-box;
+}
+
+#nexoraProfilePage{
+    width:100vw;
+    max-width:100vw;
+    overflow-x:hidden;
+}
+
+#nexoraProfileContent{
+    width:100% !important;
+    max-width:650px !important;
+    margin:0 auto !important;
+    padding:2px !important;
+    box-sizing:border-box !important;
+    overflow-x:hidden !important;
+}
+
+#nexoraProfileContent img,
+#nexoraProfileContent video{
+    max-width:100% !important;
+}
+
+#nexoraProfilePosts{
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+}
+
 </style>
 </head>
 
@@ -1792,7 +1839,7 @@ button{
             <small>Reels</small>
         </button>
 
-        <button onclick="alert('Profile system পরবর্তী ধাপে তৈরি করা হবে।')">
+        <button onclick="openMyNexoraProfile()">
             <span>👤</span>
             <small>Profile</small>
         </button>
@@ -1864,30 +1911,25 @@ const CLOUDINARY_PRESET =
    Google → Profile Setup → Firebase → Welcome → Home
    ===================================================== */
 
-
 /* =====================================================
    NEXORA GOOGLE LOGIN
+   নতুন Account-এর জন্য Google Account নির্বাচন
    ===================================================== */
 
 function googleLogin(){
 
-    const user = auth.currentUser;
-
-    if(user){
-
-        console.log(
-            "Already logged in:",
-            user.email
-        );
-
-        checkNexoraUserAccount(user);
-
-        return;
-    }
-
     console.log(
-        "NEXORA Google Redirect Login শুরু..."
+        "NEXORA নতুন Google Account Login শুরু..."
     );
+
+    /*
+     * Google-কে Account নির্বাচন করার জন্য বলা হচ্ছে।
+     * আগের login করা account সরাসরি ব্যবহার করবে না।
+     */
+
+    provider.setCustomParameters({
+        prompt: "select_account"
+    });
 
     auth.signInWithRedirect(provider);
 
@@ -1942,24 +1984,34 @@ auth.getRedirectResult()
     });
 /* =====================================================
    NEXORA CREATE ACCOUNT START
+   নতুন User-এর জন্য নতুন Google Account নির্বাচন
    ===================================================== */
 
 function startNexoraAccountCreate(){
 
-    const user = auth.currentUser;
+    /*
+     * আগের account login থাকলেও
+     * সেটাকে ব্যবহার করা হবে না।
+     */
 
-    if(user){
+    auth.signOut()
+        .then(function(){
 
-        checkNexoraUserAccount(user);
+            googleLogin();
 
-        return;
-    }
+        })
+        .catch(function(error){
 
-    googleLogin();
+            console.error(
+                "NEXORA SIGN OUT ERROR:",
+                error
+            );
+
+            googleLogin();
+
+        });
 
 }
-
-
 
 /* =====================================================
    CHECK NEXORA USER ACCOUNT
@@ -4325,10 +4377,9 @@ function logout(){
         });
 
 }
-
 /* =====================================================
-   NEXORA AUTH STATE — FACEBOOK STYLE ACCOUNT ROUTING
-   Login → Own UID → Own Profile → Own Home
+   NEXORA USER ACCOUNT ROUTING — FINAL FIX
+   প্রত্যেক User → নিজের UID → নিজের Profile → নিজের Home
    ===================================================== */
 
 auth.onAuthStateChanged(function(user){
@@ -4340,9 +4391,15 @@ auth.onAuthStateChanged(function(user){
         document.getElementById("homeSection");
 
 
-    /* ================= NO USER LOGGED IN ================= */
+    /* =====================================================
+       NO USER LOGGED IN
+       ===================================================== */
 
     if(!user){
+
+        console.log(
+            "NEXORA: No user logged in"
+        );
 
         if(login){
 
@@ -4362,15 +4419,24 @@ auth.onAuthStateChanged(function(user){
     }
 
 
-    /* ================= USER LOGGED IN ================= */
+    /* =====================================================
+       CURRENT GOOGLE USER
+       ===================================================== */
 
     console.log(
-        "NEXORA USER LOGIN:",
+        "NEXORA CURRENT USER UID:",
         user.uid
     );
 
+    console.log(
+        "NEXORA CURRENT USER EMAIL:",
+        user.email
+    );
 
-    /* ================= HIDE LOGIN ================= */
+
+    /* =====================================================
+       HIDE LOGIN
+       ===================================================== */
 
     if(login){
 
@@ -4380,7 +4446,9 @@ auth.onAuthStateChanged(function(user){
     }
 
 
-    /* ================= HIDE HOME TEMPORARILY ================= */
+    /* =====================================================
+       HOME TEMPORARILY HIDDEN
+       ===================================================== */
 
     if(home){
 
@@ -4390,11 +4458,272 @@ auth.onAuthStateChanged(function(user){
     }
 
 
-    /* ================= CHECK THIS USER ACCOUNT ================= */
+    /* =====================================================
+       FIND ONLY THIS USER'S PROFILE
+       Users/{currentUser.uid}
+       ===================================================== */
 
-    checkNexoraUserAccount(user);
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+        console.log(
+            "NEXORA PROFILE CHECK:",
+            user.uid,
+            doc.exists
+        );
+
+
+        /* =================================================
+           PROFILE EXISTS
+           ================================================= */
+
+        if(doc.exists){
+
+            const profile =
+                doc.data() || {};
+
+
+            console.log(
+                "NEXORA OWN PROFILE:",
+                profile
+            );
+
+
+            /* =============================================
+               CHECK PROFILE BELONGS TO CURRENT USER
+               ============================================= */
+
+            if(
+                profile.uid === user.uid &&
+                profile.profileComplete === true &&
+                profile.name &&
+                profile.username
+            ){
+
+                window.nexoraCurrentProfile =
+                    profile;
+
+
+                console.log(
+                    "NEXORA OWN ACCOUNT FOUND:",
+                    profile.name,
+                    profile.username
+                );
+
+
+                /* =========================================
+                   OPEN THIS USER'S OWN HOME
+                   ========================================= */
+
+                openNexoraHomeAfterAccount();
+
+                return;
+
+            }
+
+
+            /* =============================================
+               PROFILE EXISTS BUT INCOMPLETE
+               ============================================= */
+
+            console.log(
+                "NEXORA: Profile incomplete"
+            );
+
+
+            showNexoraModernProfileSetup(
+                user,
+                profile
+            );
+
+            return;
+
+        }
+
+
+        /* =================================================
+           PROFILE DOES NOT EXIST
+           NEW USER
+           ================================================= */
+
+        console.log(
+            "NEXORA: New user profile not found"
+        );
+
+
+        showNexoraModernProfileSetup(
+            user,
+            {}
+        );
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA ACCOUNT ROUTING ERROR:",
+            error
+        );
+
+        alert(
+            "আপনার NEXORA Profile খুঁজে পাওয়া যায়নি:\n\n" +
+            error.message
+        );
+
+    });
 
 });
+
+
+/* =====================================================
+   OPEN CURRENT USER'S OWN HOME
+   ===================================================== */
+
+function openNexoraHomeAfterAccount(){
+
+    const login =
+        document.getElementById(
+            "loginSection"
+        );
+
+    const home =
+        document.getElementById(
+            "homeSection"
+        );
+
+
+    /* =====================================================
+       HIDE LOGIN
+       ===================================================== */
+
+    if(login){
+
+        login.style.display =
+            "none";
+
+    }
+
+
+    /* =====================================================
+       SHOW HOME
+       ===================================================== */
+
+    if(home){
+
+        home.style.display =
+            "block";
+
+    }
+
+
+    /* =====================================================
+       CURRENT USER
+       ===================================================== */
+
+    const user =
+        auth.currentUser;
+
+
+    if(!user){
+
+        console.error(
+            "NEXORA: Current user not found"
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       LOAD ONLY CURRENT USER PROFILE
+       ===================================================== */
+
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+        if(!doc.exists){
+
+            console.error(
+                "NEXORA OWN PROFILE NOT FOUND:",
+                user.uid
+            );
+
+            return;
+
+        }
+
+
+        const profile =
+            doc.data() || {};
+
+
+        window.nexoraCurrentProfile =
+            profile;
+
+
+        console.log(
+            "NEXORA CURRENT PROFILE:",
+            profile.name,
+            profile.username,
+            profile.uid
+        );
+
+
+        /* =================================================
+           UPDATE CREATE STORY PROFILE
+           ================================================= */
+
+        if(
+            typeof updateCreateStoryProfile ===
+            "function"
+        ){
+
+            updateCreateStoryProfile();
+
+        }
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA OWN PROFILE LOAD ERROR:",
+            error
+        );
+
+    });
+
+
+    /* =====================================================
+       CLOSE PROFILE SETUP
+       ===================================================== */
+
+    const setup =
+        document.getElementById(
+            "nexoraModernProfileSetup"
+        );
+
+
+    if(setup){
+
+        setup.remove();
+
+    }
+
+
+    console.log(
+        "NEXORA OWN HOME OPENED:",
+        user.uid
+    );
+
+}
 
 /* ================= POSTS ================= */
 
@@ -5341,8 +5670,10 @@ function sharePost(postId){
 let nexoraStories = [];
 let currentStoryIndex = 0;
 
-
-/* ================= CREATE STORY PROFILE ================= */
+/* =====================================================
+   NEXORA CREATE STORY PROFILE — CURRENT USER
+   Firebase Users/{uid} থেকে নিজের profile photo
+   ===================================================== */
 
 function updateCreateStoryProfile(){
 
@@ -5354,43 +5685,98 @@ function updateCreateStoryProfile(){
     const user =
         auth.currentUser;
 
+
+    /* ================= USER CHECK ================= */
+
     if(!box || !user)
         return;
 
-    const photo =
-        user.photoURL || "";
 
-    if(photo){
+    /* ================= DEFAULT PROFILE ================= */
 
-        box.innerHTML = `
-            <img
-                src="${escapeHTML(photo)}"
-                alt="Profile"
-                style="
-                    width:100%;
-                    height:100%;
-                    object-fit:cover;
-                    display:block;
-                "
-            >
-        `;
+    box.innerHTML = `
+        <div style="
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:45px;
+            background:#e4e6eb;
+        ">
+            👤
+        </div>
+    `;
 
-    }else{
 
-        box.innerHTML = `
-            <div style="
-                width:100%;
-                height:100%;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:45px;
-            ">
-                👤
-            </div>
-        `;
+    /* =================================================
+       CURRENT USER'S OWN FIRESTORE PROFILE
+       Users/{currentUser.uid}
+       ================================================= */
 
-    }
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+        if(!doc.exists){
+
+            console.log(
+                "NEXORA: Own profile not found"
+            );
+
+            return;
+        }
+
+
+        const profile =
+            doc.data() || {};
+
+
+        /* ================= PROFILE PHOTO ================= */
+
+        const photo =
+            profile.photoURL ||
+            user.photoURL ||
+            "";
+
+
+        if(photo){
+
+            box.innerHTML = `
+                <img
+                    src="${escapeHTML(photo)}"
+                    alt="Profile"
+                    style="
+                        width:100%;
+                        height:100%;
+                        object-fit:cover;
+                        display:block;
+                    "
+                >
+            `;
+
+        }
+
+
+        console.log(
+            "NEXORA STORY PROFILE:",
+            profile.name,
+            profile.username,
+            profile.uid
+        );
+
+      })
+
+      .catch(function(error){
+
+        console.error(
+            "NEXORA STORY PROFILE ERROR:",
+            error
+        );
+
+      });
 
 }
 
@@ -5579,7 +5965,17 @@ function openNexoraProfile(uid){
 
     page.className =
         "nx-modal-page";
-
+page.style.cssText = `
+    position:fixed;
+    inset:0;
+    width:100%;
+    max-width:100vw;
+    box-sizing:border-box;
+    overflow-y:auto;
+    overflow-x:hidden;
+    background:#f5f6f8;
+    z-index:999999;
+`;
     page.innerHTML = `
 
         <div class="nx-modal-header">
@@ -5602,11 +5998,13 @@ function openNexoraProfile(uid){
 
         <div
             id="nexoraProfileContent"
-            style="
-                max-width:650px;
-                margin:auto;
-                padding:20px;
-            "
+style="
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+    padding:15px;
+    box-sizing:border-box;
+"
         >
             <div style="
                 text-align:center;
@@ -5623,9 +6021,31 @@ function openNexoraProfile(uid){
 
     loadNexoraProfile(uid);
 }
+/* =====================================================
+   NEXORA MY PROFILE
+   ===================================================== */
 
+function openMyNexoraProfile(){
 
-/* ================= LOAD PROFILE ================= */
+    const user = auth.currentUser;
+
+    if(!user){
+
+        alert("আগে NEXORA-তে Login করুন।");
+
+        return;
+    }
+
+    const ownUID = user.uid;
+
+    openNexoraProfile(ownUID);
+
+}
+
+/* =====================================================
+   NEXORA COMPLETE PROFILE
+   Own UID → Users/{UID} → Full Profile
+   ===================================================== */
 
 function loadNexoraProfile(uid){
 
@@ -5636,6 +6056,40 @@ function loadNexoraProfile(uid){
 
     if(!content)
         return;
+
+
+    /* ================= CHECK UID ================= */
+
+    if(!uid){
+
+        content.innerHTML = `
+            <div style="
+                text-align:center;
+                padding:40px;
+                color:#777;
+            ">
+                😔 User পাওয়া যায়নি।
+            </div>
+        `;
+
+        return;
+    }
+
+
+    /* ================= LOADING ================= */
+
+    content.innerHTML = `
+        <div style="
+            text-align:center;
+            padding:50px;
+            color:#777;
+        ">
+            ⏳ Profile লোড হচ্ছে...
+        </div>
+    `;
+
+
+    /* ================= GET USER PROFILE ================= */
 
     db.collection("Users")
       .doc(uid)
@@ -5658,94 +6112,527 @@ function loadNexoraProfile(uid){
             return;
         }
 
+
+        /* ================= USER DATA ================= */
+
         const user =
             doc.data();
+
 
         const name =
             user.name ||
             user.displayName ||
             "NEXORA User";
 
+
+        const username =
+            user.username ||
+            "";
+
+
         const photo =
             user.photoURL ||
             user.photo ||
             "";
 
+
+        const email =
+            user.email ||
+            "";
+
+
+        const age =
+            user.age ||
+            "";
+
+
+        const gender =
+            user.gender ||
+            "";
+
+
+        const bio =
+            user.bio ||
+            "";
+
+
+        const location =
+            user.location ||
+            "";
+
+
+        const portfolio =
+            user.portfolio ||
+            "";
+
+
+        /* ================= PROFILE ================= */
+
         content.innerHTML = `
 
             <div style="
-                background:#fff;
-                border-radius:16px;
-                padding:20px;
-                text-align:center;
-                box-shadow:0 2px 10px rgba(0,0,0,.08);
-            ">
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+    box-sizing:border-box;
+    background:#fff;
+    border-radius:20px;
+    padding:20px 15px;
+    box-shadow:
+        0 4px 20px
+        rgba(0,0,0,.08);
+    overflow:hidden;
+">
 
-                ${
-                    photo
-                    ?
-                    `
-                    <img
-                        src="${escapeHTML(photo)}"
-                        style="
-                            width:110px;
-                            height:110px;
+
+                <!-- ================= PHOTO ================= -->
+
+                <div style="
+                    text-align:center;
+                ">
+
+                    ${
+                        photo
+                        ?
+                        `
+                        <img
+                            src="${escapeHTML(photo)}"
+                            alt="Profile"
+                            style="
+                                width:120px;
+                                height:120px;
+                                border-radius:50%;
+                                object-fit:cover;
+                                border:4px solid #1877f2;
+                            "
+                        >
+                        `
+                        :
+                        `
+                        <div style="
+                            width:120px;
+                            height:120px;
+                            margin:auto;
                             border-radius:50%;
-                            object-fit:cover;
-                            border:4px solid #1877f2;
-                        "
-                    >
-                    `
-                    :
-                    `
-                    <div style="
-                        width:110px;
-                        height:110px;
-                        margin:auto;
-                        border-radius:50%;
-                        background:#1877f2;
-                        color:#fff;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:45px;
-                    ">
-                        👤
-                    </div>
-                    `
-                }
+                            background:#1877f2;
+                            color:#fff;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:50px;
+                        ">
+                            👤
+                        </div>
+                        `
+                    }
+
+                </div>
+
+
+                <!-- ================= NAME ================= -->
 
                 <h2 style="
-                    margin:12px 0 5px;
+                    text-align:center;
+                    margin:15px 0 5px;
+                    font-size:25px;
+                    font-weight:900;
                 ">
                     ${escapeHTML(name)}
                 </h2>
 
+
+                <!-- ================= USERNAME ================= -->
+
                 ${
-                    user.email
+                    username
                     ?
                     `
                     <div style="
-                        color:#777;
-                        font-size:14px;
+                        text-align:center;
+                        color:#1877f2;
+                        font-size:15px;
+                        font-weight:700;
                     ">
-                        ${escapeHTML(user.email)}
+                        @${escapeHTML(username)}
                     </div>
                     `
                     :
                     ""
                 }
 
+
+                <!-- ================= BIO ================= -->
+
+                ${
+                    bio
+                    ?
+                    `
+                    <div style="
+                        text-align:center;
+                        margin-top:15px;
+                        color:#555;
+                        font-size:15px;
+                        line-height:1.6;
+                    ">
+                        ${escapeHTML(bio)}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+                <!-- ================= ABOUT ================= -->
+
+                <div style="
+                    margin-top:22px;
+                    padding:18px;
+                    background:#f8f9fa;
+                    border-radius:15px;
+                ">
+
+                    ${
+                        age
+                        ?
+                        `
+                        <div style="
+                            margin-bottom:10px;
+                            color:#555;
+                        ">
+                            🎂 Age: ${escapeHTML(String(age))}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        gender
+                        ?
+                        `
+                        <div style="
+                            margin-bottom:10px;
+                            color:#555;
+                        ">
+                            👤 Gender: ${escapeHTML(gender)}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        location
+                        ?
+                        `
+                        <div style="
+                            margin-bottom:10px;
+                            color:#555;
+                        ">
+                            📍 Location: ${escapeHTML(location)}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        email
+                        ?
+                        `
+                        <div style="
+                            color:#555;
+                            word-break:break-word;
+                        ">
+                            📧 ${escapeHTML(email)}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+
+                <!-- ================= PORTFOLIO ================= -->
+
+                ${
+                    portfolio
+                    ?
+                    `
+                    <div style="
+                        margin-top:18px;
+                        text-align:center;
+                    ">
+                        <a
+                            href="${escapeHTML(portfolio)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style="
+                                color:#1877f2;
+                                font-weight:700;
+                                text-decoration:none;
+                            "
+                        >
+                            🌐 Visit Website
+                        </a>
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+                <!-- ================= USER ID ================= -->
+
+                <div style="
+                    margin-top:20px;
+                    text-align:center;
+                    color:#aaa;
+                    font-size:11px;
+                    word-break:break-all;
+                ">
+                    UID: ${escapeHTML(uid)}
+                </div>
+
+
+                        </div>
+
+        `;
+
+
+        /* =====================================================
+           NEXORA PROFILE POSTS
+           Show only this user's own posts
+           ===================================================== */
+
+        const postsSection =
+            document.createElement("div");
+
+        postsSection.id =
+            "nexoraProfilePosts";
+
+        postsSection.style.cssText = `
+            margin-top:20px;
+        `;
+
+        postsSection.innerHTML = `
+
+          <div style="
+    width:100%;
+    box-sizing:border-box;
+    background:#ffffff;
+    border-radius:0px;
+    padding:12px;
+                box-shadow:
+                    0 4px 20px
+                    rgba(0,0,0,.06);
+            ">
+
+                <div style="
+                    font-size:20px;
+                    font-weight:900;
+                    margin-bottom:15px;
+                ">
+                    Posts
+                </div>
+
+                <div
+                    id="nexoraProfilePostsList"
+                    style="
+                        display:flex;
+                        flex-direction:column;
+                        gap:15px;
+                    "
+                >
+                    ⏳ Posts লোড হচ্ছে...
+                </div>
+
             </div>
 
         `;
 
+        content.appendChild(postsSection);
+
+
+        /* ================= LOAD USER POSTS ================= */
+
+        const postsList =
+            document.getElementById(
+                "nexoraProfilePostsList"
+            );
+
+        if(postsList){
+
+            db.collection("Posts")
+              .where(
+                  "uid",
+                  "==",
+                  uid
+              )
+              .get()
+
+              .then(function(snapshot){
+
+                  postsList.innerHTML = "";
+
+                  if(snapshot.empty){
+
+                      postsList.innerHTML = `
+                          <div style="
+                              text-align:center;
+                              padding:35px;
+                              color:#999;
+                          ">
+                              📝 এখনো কোনো Post নেই।
+                          </div>
+                      `;
+
+                      return;
+                  }
+
+
+                  snapshot.forEach(function(postDoc){
+
+                      const post =
+                          postDoc.data();
+
+                      const text =
+                          post.text || "";
+
+                      const name =
+                          post.name ||
+                          user.name ||
+                          "NEXORA User";
+
+                      const photoURL =
+                          post.photoURL ||
+                          post.userPhotoURL ||
+                          user.photoURL ||
+                          "";
+
+                      const postCard =
+                          document.createElement("div");
+
+                      postCard.style.cssText = `
+                          background:#fafafa;
+                          border:1px solid #eee;
+                          border-radius:18px;
+                          overflow:hidden;
+                      `;
+
+
+                      postCard.innerHTML = `
+
+                          <div style="
+                              display:flex;
+                              align-items:center;
+                              gap:10px;
+                              padding:15px;
+                          ">
+
+                              ${
+                                  photoURL
+                                  ?
+                                  `
+                                  <img
+                                      src="${escapeHTML(photoURL)}"
+                                      style="
+                                          width:42px;
+                                          height:42px;
+                                          border-radius:50%;
+                                          object-fit:cover;
+                                      "
+                                  >
+                                  `
+                                  :
+                                  `
+                                  <div style="
+                                      width:42px;
+                                      height:42px;
+                                      border-radius:50%;
+                                      background:#1877f2;
+                                      color:white;
+                                      display:flex;
+                                      align-items:center;
+                                      justify-content:center;
+                                  ">
+                                      👤
+                                  </div>
+                                  `
+                              }
+
+                              <b>
+                                  ${escapeHTML(name)}
+                              </b>
+
+                          </div>
+
+
+                          ${
+                              text
+                              ?
+                              `
+                              <div style="
+                                  padding:0 15px 15px;
+                                  line-height:1.6;
+                                  white-space:pre-wrap;
+                              ">
+                                  ${escapeHTML(text)}
+                              </div>
+                              `
+                              :
+                              ""
+                          }
+
+                      `;
+
+                      postsList.appendChild(
+                          postCard
+                      );
+
+                  });
+
+              })
+
+              .catch(function(error){
+
+                  console.error(
+                      "PROFILE POSTS ERROR:",
+                      error
+                  );
+
+                  postsList.innerHTML = `
+                      <div style="
+                          text-align:center;
+                          padding:30px;
+                          color:#e53935;
+                      ">
+                          ❌ Posts লোড করা যায়নি।
+                      </div>
+                  `;
+
+              });
+
+        }
+
+
       })
+
+        
+
+      
+
+
+      /* ================= ERROR ================= */
 
       .catch(function(error){
 
         console.error(
-            "PROFILE LOAD ERROR:",
+            "NEXORA PROFILE LOAD ERROR:",
             error
         );
 
@@ -5753,17 +6640,17 @@ function loadNexoraProfile(uid){
             <div style="
                 text-align:center;
                 padding:40px;
-                color:red;
+                color:#e53935;
             ">
                 ❌ Profile লোড করা যায়নি।
+                <br><br>
+                ${escapeHTML(error.message)}
             </div>
         `;
 
       });
 
 }
-
-
 /* ================= CLOSE PROFILE ================= */
 
 function closeNexoraProfile(){
