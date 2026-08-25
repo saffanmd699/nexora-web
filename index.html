@@ -1878,113 +1878,38 @@ const CLOUDINARY_PRESET =
    NEXORA MODERN ACCOUNT SYSTEM
    Google → Profile Setup → Firebase → Welcome → Home
    ===================================================== */
-
 /* =====================================================
-   NEXORA GOOGLE LOGIN — POPUP FIX
-   Google → Profile Check → Profile Setup / Home
+   NEXORA GOOGLE LOGIN — MOBILE REDIRECT FIX
+   GitHub Pages + Firebase Authentication
    ===================================================== */
 
 function googleLogin(){
 
     console.log(
-        "NEXORA Google Login শুরু..."
+        "NEXORA: Google Login শুরু..."
     );
 
     provider.setCustomParameters({
         prompt: "select_account"
     });
-console.log(
-    "NEXORA: Google Popup শুরু হচ্ছে..."
-);
-
-console.log(
-    "NEXORA AUTH BEFORE POPUP:",
-    auth.currentUser
-);
-    auth.signInWithPopup(provider)
-
-.then(function(result){
 
     console.log(
-        "NEXORA: GOOGLE POPUP RESULT:",
-        result
+        "NEXORA: Google Redirect শুরু হচ্ছে..."
     );
 
     console.log(
-        "NEXORA: GOOGLE POPUP USER:",
-        result ? result.user : null
+        "NEXORA AUTH BEFORE REDIRECT:",
+        auth.currentUser
     );
 
-    if(
-        !result ||
-        !result.user
-    ){
-
-                throw new Error(
-                    "Google User পাওয়া যায়নি।"
-                );
-
-            }
-
-            const user =
-                result.user;
-
-            console.log(
-                "NEXORA Google Login সফল:",
-                user.email
-            );
-
-            console.log(
-                "NEXORA GOOGLE UID:",
-                user.uid
-            );
-
-            checkNexoraUserAccount(user);
-
-        })
+    auth.signInWithRedirect(provider)
 
         .catch(function(error){
 
             console.error(
-                "NEXORA GOOGLE LOGIN ERROR:",
+                "NEXORA GOOGLE REDIRECT ERROR:",
                 error
             );
-
-            if(
-                error.code ===
-                "auth/popup-closed-by-user"
-            ){
-
-                console.log(
-                    "NEXORA: Google popup user বন্ধ করেছেন।"
-                );
-
-                return;
-            }
-
-            if(
-                error.code ===
-                "auth/popup-blocked"
-            ){
-
-                alert(
-                    "Google Login Popup Browser দ্বারা Block হয়েছে। Chrome-এ Popup অনুমতি দিন।"
-                );
-
-                return;
-            }
-
-            if(
-                error.code ===
-                "auth/account-exists-with-different-credential"
-            ){
-
-                alert(
-                    "এই Email দিয়ে অন্য একটি Login Method আগে থেকেই আছে।"
-                );
-
-                return;
-            }
 
             alert(
                 "Google Login করা যায়নি:\n\n" +
@@ -1998,6 +1923,73 @@ console.log(
 }
 
 
+/* =====================================================
+   GOOGLE REDIRECT RESULT
+   GitHub Pages ফিরে আসার পর Google User নেওয়া
+   ===================================================== */
+
+auth.getRedirectResult()
+
+    .then(function(result){
+
+        console.log(
+            "NEXORA: GOOGLE REDIRECT RESULT:",
+            result
+        );
+
+        if(
+            !result ||
+            !result.user
+        ){
+
+            console.log(
+                "NEXORA: No Google redirect user."
+            );
+
+            return;
+        }
+
+        const user =
+            result.user;
+
+        console.log(
+            "NEXORA Google Login সফল:",
+            user.email
+        );
+
+        console.log(
+            "NEXORA GOOGLE UID:",
+            user.uid
+        );
+
+        checkNexoraUserAccount(user);
+
+    })
+
+    .catch(function(error){
+
+        console.error(
+            "NEXORA GOOGLE REDIRECT RESULT ERROR:",
+            error
+        );
+
+        alert(
+            "Google Login করা যায়নি:\n\n" +
+            error.code +
+            "\n\n" +
+            error.message
+        );
+
+    });
+
+
+/* =====================================================
+   NEXORA LOGIN SYSTEM READY
+   ===================================================== */
+
+console.log(
+    "NEXORA Google Redirect Authentication Ready."
+);
 /* =====================================================
    CREATE ACCOUNT START
    ===================================================== */
