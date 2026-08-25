@@ -1893,15 +1893,32 @@ function googleLogin(){
     provider.setCustomParameters({
         prompt: "select_account"
     });
+console.log(
+    "NEXORA: Google Popup শুরু হচ্ছে..."
+);
 
+console.log(
+    "NEXORA AUTH BEFORE POPUP:",
+    auth.currentUser
+);
     auth.signInWithPopup(provider)
 
-        .then(function(result){
+.then(function(result){
 
-            if(
-                !result ||
-                !result.user
-            ){
+    console.log(
+        "NEXORA: GOOGLE POPUP RESULT:",
+        result
+    );
+
+    console.log(
+        "NEXORA: GOOGLE POPUP USER:",
+        result ? result.user : null
+    );
+
+    if(
+        !result ||
+        !result.user
+    ){
 
                 throw new Error(
                     "Google User পাওয়া যায়নি।"
@@ -4349,17 +4366,43 @@ function logout(){
    NEXORA AUTH STATE ROUTING — FINAL
    Google Login → Profile Check → Setup / Home
    ===================================================== */
+/* =====================================================
+   NEXORA AUTH STATE ROUTING — DIAGNOSTIC
+   ===================================================== */
 
 window.nexoraAuthRoutingBusy = false;
 
 auth.onAuthStateChanged(function(user){
+
+    console.log(
+        "========== NEXORA AUTH STATE =========="
+    );
+
+    console.log(
+        "NEXORA AUTH USER:",
+        user
+    );
+
+    console.log(
+        "NEXORA AUTH UID:",
+        user ? user.uid : "NO UID"
+    );
+
+    console.log(
+        "NEXORA AUTH EMAIL:",
+        user ? user.email : "NO EMAIL"
+    );
+
+    console.log(
+        "NEXORA AUTH CURRENT USER:",
+        auth.currentUser
+    );
 
     const login =
         document.getElementById("loginSection");
 
     const home =
         document.getElementById("homeSection");
-
 
     /* =====================================================
        NO USER
