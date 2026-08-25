@@ -6163,6 +6163,505 @@ function openMyNexoraProfile(){
 }
 
 /* =====================================================
+   NEXORA PROFILE PHOTO MENU
+   ===================================================== */
+
+function openNexoraProfilePhotoMenu(uid){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert("আগে NEXORA-তে Login করুন।");
+
+        return;
+    }
+
+    if(currentUser.uid !== uid){
+
+        alert(
+            "শুধু নিজের Profile Photo পরিবর্তন করতে পারবেন।"
+        );
+
+        return;
+    }
+
+    const old =
+        document.getElementById(
+            "nexoraProfilePhotoMenu"
+        );
+
+    if(old)
+        old.remove();
+
+
+    const menu =
+        document.createElement("div");
+
+    menu.id =
+        "nexoraProfilePhotoMenu";
+
+    menu.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.55);
+        z-index:2000000;
+        display:flex;
+        align-items:flex-end;
+        justify-content:center;
+    `;
+
+
+    menu.innerHTML = `
+
+        <div style="
+            width:100%;
+            max-width:500px;
+            background:#fff;
+            border-radius:22px 22px 0 0;
+            padding:20px;
+            box-sizing:border-box;
+            box-shadow:0 -5px 25px rgba(0,0,0,.2);
+        ">
+
+            <div style="
+                text-align:center;
+                font-size:19px;
+                font-weight:900;
+                margin-bottom:18px;
+            ">
+                Profile Photo
+            </div>
+
+
+            <button
+                onclick="selectNexoraProfilePhoto('${escapeHTML(uid)}')"
+                style="
+                    width:100%;
+                    padding:15px;
+                    margin-bottom:10px;
+                    border:none;
+                    border-radius:14px;
+                    background:#1877f2;
+                    color:#fff;
+                    font-size:16px;
+                    font-weight:800;
+                "
+            >
+                📷 Change Profile Photo
+            </button>
+
+
+            <button
+                onclick="viewNexoraProfilePhoto('${escapeHTML(uid)}')"
+                style="
+                    width:100%;
+                    padding:15px;
+                    margin-bottom:10px;
+                    border:none;
+                    border-radius:14px;
+                    background:#f1f3f5;
+                    color:#222;
+                    font-size:16px;
+                    font-weight:800;
+                "
+            >
+                👁️ View Profile Photo
+            </button>
+
+
+            <button
+                onclick="removeNexoraProfilePhoto('${escapeHTML(uid)}')"
+                style="
+                    width:100%;
+                    padding:15px;
+                    margin-bottom:10px;
+                    border:none;
+                    border-radius:14px;
+                    background:#fff0f0;
+                    color:#e53935;
+                    font-size:16px;
+                    font-weight:800;
+                "
+            >
+                🗑️ Remove Profile Photo
+            </button>
+
+
+            <button
+                onclick="closeNexoraProfilePhotoMenu()"
+                style="
+                    width:100%;
+                    padding:15px;
+                    border:none;
+                    border-radius:14px;
+                    background:#eee;
+                    color:#333;
+                    font-size:16px;
+                    font-weight:800;
+                "
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(menu);
+
+}
+
+/* =====================================================
+   NEXORA PROFILE PHOTO ACTIONS
+   ===================================================== */
+
+
+/* ================= CLOSE PHOTO MENU ================= */
+
+function closeNexoraProfilePhotoMenu(){
+
+    const menu =
+        document.getElementById(
+            "nexoraProfilePhotoMenu"
+        );
+
+    if(menu)
+        menu.remove();
+
+}
+
+
+/* ================= CHANGE PROFILE PHOTO ================= */
+
+function selectNexoraProfilePhoto(uid){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert("আগে NEXORA-তে Login করুন।");
+
+        return;
+    }
+
+    if(currentUser.uid !== uid){
+
+        alert(
+            "শুধু নিজের Profile Photo পরিবর্তন করতে পারবেন।"
+        );
+
+        return;
+    }
+
+
+    closeNexoraProfilePhotoMenu();
+
+
+    /* ================= FILE INPUT ================= */
+
+    let input =
+        document.getElementById(
+            "nexoraProfilePhotoInput"
+        );
+
+
+    if(!input){
+
+        input =
+            document.createElement("input");
+
+        input.type =
+            "file";
+
+        input.id =
+            "nexoraProfilePhotoInput";
+
+        input.accept =
+            "image/*";
+
+        input.style.display =
+            "none";
+
+        document.body.appendChild(input);
+
+    }
+
+
+    input.value = "";
+
+
+    input.onchange =
+        function(){
+
+            const file =
+                input.files &&
+                input.files[0];
+
+            if(!file)
+                return;
+
+
+            /* ================= FILE CHECK ================= */
+
+            if(!file.type.startsWith("image/")){
+
+                alert(
+                    "শুধু Image নির্বাচন করুন।"
+                );
+
+                return;
+            }
+
+
+            /* ================= SIZE CHECK ================= */
+
+            if(file.size > 5 * 1024 * 1024){
+
+                alert(
+                    "Profile Photo সর্বোচ্চ 5MB হতে হবে।"
+                );
+
+                return;
+            }
+
+
+            alert(
+                "Profile Photo Upload System-এর পরবর্তী ধাপের জন্য Image নির্বাচন হয়েছে।"
+            );
+
+
+            console.log(
+                "NEXORA PROFILE PHOTO SELECTED:",
+                file.name,
+                file.size
+            );
+
+        };
+
+
+    input.click();
+
+}
+
+
+/* ================= VIEW PROFILE PHOTO ================= */
+
+function viewNexoraProfilePhoto(uid){
+
+    closeNexoraProfilePhotoMenu();
+
+
+    db.collection("Users")
+      .doc(uid)
+      .get()
+
+      .then(function(doc){
+
+        if(!doc.exists){
+
+            alert(
+                "Profile পাওয়া যায়নি।"
+            );
+
+            return;
+        }
+
+
+        const data =
+            doc.data() || {};
+
+
+        const photo =
+            data.photoURL ||
+            data.photo ||
+            "";
+
+
+        if(!photo){
+
+            alert(
+                "এই Profile-এ কোনো Photo নেই।"
+            );
+
+            return;
+        }
+
+
+        const old =
+            document.getElementById(
+                "nexoraProfilePhotoViewer"
+            );
+
+        if(old)
+            old.remove();
+
+
+        const viewer =
+            document.createElement("div");
+
+        viewer.id =
+            "nexoraProfilePhotoViewer";
+
+
+        viewer.style.cssText = `
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.90);
+            z-index:2100000;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            box-sizing:border-box;
+        `;
+
+
+        viewer.innerHTML = `
+
+            <button
+                onclick="document.getElementById('nexoraProfilePhotoViewer').remove()"
+                style="
+                    position:absolute;
+                    top:20px;
+                    right:20px;
+                    width:45px;
+                    height:45px;
+                    border:none;
+                    border-radius:50%;
+                    background:rgba(255,255,255,.15);
+                    color:#fff;
+                    font-size:25px;
+                    z-index:2;
+                "
+            >
+                ✕
+            </button>
+
+
+            <img
+                src="${escapeHTML(photo)}"
+                alt="Profile Photo"
+                style="
+                    max-width:100%;
+                    max-height:85vh;
+                    width:auto;
+                    height:auto;
+                    object-fit:contain;
+                    border-radius:12px;
+                    box-shadow:0 10px 40px rgba(0,0,0,.5);
+                "
+            >
+
+        `;
+
+
+        document.body.appendChild(viewer);
+
+      })
+
+      .catch(function(error){
+
+        console.error(
+            "NEXORA VIEW PROFILE PHOTO ERROR:",
+            error
+        );
+
+        alert(
+            "Profile Photo দেখা যায়নি।\n\n" +
+            (error.message || "")
+        );
+
+      });
+
+}
+
+
+/* ================= REMOVE PROFILE PHOTO ================= */
+
+function removeNexoraProfilePhoto(uid){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert("আগে NEXORA-তে Login করুন।");
+
+        return;
+    }
+
+
+    if(currentUser.uid !== uid){
+
+        alert(
+            "শুধু নিজের Profile Photo মুছতে পারবেন।"
+        );
+
+        return;
+    }
+
+
+    const confirmRemove =
+        confirm(
+            "আপনি কি আপনার Profile Photo মুছে ফেলতে চান?"
+        );
+
+
+    if(!confirmRemove)
+        return;
+
+
+    db.collection("Users")
+      .doc(uid)
+      .update({
+
+          photoURL: ""
+
+      })
+
+      .then(function(){
+
+          alert(
+              "🗑️ Profile Photo মুছে ফেলা হয়েছে।"
+          );
+
+
+          closeNexoraProfilePhotoMenu();
+
+
+          /* ================= RELOAD PROFILE ================= */
+
+          if(
+              typeof loadNexoraProfile ===
+              "function"
+          ){
+
+              loadNexoraProfile(uid);
+
+          }
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA REMOVE PROFILE PHOTO ERROR:",
+              error
+          );
+
+          alert(
+              "Profile Photo মুছে ফেলা যায়নি.\n\n" +
+              (error.message || "")
+          );
+
+      });
+
+}
+
+/* =====================================================
    NEXORA COMPLETE PROFILE + USER POSTS
    PROFILE + IMAGE + VIDEO
    FULL WIDTH MEDIA — FIXED
@@ -6310,10 +6809,13 @@ const isProfileOwner =
 
                 <!-- ================= PROFILE PHOTO ================= -->
 
-                <div style="
-                    text-align:center;
-                ">
-
+              <div
+    onclick="openNexoraProfilePhotoMenu('${escapeHTML(uid)}')"
+    style="
+        text-align:center;
+        cursor:pointer;
+    "
+>
                     ${
                         photo
                         ?
@@ -7120,6 +7622,175 @@ function closeNexoraProfile(){
 
 }
 
+/* =====================================================
+   NEXORA PROFILE PHOTO MENU
+   ===================================================== */
+
+function openNexoraProfilePhotoMenu(uid){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert("আগে NEXORA-তে Login করুন।");
+
+        return;
+    }
+
+    if(currentUser.uid !== uid){
+
+        alert("শুধু নিজের Profile Photo পরিবর্তন করতে পারবেন।");
+
+        return;
+    }
+
+    const old =
+        document.getElementById(
+            "nexoraProfilePhotoMenu"
+        );
+
+    if(old)
+        old.remove();
+
+    const menu =
+        document.createElement("div");
+
+    menu.id =
+        "nexoraProfilePhotoMenu";
+
+    menu.style.cssText = `
+        position:fixed;
+        inset:0;
+        z-index:2000000;
+        background:rgba(0,0,0,.55);
+        display:flex;
+        align-items:flex-end;
+        justify-content:center;
+    `;
+
+    menu.innerHTML = `
+
+        <div style="
+            width:100%;
+            max-width:500px;
+            background:#fff;
+            border-radius:22px 22px 0 0;
+            padding:20px;
+            box-sizing:border-box;
+        ">
+
+            <div style="
+                text-align:center;
+                font-size:19px;
+                font-weight:900;
+                margin-bottom:18px;
+            ">
+                Profile Photo
+            </div>
+
+            <button
+                onclick="selectNexoraProfilePhoto()"
+                style="
+                    width:100%;
+                    padding:15px;
+                    border:none;
+                    border-radius:14px;
+                    background:#1877f2;
+                    color:#fff;
+                    font-size:16px;
+                    font-weight:800;
+                    margin-bottom:10px;
+                "
+            >
+                🖼️ Choose from Gallery
+            </button>
+
+            <button
+                onclick="removeNexoraProfilePhoto('${escapeHTML(uid)}')"
+                style="
+                    width:100%;
+                    padding:15px;
+                    border:none;
+                    border-radius:14px;
+                    background:#f1f3f5;
+                    color:#e53935;
+                    font-size:16px;
+                    font-weight:800;
+                    margin-bottom:10px;
+                "
+            >
+                🗑️ Remove Profile Photo
+            </button>
+
+            <button
+                onclick="closeNexoraProfilePhotoMenu()"
+                style="
+                    width:100%;
+                    padding:15px;
+                    border:none;
+                    border-radius:14px;
+                    background:#eee;
+                    color:#333;
+                    font-size:16px;
+                    font-weight:800;
+                "
+            >
+                Cancel
+            </button>
+
+            <input
+                type="file"
+                id="nexoraProfilePhotoInput"
+                accept="image/*"
+                style="display:none"
+                onchange="handleNexoraProfilePhoto(event)"
+            >
+
+        </div>
+
+    `;
+
+    document.body.appendChild(menu);
+
+}
+
+
+/* =====================================================
+   SELECT PROFILE PHOTO
+   ===================================================== */
+
+function selectNexoraProfilePhoto(){
+
+    const input =
+        document.getElementById(
+            "nexoraProfilePhotoInput"
+        );
+
+    if(input){
+
+        input.click();
+
+    }
+
+}
+
+
+/* =====================================================
+   CLOSE PROFILE PHOTO MENU
+   ===================================================== */
+
+function closeNexoraProfilePhotoMenu(){
+
+    const menu =
+        document.getElementById(
+            "nexoraProfilePhotoMenu"
+        );
+
+    if(menu)
+        menu.remove();
+
+}
 /* =====================================================
    NEXORA MODERN EDIT PROFILE
    ===================================================== */
