@@ -6332,7 +6332,6 @@ function closeNexoraProfilePhotoMenu(){
 
 }
 
-
 /* ================= CHANGE PROFILE PHOTO ================= */
 
 function selectNexoraProfilePhoto(uid){
@@ -6340,12 +6339,18 @@ function selectNexoraProfilePhoto(uid){
     const currentUser =
         auth.currentUser;
 
+
+    /* ================= LOGIN CHECK ================= */
+
     if(!currentUser){
 
         alert("আগে NEXORA-তে Login করুন।");
 
         return;
     }
+
+
+    /* ================= OWNER CHECK ================= */
 
     if(currentUser.uid !== uid){
 
@@ -6356,6 +6361,8 @@ function selectNexoraProfilePhoto(uid){
         return;
     }
 
+
+    /* ================= CLOSE MENU ================= */
 
     closeNexoraProfilePhotoMenu();
 
@@ -6390,8 +6397,12 @@ function selectNexoraProfilePhoto(uid){
     }
 
 
+    /* ================= RESET INPUT ================= */
+
     input.value = "";
 
+
+    /* ================= FILE SELECT ================= */
 
     input.onchange =
         function(){
@@ -6400,11 +6411,12 @@ function selectNexoraProfilePhoto(uid){
                 input.files &&
                 input.files[0];
 
+
             if(!file)
                 return;
 
 
-            /* ================= FILE CHECK ================= */
+            /* ================= IMAGE CHECK ================= */
 
             if(!file.type.startsWith("image/")){
 
@@ -6428,24 +6440,132 @@ function selectNexoraProfilePhoto(uid){
             }
 
 
+            /* ================= UPLOAD MESSAGE ================= */
+
             alert(
-                "Profile Photo Upload System-এর পরবর্তী ধাপের জন্য Image নির্বাচন হয়েছে।"
+                "📤 Profile Photo Upload শুরু হচ্ছে..."
             );
 
 
-            console.log(
-                "NEXORA PROFILE PHOTO SELECTED:",
-                file.name,
-                file.size
-            );
+            /* =================================================
+               FIREBASE STORAGE
+               ================================================= */
+
+            const storage =
+                firebase.storage();
+
+
+            const fileName =
+                "profile_" +
+                uid +
+                "_" +
+                Date.now() +
+                "_" +
+                file.name;
+
+
+            const storageRef =
+                storage
+                .ref()
+                .child(
+                    "NEXORA_Profile_Photos/" +
+                    uid +
+                    "/" +
+                    fileName
+                );
+
+
+            /* ================= UPLOAD ================= */
+
+            storageRef
+                .put(file)
+
+
+                .then(function(snapshot){
+
+                    console.log(
+                        "NEXORA PROFILE PHOTO UPLOADED:",
+                        snapshot
+                    );
+
+
+                    /* ================= GET URL ================= */
+
+                    return snapshot.ref.getDownloadURL();
+
+                })
+
+
+                .then(function(downloadURL){
+
+                    console.log(
+                        "NEXORA PROFILE PHOTO URL:",
+                        downloadURL
+                    );
+
+
+                    /* ================= SAVE FIRESTORE ================= */
+
+                    return db
+                        .collection("Users")
+                        .doc(uid)
+                        .update({
+
+                            photoURL:
+                                downloadURL,
+
+                            photo:
+                                downloadURL
+
+                        });
+
+                })
+
+
+                .then(function(){
+
+                    alert(
+                        "✅ Profile Photo সফলভাবে পরিবর্তন হয়েছে।"
+                    );
+
+
+                    /* ================= RELOAD PROFILE ================= */
+
+                    if(
+                        typeof loadNexoraProfile ===
+                        "function"
+                    ){
+
+                        loadNexoraProfile(uid);
+
+                    }
+
+                })
+
+
+                .catch(function(error){
+
+                    console.error(
+                        "NEXORA PROFILE PHOTO UPLOAD ERROR:",
+                        error
+                    );
+
+
+                    alert(
+                        "❌ Profile Photo Upload করা যায়নি।\n\n" +
+                        (error.message || "")
+                    );
+
+                });
 
         };
 
 
+    /* ================= OPEN GALLERY ================= */
+
     input.click();
 
 }
-
 
 /* ================= VIEW PROFILE PHOTO ================= */
 
