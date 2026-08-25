@@ -1884,27 +1884,15 @@ const CLOUDINARY_PRESET =
    Google → Profile Check → Profile Setup / Home
    ===================================================== */
 
-/* =====================================================
-   GOOGLE LOGIN
-   Popup ব্যবহার করা হচ্ছে
-   Redirect নয়
-   ===================================================== */
-
 function googleLogin(){
 
     console.log(
         "NEXORA Google Login শুরু..."
     );
 
-
-    /* ================= GOOGLE ACCOUNT SELECT ================= */
-
     provider.setCustomParameters({
         prompt: "select_account"
     });
-
-
-    /* ================= GOOGLE POPUP ================= */
 
     auth.signInWithPopup(provider)
 
@@ -1921,29 +1909,22 @@ function googleLogin(){
 
             }
 
-
             const user =
                 result.user;
-
 
             console.log(
                 "NEXORA Google Login সফল:",
                 user.email
             );
 
-
             console.log(
                 "NEXORA GOOGLE UID:",
                 user.uid
             );
 
-
-            /* ================= CHECK NEXORA ACCOUNT ================= */
-
             checkNexoraUserAccount(user);
 
         })
-
 
         .catch(function(error){
 
@@ -1951,9 +1932,6 @@ function googleLogin(){
                 "NEXORA GOOGLE LOGIN ERROR:",
                 error
             );
-
-
-            /* ================= POPUP CLOSED ================= */
 
             if(
                 error.code ===
@@ -1965,11 +1943,7 @@ function googleLogin(){
                 );
 
                 return;
-
             }
-
-
-            /* ================= POPUP BLOCKED ================= */
 
             if(
                 error.code ===
@@ -1981,11 +1955,7 @@ function googleLogin(){
                 );
 
                 return;
-
             }
-
-
-            /* ================= ACCOUNT EXISTS DIFFERENT CREDENTIAL ================= */
 
             if(
                 error.code ===
@@ -1997,11 +1967,7 @@ function googleLogin(){
                 );
 
                 return;
-
             }
-
-
-            /* ================= GENERAL ERROR ================= */
 
             alert(
                 "Google Login করা যায়নি:\n\n" +
@@ -2017,7 +1983,6 @@ function googleLogin(){
 
 /* =====================================================
    CREATE ACCOUNT START
-   পুরোনো Redirect System সম্পূর্ণ বাদ
    ===================================================== */
 
 function startNexoraAccountCreate(){
@@ -2025,14 +1990,6 @@ function startNexoraAccountCreate(){
     console.log(
         "NEXORA Create Account শুরু..."
     );
-
-
-    /*
-     * আগের Google session থাকলেও
-     * নতুন Google Account নির্বাচন করার জন্য
-     * Popup ব্যবহার করা হবে।
-     */
-
 
     auth.signOut()
 
@@ -2042,11 +1999,9 @@ function startNexoraAccountCreate(){
                 "NEXORA পুরোনো session logout হয়েছে।"
             );
 
-
             googleLogin();
 
         })
-
 
         .catch(function(error){
 
@@ -2054,12 +2009,6 @@ function startNexoraAccountCreate(){
                 "NEXORA SIGN OUT ERROR:",
                 error
             );
-
-
-            /*
-             * SignOut ব্যর্থ হলেও
-             * Google Login বন্ধ হবে না।
-             */
 
             googleLogin();
 
@@ -2082,24 +2031,16 @@ function checkNexoraUserAccount(user){
         );
 
         return;
-
     }
-
 
     console.log(
         "NEXORA ACCOUNT CHECK:",
         user.uid
     );
 
-
-    /* =================================================
-       CURRENT USER-এর নিজের UID
-       ================================================= */
-
     db.collection("Users")
       .doc(user.uid)
       .get()
-
 
       .then(function(doc){
 
@@ -2108,46 +2049,27 @@ function checkNexoraUserAccount(user){
             doc.exists
         );
 
-
-        /* =================================================
-           NEW USER
-           ================================================= */
-
         if(!doc.exists){
 
             console.log(
                 "NEXORA: New User → Profile Setup"
             );
 
-
             showNexoraModernProfileSetup(
                 user,
                 {}
             );
 
-
             return;
-
         }
-
-
-        /* =================================================
-           EXISTING USER
-           ================================================= */
 
         const data =
             doc.data() || {};
-
 
         console.log(
             "NEXORA EXISTING PROFILE:",
             data
         );
-
-
-        /* =================================================
-           COMPLETE PROFILE
-           ================================================= */
 
         if(
             data.profileComplete === true &&
@@ -2161,27 +2083,17 @@ function checkNexoraUserAccount(user){
                 "NEXORA: Complete Profile → Home"
             );
 
-
             window.nexoraCurrentProfile =
                 data;
 
-
             openNexoraHomeAfterAccount();
 
-
             return;
-
         }
-
-
-        /* =================================================
-           INCOMPLETE PROFILE
-           ================================================= */
 
         console.log(
             "NEXORA: Profile Incomplete → Setup"
         );
-
 
         showNexoraModernProfileSetup(
             user,
@@ -2190,14 +2102,12 @@ function checkNexoraUserAccount(user){
 
       })
 
-
       .catch(function(error){
 
         console.error(
             "NEXORA USER CHECK ERROR:",
             error
         );
-
 
         alert(
             "NEXORA Account Check করা যায়নি:\n\n" +
@@ -2212,100 +2122,12 @@ function checkNexoraUserAccount(user){
 
 
 /* =====================================================
-   OPTIONAL:
-   পুরোনো Redirect Result আর ব্যবহার করা হবে না।
-   তাই auth.getRedirectResult() এখানে নেই।
-   ===================================================== */
-
-
-/* =====================================================
    NEXORA LOGIN SYSTEM READY
    ===================================================== */
 
 console.log(
     "NEXORA Google Popup Authentication Ready."
 );
-/* =====================================================
-   CHECK NEXORA USER ACCOUNT
-   ===================================================== */
-
-function checkNexoraUserAccount(user){
-
-    if(!user)
-        return;
-
-
-    db.collection("Users")
-      .doc(user.uid)
-      .get()
-
-      .then(function(doc){
-
-        /* ================= NEW ACCOUNT ================= */
-
-        if(!doc.exists){
-
-            showNexoraModernProfileSetup(user);
-
-            return;
-        }
-
-
-        /* ================= EXISTING ACCOUNT ================= */
-
-        const data =
-            doc.data() || {};
-
-
-        /* ================= COMPLETE PROFILE CHECK ================= */
-
-        if(
-            data.profileComplete === true &&
-            data.username &&
-            data.name &&
-            data.gender &&
-            data.dateOfBirth
-        ){
-
-            console.log(
-                "Complete NEXORA Profile Found"
-            );
-
-            openNexoraHomeAfterAccount();
-
-            return;
-        }
-
-
-        /* ================= INCOMPLETE PROFILE ================= */
-
-        console.log(
-            "NEXORA Profile Incomplete"
-        );
-
-        showNexoraModernProfileSetup(
-            user,
-            data
-        );
-
-      })
-
-      .catch(function(error){
-
-        console.error(
-            "NEXORA USER CHECK ERROR:",
-            error
-        );
-
-        alert(
-            "Account Check করা যায়নি:\n\n" +
-            error.message
-        );
-
-      });
-
-}
-
 
 /* =====================================================
    MODERN NEXORA PROFILE SETUP
