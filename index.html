@@ -6331,7 +6331,424 @@ function closeNexoraProfilePhotoMenu(){
         menu.remove();
 
 }
+/* ================= CHANGE PROFILE PHOTO ================= */
 
+function selectNexoraProfilePhoto(uid){
+
+    const currentUser = auth.currentUser;
+
+    if(!currentUser){
+        alert("আগে NEXORA-তে Login করুন।");
+        return;
+    }
+
+    if(currentUser.uid !== uid){
+        alert("শুধু নিজের Profile Photo পরিবর্তন করতে পারবেন।");
+        return;
+    }
+
+    closeNexoraProfilePhotoMenu();
+
+    let input =
+        document.getElementById(
+            "nexoraProfilePhotoInput"
+        );
+
+    if(input)
+        input.remove();
+
+    input =
+        document.createElement("input");
+
+    input.type = "file";
+    input.id = "nexoraProfilePhotoInput";
+    input.accept = "image/*";
+
+    input.style.position = "fixed";
+    input.style.left = "-10000px";
+
+    document.body.appendChild(input);
+
+
+    input.onchange = function(){
+
+        const file =
+            input.files &&
+            input.files[0];
+
+        if(!file)
+            return;
+
+
+        if(!file.type.startsWith("image/")){
+
+            alert("শুধু Image নির্বাচন করুন।");
+            return;
+
+        }
+
+
+        if(file.size > 5 * 1024 * 1024){
+
+            alert(
+                "Profile Photo সর্বোচ্চ 5MB হতে হবে।"
+            );
+
+            return;
+
+        }
+
+
+        /* ================= UPLOAD SCREEN ================= */
+
+        const screen =
+            document.createElement("div");
+
+        screen.id =
+            "nexoraProfilePhotoUploading";
+
+        screen.style.cssText = `
+            position:fixed;
+            inset:0;
+            z-index:9999999;
+            background:rgba(0,0,0,.75);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            box-sizing:border-box;
+        `;
+
+
+        const previewURL =
+            URL.createObjectURL(file);
+
+
+        screen.innerHTML = `
+
+            <div style="
+                width:100%;
+                max-width:360px;
+                background:#fff;
+                border-radius:25px;
+                padding:28px 20px;
+                text-align:center;
+                box-sizing:border-box;
+                box-shadow:0 15px 50px rgba(0,0,0,.35);
+            ">
+
+                <img
+                    src="${previewURL}"
+                    style="
+                        width:120px;
+                        height:120px;
+                        border-radius:50%;
+                        object-fit:cover;
+                        border:4px solid #1877f2;
+                        margin-bottom:18px;
+                    "
+                >
+
+                <div style="
+                    font-size:21px;
+                    font-weight:900;
+                    margin-bottom:8px;
+                ">
+                    Updating Profile Photo
+                </div>
+
+                <div
+                    id="nexoraPhotoUploadStatus"
+                    style="
+                        color:#777;
+                        font-size:14px;
+                        margin-bottom:20px;
+                    "
+                >
+                    Photo Upload হচ্ছে...
+                </div>
+
+                <div style="
+                    width:100%;
+                    height:9px;
+                    background:#e9ecef;
+                    border-radius:20px;
+                    overflow:hidden;
+                ">
+
+                    <div
+                        id="nexoraPhotoProgress"
+                        style="
+                            width:0%;
+                            height:100%;
+                            background:#1877f2;
+                            transition:width .3s;
+                        "
+                    ></div>
+
+                </div>
+
+                <div
+                    id="nexoraPhotoPercent"
+                    style="
+                        margin-top:10px;
+                        color:#1877f2;
+                        font-weight:800;
+                    "
+                >
+                    0%
+                </div>
+
+            </div>
+        `;
+
+
+        document.body.appendChild(screen);
+
+
+        /* ================= STORAGE CHECK ================= */
+
+        if(typeof storage === "undefined"){
+
+            screen.remove();
+
+            URL.revokeObjectURL(previewURL);
+
+            alert(
+                "❌ Firebase Storage পাওয়া যাচ্ছে না।"
+            );
+
+            return;
+        }
+
+
+        /* ================= STORAGE ================= */
+
+        const storageRef =
+            storage
+            .ref()
+            .child(
+                "NEXORA_Profile_Photos/" +
+                uid +
+                "/profile_" +
+                Date.now() +
+                "_" +
+                file.name
+            );
+
+
+        const uploadTask =
+            storageRef.put(file);
+
+
+        /* ================= PROGRESS ================= */
+
+        uploadTask.on(
+
+            "state_changed",
+
+            function(snapshot){
+
+                const progress =
+                    Math.round(
+                        (
+                            snapshot.bytesTransferred /
+                            snapshot.totalBytes
+                        ) * 100
+                    );
+
+
+                const bar =
+                    document.getElementById(
+                        "nexoraPhotoProgress"
+                    );
+
+                const percent =
+                    document.getElementById(
+                        "nexoraPhotoPercent"
+                    );
+
+                const status =
+                    document.getElementById(
+                        "nexoraPhotoUploadStatus"
+                    );
+
+
+                if(bar)
+                    bar.style.width =
+                        progress + "%";
+
+
+                if(percent)
+                    percent.innerText =
+                        progress + "%";
+
+
+                if(status){
+
+                    status.innerText =
+                        progress < 100
+                        ? "Photo Upload হচ্ছে..."
+                        : "Profile Photo Update হচ্ছে...";
+
+                }
+
+            },
+
+
+            /* ================= ERROR ================= */
+
+            function(error){
+
+                console.error(
+                    "NEXORA PROFILE PHOTO UPLOAD ERROR:",
+                    error
+                );
+
+                URL.revokeObjectURL(previewURL);
+
+                if(screen)
+                    screen.remove();
+
+                alert(
+                    "❌ Profile Photo Upload করা যায়নি.\n\n" +
+                    (error.message || "")
+                );
+
+            },
+
+
+            /* ================= SUCCESS ================= */
+
+            function(){
+
+                uploadTask.snapshot.ref
+                    .getDownloadURL()
+
+                    .then(function(downloadURL){
+
+                        return db
+                            .collection("Users")
+                            .doc(uid)
+                            .update({
+
+                                photoURL:
+                                    downloadURL,
+
+                                photo:
+                                    downloadURL
+
+                            });
+
+                    })
+
+                    .then(function(){
+
+                        URL.revokeObjectURL(
+                            previewURL
+                        );
+
+
+                        if(screen){
+
+                            screen.innerHTML = `
+
+                                <div style="
+                                    background:#fff;
+                                    padding:30px 20px;
+                                    border-radius:25px;
+                                    width:100%;
+                                    max-width:360px;
+                                    text-align:center;
+                                    box-sizing:border-box;
+                                ">
+
+                                    <div style="
+                                        font-size:50px;
+                                        margin-bottom:12px;
+                                    ">
+                                        ✅
+                                    </div>
+
+                                    <div style="
+                                        font-size:21px;
+                                        font-weight:900;
+                                        margin-bottom:8px;
+                                    ">
+                                        Profile Photo Updated
+                                    </div>
+
+                                    <div style="
+                                        color:#777;
+                                        font-size:14px;
+                                    ">
+                                        আপনার Profile Photo সফলভাবে আপডেট হয়েছে।
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+
+
+                        setTimeout(function(){
+
+                            if(screen)
+                                screen.remove();
+
+
+                            if(
+                                typeof loadNexoraProfile ===
+                                "function"
+                            ){
+
+                                loadNexoraProfile(uid);
+
+                            }
+
+                        },1500);
+
+                    })
+
+                    .catch(function(error){
+
+                        console.error(
+                            "NEXORA PROFILE PHOTO FIRESTORE ERROR:",
+                            error
+                        );
+
+                        URL.revokeObjectURL(
+                            previewURL
+                        );
+
+                        if(screen)
+                            screen.remove();
+
+                        alert(
+                            "❌ Profile Photo Update করা যায়নি.\n\n" +
+                            (error.message || "")
+                        );
+
+                    });
+
+            }
+
+        );
+
+    };
+
+
+    /* ================= OPEN GALLERY ================= */
+
+    input.click();
+
+}
+
+
+/* ================= VIEW PROFILE PHOTO ================= */
+
+function viewNexoraProfilePhoto(uid){
 
 /* ================= VIEW PROFILE PHOTO ================= */
 
