@@ -6742,7 +6742,8 @@ function selectNexoraProfilePhoto(){
 
                 /* ================= FIRESTORE ================= */
 
-                db.collection("Users")
+      console.log("CLOUDINARY SUCCESS - FIRESTORE UPDATE শুরু হচ্ছে");         
+ db.collection("Users")
                   .doc(uid)
                   .update({
 
