@@ -6340,7 +6340,7 @@ function closeNexoraProfilePhotoMenu(){
    Gallery → Preview → Cloudinary → Firestore
    ===================================================== */
 
-function selectNexoraProfilePhoto(uid){
+function selectNexoraProfilePhoto(){
 
     const currentUser = auth.currentUser;
 
@@ -6351,13 +6351,7 @@ function selectNexoraProfilePhoto(uid){
 
     }
 
-    if(currentUser.uid !== uid){
-
-        alert("শুধু নিজের Profile Photo পরিবর্তন করতে পারবেন।");
-        return;
-
-    }
-
+    
     closeNexoraProfilePhotoMenu();
 
 
