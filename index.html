@@ -6352,22 +6352,16 @@ alert("PROFILE PHOTO FUNCTION চলছে");
 
     closeNexoraProfilePhotoMenu();
 
-    let input =
-        document.getElementById("nexoraProfilePhotoInput");
+let input = document.createElement("input");
 
-    if(!input){
+input.type = "file";
+input.id = "nexoraProfilePhotoInputUpload";
+input.accept = "image/*";
+input.style.display = "none";
 
-        input = document.createElement("input");
-
-        input.type = "file";
-        input.id = "nexoraProfilePhotoInput";
-        input.accept = "image/*";
-        input.style.display = "none";
-
-        document.body.appendChild(input);
-    }
-
-    input.value = "";
+document.body.appendChild(input);
+   input.click();
+ input.value = "";
 
     input.onchange = function(){
 
