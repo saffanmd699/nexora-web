@@ -1874,6 +1874,9 @@ const CLOUDINARY_CLOUD =
 
 const CLOUDINARY_PRESET =
     "NEXORA _Reels";
+
+const CLOUDINARY_PROFILE_PRESET =
+    "NEXORA_Profile_Photos";
 /* =====================================================
    NEXORA MODERN ACCOUNT SYSTEM
    Google → Profile Setup → Firebase → Welcome → Home
@@ -6529,9 +6532,9 @@ function selectNexoraProfilePhoto(uid){
         );
 
         formData.append(
-            "upload_preset",
-            CLOUDINARY_PRESET
-        );
+    "upload_preset",
+    CLOUDINARY_PROFILE_PRESET
+);
 
 
         /* ================= XHR ================= */
