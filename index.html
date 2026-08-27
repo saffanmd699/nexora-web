@@ -6571,7 +6571,7 @@ function selectNexoraProfilePhoto(){
             cloudinaryURL,
             true
         );
-
+        xhr.timeout = 60000;
 
         /* ================= UPLOAD PROGRESS ================= */
 
@@ -6635,7 +6635,35 @@ function selectNexoraProfilePhoto(){
                 }
 
             };
+        /* ================= CLOUDINARY TIMEOUT ================= */
 
+        xhr.ontimeout =
+            function(){
+
+                console.error(
+                    "CLOUDINARY TIMEOUT:",
+                    xhr.responseText
+                );
+
+
+                URL.revokeObjectURL(
+                    previewURL
+                );
+
+
+                input.remove();
+
+
+                if(uploadScreen)
+                    uploadScreen.remove();
+
+
+                alert(
+                    "❌ Cloudinary response পেতে 60 সেকেন্ডের বেশি সময় লাগছে।\n\n" +
+                    "Upload server response দেয়নি।"
+                );
+
+            };
 
         /* ================= CLOUDINARY RESPONSE ================= */
 
