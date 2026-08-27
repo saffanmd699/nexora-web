@@ -7407,32 +7407,32 @@ const isProfileOwner =
             align-items:center;
             justify-content:center;
 
-                    ${
-                photo
-                ?
-                `
-                background:
-                    linear-gradient(
-                        135deg,
-                        #1877f2,
-                        #00d4ff,
-                        #8b5cf6,
-                        #ec4899,
-                        #ffb703
-                    );
+                 ${
+    photo && hasNexoraStory
+    ?
+    `
+    background:
+        linear-gradient(
+            135deg,
+            #1877f2,
+            #00d4ff,
+            #8b5cf6,
+            #ec4899,
+            #ffb703
+        );
 
-                padding:4px;
+    padding:4px;
 
-                box-shadow:
-                    0 0 0 2px rgba(255,255,255,.9),
-                    0 4px 18px rgba(24,119,242,.35);
-                `
-                :
-                `
-                background:#e9eef7;
-                padding:3px;
-                `
-            }
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,.9),
+        0 4px 18px rgba(24,119,242,.35);
+    `
+    :
+    `
+    background:#e9eef7;
+    padding:3px;
+    `
+}
 
             box-sizing:border-box;
         "
@@ -7444,18 +7444,20 @@ const isProfileOwner =
             photo
             ?
             `
-            <img
-                src="${escapeHTML(photo)}"
-                alt="Profile Photo"
-                style="
-                    width:100%;
-                    height:100%;
-                    border-radius:50%;
-                    object-fit:cover;
-                    display:block;
-                    background:#fff;
-                "
-            >
+        <img
+    src="${escapeHTML(photo)}"
+    alt="Profile Photo"
+    style="
+        width:100%;
+        height:100%;
+        border-radius:50%;
+        object-fit:cover;
+        display:block;
+        background:#fff;
+        box-sizing:border-box;
+        border:2px solid #fff;
+    "
+>
             `
             :
             `
