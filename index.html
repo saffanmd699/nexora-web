@@ -6664,256 +6664,263 @@ function selectNexoraProfilePhoto(){
                 );
 
             };
+/* ================= CLOUDINARY RESPONSE ================= */
 
-        /* ================= CLOUDINARY RESPONSE ================= */
+xhr.onload = function(){
 
-        xhr.onload =
-            function(){
+    console.log(
+        "CLOUDINARY RESPONSE RECEIVED",
+        xhr.status
+    );
 
-                if(
-                    xhr.status < 200 ||
-                    xhr.status >= 300
-                ){
+    if(xhr.status < 200 || xhr.status >= 300){
 
-                    console.error(
-                        "CLOUDINARY ERROR:",
-                        xhr.responseText
-                    );
+        console.error(
+            "CLOUDINARY ERROR:",
+            xhr.responseText
+        );
 
+        URL.revokeObjectURL(previewURL);
 
-                    URL.revokeObjectURL(
-                        previewURL
-                    );
+        if(uploadScreen)
+            uploadScreen.remove();
 
+        input.remove();
 
-                    if(uploadScreen)
-                        uploadScreen.remove();
+        alert(
+            "❌ Cloudinary Upload ব্যর্থ হয়েছে.\n\n" +
+            xhr.responseText
+        );
 
-
-                    input.remove();
-
-
-                    alert(
-                        "❌ Cloudinary Upload ব্যর্থ হয়েছে।\n\n" +
-                        xhr.responseText
-                    );
+        return;
+    }
 
 
-                    return;
+    /* ================= PARSE CLOUDINARY ================= */
 
-                }
+    let result;
 
+    try{
 
-                let result;
+        result = JSON.parse(
+            xhr.responseText
+        );
 
+    }catch(error){
 
-                try{
+        console.error(
+            "CLOUDINARY JSON ERROR:",
+            error
+        );
 
-                    result =
-                        JSON.parse(
-                            xhr.responseText
-                        );
+        URL.revokeObjectURL(previewURL);
 
-                }catch(error){
+        if(uploadScreen)
+            uploadScreen.remove();
 
-                    URL.revokeObjectURL(
-                        previewURL
-                    );
+        input.remove();
 
+        alert(
+            "❌ Cloudinary response পড়া যায়নি।"
+        );
 
-                    if(uploadScreen)
-                        uploadScreen.remove();
-
-
-                    input.remove();
-
-
-                    alert(
-                        "❌ Cloudinary response সঠিক নয়।"
-                    );
+        return;
+    }
 
 
-                    return;
-
-                }
-
-
-                const downloadURL =
-                    result.secure_url ||
-                    result.url ||
-                    "";
+    const downloadURL =
+        result.secure_url ||
+        result.url ||
+        "";
 
 
-                if(!downloadURL){
+    if(!downloadURL){
 
-                    URL.revokeObjectURL(
-                        previewURL
-                    );
+        URL.revokeObjectURL(previewURL);
 
+        if(uploadScreen)
+            uploadScreen.remove();
 
-                    if(uploadScreen)
-                        uploadScreen.remove();
+        input.remove();
 
+        alert(
+            "❌ Profile Photo URL পাওয়া যায়নি।"
+        );
 
-                    input.remove();
-
-
-                    alert(
-                        "❌ Profile Photo URL পাওয়া যায়নি।"
-                    );
+        return;
+    }
 
 
-                    return;
-
-                }
-
-/* ================= FIRESTORE ================= */
-
-db.collection("Users")
-  .doc(uid)
-  .set({
-
-      photoURL: downloadURL,
-      photo: downloadURL
-
-  }, {
-
-      merge: true
-
-  })
-
-  .then(function(){
-
-      console.log(
-          "NEXORA PROFILE PHOTO FIRESTORE UPDATE SUCCESS"
-      );
+    console.log(
+        "CLOUDINARY SUCCESS:",
+        downloadURL
+    );
 
 
-      URL.revokeObjectURL(
-          previewURL
-      );
+    /* ================= FIRESTORE START ================= */
+
+    if(uploadScreen){
+
+        const status =
+            document.getElementById(
+                "nexoraPhotoUploadStatus"
+            );
+
+        if(status){
+
+            status.innerText =
+                "Cloudinary সম্পন্ন হয়েছে। Profile Save হচ্ছে...";
+
+        }
+
+    }
 
 
-      input.remove();
+    console.log(
+        "FIRESTORE UPDATE START"
+    );
 
 
-      /* ================= SUCCESS SCREEN ================= */
+    /* ================= FIRESTORE SAVE ================= */
 
-      if(uploadScreen){
+    db.collection("Users")
+      .doc(uid)
+      .set({
 
-          uploadScreen.innerHTML = `
+          photoURL: downloadURL,
+          photo: downloadURL
 
-              <div style="
-                  width:100%;
-                  max-width:360px;
-                  background:#fff;
-                  border-radius:24px;
-                  padding:30px 20px;
-                  text-align:center;
-                  box-sizing:border-box;
-                  box-shadow:0 15px 50px rgba(0,0,0,.30);
-              ">
+      }, {
+
+          merge: true
+
+      })
+
+      .then(function(){
+
+          console.log(
+              "FIRESTORE UPDATE SUCCESS"
+          );
+
+
+          URL.revokeObjectURL(
+              previewURL
+          );
+
+
+          input.remove();
+
+
+          /* ================= SUCCESS ================= */
+
+          if(uploadScreen){
+
+              uploadScreen.innerHTML = `
 
                   <div style="
-                      width:85px;
-                      height:85px;
-                      margin:0 auto 18px;
-                      border-radius:50%;
-                      overflow:hidden;
-                      border:4px solid #1877f2;
+                      width:100%;
+                      max-width:360px;
+                      background:#fff;
+                      border-radius:24px;
+                      padding:30px 20px;
+                      text-align:center;
+                      box-sizing:border-box;
+                      box-shadow:0 15px 50px rgba(0,0,0,.30);
                   ">
 
-                      <img
-                          src="${downloadURL}"
-                          style="
-                              width:100%;
-                              height:100%;
-                              object-fit:cover;
-                              display:block;
-                          "
-                      >
+                      <div style="
+                          width:85px;
+                          height:85px;
+                          margin:0 auto 18px;
+                          border-radius:50%;
+                          overflow:hidden;
+                          border:4px solid #1877f2;
+                      ">
+
+                          <img
+                              src="${downloadURL}"
+                              style="
+                                  width:100%;
+                                  height:100%;
+                                  object-fit:cover;
+                                  display:block;
+                              "
+                          >
+
+                      </div>
+
+                      <div style="
+                          font-size:21px;
+                          font-weight:900;
+                          color:#222;
+                          margin-bottom:8px;
+                      ">
+                          ✅ Profile Photo Updated
+                      </div>
+
+                      <div style="
+                          font-size:14px;
+                          color:#777;
+                      ">
+                          আপনার নতুন Profile Photo সফলভাবে আপডেট হয়েছে।
+                      </div>
 
                   </div>
 
+              `;
 
-                  <div style="
-                      font-size:21px;
-                      font-weight:900;
-                      color:#222;
-                      margin-bottom:8px;
-                  ">
-                      ✅ Profile Photo Updated
-                  </div>
+          }
 
 
-                  <div style="
-                      font-size:14px;
-                      color:#777;
-                  ">
-                      আপনার নতুন Profile Photo সফলভাবে আপডেট হয়েছে।
-                  </div>
+          /* ================= REFRESH ================= */
 
-              </div>
+          setTimeout(function(){
 
-          `;
-
-      }
+              if(uploadScreen)
+                  uploadScreen.remove();
 
 
-      /* ================= CLOSE + REFRESH ================= */
+              if(
+                  typeof loadNexoraProfile ===
+                  "function"
+              ){
 
-      setTimeout(function(){
+                  loadNexoraProfile(uid);
+
+              }
+
+          },1500);
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "FIRESTORE UPDATE ERROR:",
+              error
+          );
+
+
+          URL.revokeObjectURL(
+              previewURL
+          );
+
+
+          input.remove();
+
 
           if(uploadScreen)
               uploadScreen.remove();
 
 
-          if(
-              typeof loadNexoraProfile ===
-              "function"
-          ){
+          alert(
+              "❌ Firestore-এ Profile Photo Save হয়নি।\n\n" +
+              (error.message || error)
+          );
 
-              loadNexoraProfile(uid);
+      });
 
-          }
-
-      },1500);
-
-  })
-
-
-  /* ================= FIRESTORE ERROR ================= */
-
-  .catch(function(error){
-
-      console.error(
-          "NEXORA PROFILE FIRESTORE ERROR:",
-          error
-      );
-
-
-      URL.revokeObjectURL(
-          previewURL
-      );
-
-
-      input.remove();
-
-
-      if(uploadScreen)
-          uploadScreen.remove();
-
-
-      alert(
-          "❌ Profile Photo Database-এ update করা যায়নি।\n\n" +
-          "Firestore Error: " +
-          (error.message || error)
-      );
-
-  });
-                
-            };
-
+};
 
         /* ================= NETWORK ERROR ================= */
 
