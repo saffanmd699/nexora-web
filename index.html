@@ -7317,7 +7317,18 @@ function loadNexoraProfile(uid){
             user.photo ||
             "";
 
+/* ================= NEXORA STORY RING CHECK ================= */
 
+const hasNexoraStory =
+    Array.isArray(nexoraStories) &&
+    nexoraStories.some(function(story){
+
+        return (
+            story &&
+            story.uid === uid
+        );
+
+    });
         const email =
             user.email || "";
 
@@ -7372,56 +7383,159 @@ const isProfileOwner =
                 overflow:hidden;
             ">
 
+<!-- ================= NEXORA PREMIUM PROFILE PHOTO ================= -->
 
-                <!-- ================= PROFILE PHOTO ================= -->
-
-              <div
+<div
     onclick="openNexoraProfilePhotoMenu('${escapeHTML(uid)}')"
     style="
-        text-align:center;
+        width:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        margin:5px 0 10px;
         cursor:pointer;
     "
 >
+
+    <div
+        style="
+            position:relative;
+            width:126px;
+            height:126px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
                     ${
-                        photo
-                        ?
-                        `
-                        <img
-                            src="${escapeHTML(photo)}"
-                            alt="Profile"
-                            style="
-                                width:120px;
-                                height:120px;
-                                border-radius:50%;
-                                object-fit:cover;
-                                border:4px solid #1877f2;
-                                display:block;
-                                margin:0 auto;
-                            "
-                        >
-                        `
-                        :
-                        `
-                        <div style="
-                            width:120px;
-                            height:120px;
-                            margin:0 auto;
-                            border-radius:50%;
-                            background:#1877f2;
-                            color:#fff;
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            font-size:50px;
-                        ">
-                            👤
-                        </div>
-                        `
-                    }
+                photo
+                ?
+                `
+                background:
+                    linear-gradient(
+                        135deg,
+                        #1877f2,
+                        #00d4ff,
+                        #8b5cf6,
+                        #ec4899,
+                        #ffb703
+                    );
 
-                </div>
+                padding:4px;
+
+                box-shadow:
+                    0 0 0 2px rgba(255,255,255,.9),
+                    0 4px 18px rgba(24,119,242,.35);
+                `
+                :
+                `
+                background:#e9eef7;
+                padding:3px;
+                `
+            }
+
+            box-sizing:border-box;
+        "
+    >
+
+        <!-- ================= PHOTO ================= -->
+
+        ${
+            photo
+            ?
+            `
+            <img
+                src="${escapeHTML(photo)}"
+                alt="Profile Photo"
+                style="
+                    width:100%;
+                    height:100%;
+                    border-radius:50%;
+                    object-fit:cover;
+                    display:block;
+                    background:#fff;
+                "
+            >
+            `
+            :
+            `
+            <!-- ================= GENERATED INITIAL AVATAR ================= -->
+
+            <div
+                style="
+                    width:100%;
+                    height:100%;
+                    border-radius:50%;
+
+                    background:
+                        linear-gradient(
+                            135deg,
+                            #1877f2,
+                            #7c3aed
+                        );
+
+                    color:#fff;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    font-size:46px;
+                    font-weight:900;
+
+                    text-transform:uppercase;
+
+                    box-sizing:border-box;
+                "
+            >
+                ${escapeHTML(
+                    String(name || "N")
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase()
+                )}
+            </div>
+            `
+        }
 
 
+        <!-- ================= ONLINE DOT ================= -->
+
+        ${
+            currentUID === uid
+            ?
+            `
+            <div
+                style="
+                    position:absolute;
+                    right:5px;
+                    bottom:7px;
+
+                    width:19px;
+                    height:19px;
+
+                    border-radius:50%;
+
+                    background:#22c55e;
+
+                    border:3px solid #fff;
+
+                    box-sizing:border-box;
+
+                    box-shadow:
+                        0 0 0 2px
+                        rgba(34,197,94,.15);
+                "
+            ></div>
+            `
+            :
+            ""
+        }
+
+    </div>
+
+</div>
+                
                 <!-- ================= NAME ================= -->
 
                 <h2 style="
