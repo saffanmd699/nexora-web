@@ -6755,6 +6755,24 @@ xhr.onload = function(){
         "CLOUDINARY SUCCESS:",
         downloadURL
     );
+/* ================= GET FIREBASE USER UID ================= */
+
+const currentUser = auth.currentUser;
+
+if(!currentUser){
+
+    console.error(
+        "NEXORA: Firebase user পাওয়া যায়নি"
+    );
+
+    alert(
+        "❌ User login করা নেই। আবার Login করুন।"
+    );
+
+    return;
+}
+
+const uid = currentUser.uid;
 
 /* ================= FIRESTORE SAVE ================= */
 
