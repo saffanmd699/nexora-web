@@ -10280,10 +10280,26 @@ function openNexoraProfileMore(uid){
                     "
                     style="
                         min-height:78px;
-                        border:1px solid #e4e7ef;
-                        border-radius:17px;
-                        background:#fff;
-                        color:#171927;
+ border:1px solid rgba(255,255,255,.35);
+border-radius:17px;
+
+background:
+    linear-gradient(
+        145deg,
+        #6c63ff 0%,
+        #4f46e5 45%,
+        #00c6ff 100%
+    );
+
+color:#fff;
+
+box-shadow:
+    0 8px 25px
+    rgba(79,70,229,.28);
+
+transition:
+    transform .18s ease,
+    box-shadow .18s ease;
 
                         display:flex;
                         flex-direction:column;
@@ -10295,9 +10311,7 @@ function openNexoraProfileMore(uid){
                         font-weight:800;
                         cursor:pointer;
 
-                        box-shadow:
-                            0 4px 15px
-                            rgba(20,24,40,.06);
+                        
                     "
                 >
 
@@ -10333,10 +10347,26 @@ function openNexoraProfileMore(uid){
                     "
                     style="
                         min-height:78px;
-                        border:1px solid #e4e7ef;
-                        border-radius:17px;
-                        background:#fff;
-                        color:#171927;
+ border:1px solid rgba(255,255,255,.35);
+border-radius:17px;
+
+background:
+    linear-gradient(
+        145deg,
+        #ff6b9d 0%,
+        #ff416c 48%,
+        #ff4b2b 100%
+    );
+
+color:#fff;
+
+box-shadow:
+    0 8px 25px
+    rgba(255,65,108,.25);
+
+transition:
+    transform .18s ease,
+    box-shadow .18s ease;
 
                         display:flex;
                         flex-direction:column;
@@ -10348,9 +10378,7 @@ function openNexoraProfileMore(uid){
                         font-weight:800;
                         cursor:pointer;
 
-                        box-shadow:
-                            0 4px 15px
-                            rgba(20,24,40,.06);
+                        
                     "
                 >
 
@@ -10387,10 +10415,26 @@ function openNexoraProfileMore(uid){
                     "
                     style="
                         min-height:78px;
-                        border:1px solid #e4e7ef;
-                        border-radius:17px;
-                        background:#fff;
-                        color:#171927;
+border:1px solid rgba(255,255,255,.35);
+border-radius:17px;
+
+background:
+    linear-gradient(
+        145deg,
+        #8b5cf6 0%,
+        #6c63ff 45%,
+        #00c6ff 100%
+    );
+
+color:#fff;
+
+box-shadow:
+    0 8px 25px
+    rgba(108,99,255,.28);
+
+transition:
+    transform .18s ease,
+    box-shadow .18s ease; 
 
                         display:flex;
                         flex-direction:column;
@@ -10402,9 +10446,7 @@ function openNexoraProfileMore(uid){
                         font-weight:800;
                         cursor:pointer;
 
-                        box-shadow:
-                            0 4px 15px
-                            rgba(20,24,40,.06);
+                        
                     "
                 >
 
@@ -10442,11 +10484,26 @@ function openNexoraProfileMore(uid){
                     "
                     style="
                         min-height:78px;
-                        border:1px solid #e4e7ef;
-                        border-radius:17px;
-                        background:#fff;
-                        color:#171927;
+ border:1px solid rgba(255,255,255,.35);
+border-radius:17px;
 
+background:
+    linear-gradient(
+        145deg,
+        #00c6ff 0%,
+        #0072ff 50%,
+        #0052cc 100%
+    );
+
+color:#fff
+
+box-shadow:
+    0 8px 25px
+    rgba(0,114,255,.28);
+
+transition:
+    transform .18s ease,
+    box-shadow .18s ease;
                         display:flex;
                         flex-direction:column;
                         align-items:center;
@@ -10457,9 +10514,8 @@ function openNexoraProfileMore(uid){
                         font-weight:800;
                         cursor:pointer;
 
-                        box-shadow:
-                            0 4px 15px
-                            rgba(20,24,40,.06);
+                        
+                            
                     "
                 >
 
@@ -10482,81 +10538,100 @@ function openNexoraProfileMore(uid){
                     </span>
 
                 </button>
+
                 <!-- ================= SETTINGS ================= -->
 
-                <button
-                    type="button"
-                    onclick="
-                        openNexoraProfileSettings(
-                            '${escapeHTML(uid)}'
-                        );
-                    "
-                    style="
-                        min-height:78px;
-                        border:1px solid #e1e5ef;
-                        border-radius:17px;
+<button
+    type="button"
+    onclick="
+        openNexoraProfileSettings(
+            '${escapeHTML(uid)}'
+        );
+    "
+    style="
+        min-height:78px;
 
-                        background:
-                            linear-gradient(
-                                145deg,
-                                #ffffff,
-                                #f5f7fc
-                            );
+        border:1px solid rgba(255,255,255,.35);
+        border-radius:17px;
 
-                        color:#171927;
+        background:
+            linear-gradient(
+                145deg,
+                #00b09b 0%,
+                #00a86b 45%,
+                #38ef7d 100%
+            );
 
-                        display:flex;
-                        flex-direction:column;
-                        align-items:center;
-                        justify-content:center;
+        color:#fff;
 
-                        gap:7px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
 
-                        font-family:inherit;
-                        font-weight:800;
+        gap:7px;
 
-                        cursor:pointer;
+        font-family:inherit;
+        font-weight:800;
 
-                        box-shadow:
-                            0 5px 18px
-                            rgba(20,24,40,.07);
+        cursor:pointer;
 
-                        transition:
-                            transform .18s ease,
-                            box-shadow .18s ease;
-                    "
-                    onmousedown="
-                        this.style.transform='scale(.97)';
-                        this.style.boxShadow='0 2px 8px rgba(20,24,40,.08)';
-                    "
-                    onmouseup="
-                        this.style.transform='scale(1)';
-                        this.style.boxShadow='0 5px 18px rgba(20,24,40,.07)';
-                    "
-                >
+        box-shadow:
+            0 8px 25px
+            rgba(0,168,107,.28);
 
-                    <svg
-                        width="23"
-                        height="23"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
-                        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.9 1.9-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V20h-2.68v-.01a1.7 1.7 0 0 0-1.03-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-1.9-1.9.06-.06A1.7 1.7 0 0 0 7.8 15a1.7 1.7 0 0 0-1.55-1.03H6v-2.68h.25A1.7 1.7 0 0 0 7.8 10.3a1.7 1.7 0 0 0-.34-1.88L7.4 8.36l1.9-1.9.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.27 5.3V5h2.68v.3a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.9 1.9-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.55 1.03H21v2.68h-.03A1.7 1.7 0 0 0 19.4 15Z"/>
-                    </svg>
+        transition:
+            transform .18s ease,
+            box-shadow .18s ease;
+    "
 
-                    <span style="
-                        font-size:13px;
-                    ">
-                        Settings
-                    </span>
+    onmousedown="
+        this.style.transform='scale(.97)';
+        this.style.boxShadow='0 4px 12px rgba(0,168,107,.20)';
+    "
 
-                </button>
+    onmouseup="
+        this.style.transform='scale(1)';
+        this.style.boxShadow='0 8px 25px rgba(0,168,107,.28)';
+    "
 
+    ontouchstart="
+        this.style.transform='scale(.97)';
+        this.style.boxShadow='0 4px 12px rgba(0,168,107,.20)';
+    "
+
+    ontouchend="
+        this.style.transform='scale(1)';
+        this.style.boxShadow='0 8px 25px rgba(0,168,107,.28)';
+    "
+>
+
+    <svg
+        width="23"
+        height="23"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+
+        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.9 1.9-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V20h-2.68v-.01a1.7 1.7 0 0 0-1.03-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-1.9-1.9.06-.06A1.7 1.7 0 0 0 7.8 15a1.7 1.7 0 0 0-1.55-1.03H6v-2.68h.25A1.7 1.7 0 0 0 7.8 10.3a1.7 1.7 0 0 0-.34-1.88L7.4 8.36l1.9-1.9.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.27 5.3V5h2.68v.3a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.9 1.9-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.55 1.03H21v2.68h-.03A1.7 1.7 0 0 0 19.4 15Z"/>
+
+    </svg>
+
+    <span
+        style="
+            font-size:13px;
+        "
+    >
+        Settings
+    </span>
+
+</button>
 
             </div>
 
