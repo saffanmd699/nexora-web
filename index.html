@@ -6166,7 +6166,8 @@ function openMyNexoraProfile(){
 }
 
 /* =====================================================
-   NEXORA PROFILE PHOTO MENU
+   NEXORA PREMIUM PROFILE PHOTO MENU
+   ORIGINAL NEXORA DESIGN
    ===================================================== */
 
 function openNexoraProfilePhotoMenu(uid){
@@ -6190,6 +6191,9 @@ function openNexoraProfilePhotoMenu(uid){
         return;
     }
 
+
+    /* ================= REMOVE OLD MENU ================= */
+
     const old =
         document.getElementById(
             "nexoraProfilePhotoMenu"
@@ -6199,110 +6203,458 @@ function openNexoraProfilePhotoMenu(uid){
         old.remove();
 
 
+    /* ================= CREATE MENU ================= */
+
     const menu =
         document.createElement("div");
 
     menu.id =
         "nexoraProfilePhotoMenu";
 
+
     menu.style.cssText = `
         position:fixed;
         inset:0;
-        background:rgba(0,0,0,.55);
         z-index:2000000;
         display:flex;
         align-items:flex-end;
         justify-content:center;
+        background:rgba(8,12,28,.60);
+        backdrop-filter:blur(14px);
+        -webkit-backdrop-filter:blur(14px);
+        animation:nexoraPhotoMenuFade .22s ease;
     `;
 
 
+    /* ================= MENU HTML ================= */
+
     menu.innerHTML = `
 
-        <div style="
-            width:100%;
-            max-width:500px;
-            background:#fff;
-            border-radius:22px 22px 0 0;
-            padding:20px;
-            box-sizing:border-box;
-            box-shadow:0 -5px 25px rgba(0,0,0,.2);
-        ">
+        <div
+            onclick="event.stopPropagation()"
+            style="
+                width:100%;
+                max-width:520px;
+                box-sizing:border-box;
+                padding:10px 14px 20px;
+                border-radius:30px 30px 0 0;
 
-            <div style="
-                text-align:center;
-                font-size:19px;
-                font-weight:900;
-                margin-bottom:18px;
-            ">
-                Profile Photo
+                background:
+                    linear-gradient(
+                        145deg,
+                        rgba(255,255,255,.98),
+                        rgba(246,247,253,.98)
+                    );
+
+                box-shadow:
+                    0 -15px 50px rgba(0,0,0,.25);
+
+                animation:
+                    nexoraPhotoMenuUp
+                    .28s cubic-bezier(.2,.8,.2,1);
+            "
+        >
+
+            <!-- ================= HANDLE ================= -->
+
+            <div
+                style="
+                    width:48px;
+                    height:5px;
+                    border-radius:20px;
+                    background:#d7dae5;
+                    margin:2px auto 20px;
+                "
+            ></div>
+
+
+            <!-- ================= HEADER ================= -->
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+                    padding:4px 6px 20px;
+                "
+            >
+
+                <div
+                    style="
+                        width:54px;
+                        height:54px;
+                        border-radius:18px;
+
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+
+                        background:
+                            linear-gradient(
+                                145deg,
+                                #6c63ff,
+                                #00c6ff
+                            );
+
+                        color:#fff;
+                        font-size:25px;
+
+                        box-shadow:
+                            0 9px 24px
+                            rgba(108,99,255,.25);
+                    "
+                >
+                    ✦
+                </div>
+
+
+                <div style="flex:1;">
+
+                    <div
+                        style="
+                            font-size:19px;
+                            font-weight:900;
+                            color:#151827;
+                            margin-bottom:4px;
+                        "
+                    >
+                        Profile Photo
+                    </div>
+
+                    <div
+                        style="
+                            font-size:12px;
+                            font-weight:700;
+                            color:#8b90a1;
+                        "
+                    >
+                        Manage your NEXORA identity
+                    </div>
+
+                </div>
+
             </div>
 
 
+            <!-- =================================================
+                 CHANGE PHOTO
+                 ================================================= -->
+
             <button
-                onclick="selectNexoraProfilePhoto('${escapeHTML(uid)}')"
+                onclick="
+                    closeNexoraProfilePhotoMenu();
+                    selectNexoraProfilePhoto();
+                "
                 style="
                     width:100%;
-                    padding:15px;
-                    margin-bottom:10px;
+                    min-height:66px;
+
                     border:none;
-                    border-radius:14px;
-                    background:#1877f2;
+                    border-radius:20px;
+
+                    padding:10px 14px;
+                    margin-bottom:10px;
+
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    text-align:left;
+
+                    background:
+                        linear-gradient(
+                            135deg,
+                            #6c63ff,
+                            #5146e5
+                        );
+
                     color:#fff;
-                    font-size:16px;
-                    font-weight:800;
+                    cursor:pointer;
+
+                    box-shadow:
+                        0 10px 26px
+                        rgba(81,70,229,.25);
+
+                    transition:
+                        transform .18s ease,
+                        box-shadow .18s ease;
+                "
+                onmousedown="
+                    this.style.transform='scale(.985)';
+                "
+                onmouseup="
+                    this.style.transform='scale(1)';
                 "
             >
-                📷 Change Profile Photo
+
+                <span
+                    style="
+                        width:44px;
+                        height:44px;
+                        border-radius:15px;
+
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+
+                        background:rgba(255,255,255,.17);
+
+                        font-size:21px;
+                        flex-shrink:0;
+                    "
+                >
+                    📷
+                </span>
+
+
+                <span style="flex:1;">
+
+                    <span
+                        style="
+                            display:block;
+                            font-size:16px;
+                            font-weight:900;
+                            margin-bottom:3px;
+                        "
+                    >
+                        Choose New Photo
+                    </span>
+
+                    <span
+                        style="
+                            display:block;
+                            font-size:12px;
+                            font-weight:600;
+                            opacity:.82;
+                        "
+                    >
+                        Select a new image from your gallery
+                    </span>
+
+                </span>
+
+
+                <span
+                    style="
+                        font-size:25px;
+                        opacity:.75;
+                    "
+                >
+                    ›
+                </span>
+
             </button>
 
 
+            <!-- =================================================
+                 VIEW PHOTO
+                 ================================================= -->
+
             <button
-                onclick="viewNexoraProfilePhoto('${escapeHTML(uid)}')"
+                onclick="
+                    closeNexoraProfilePhotoMenu();
+                    viewNexoraProfilePhoto('${escapeHTML(uid)}');
+                "
                 style="
                     width:100%;
-                    padding:15px;
+                    min-height:66px;
+
+                    border:1px solid #e5e7ef;
+                    border-radius:20px;
+
+                    padding:10px 14px;
                     margin-bottom:10px;
-                    border:none;
-                    border-radius:14px;
-                    background:#f1f3f5;
-                    color:#222;
-                    font-size:16px;
-                    font-weight:800;
+
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    text-align:left;
+
+                    background:#fff;
+                    color:#202331;
+                    cursor:pointer;
+
+                    box-shadow:
+                        0 5px 18px
+                        rgba(20,24,40,.05);
                 "
             >
-                👁️ View Profile Photo
+
+                <span
+                    style="
+                        width:44px;
+                        height:44px;
+                        border-radius:15px;
+
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+
+                        background:#efeeff;
+
+                        color:#5b50e6;
+
+                        font-size:21px;
+                        flex-shrink:0;
+                    "
+                >
+                    ◉
+                </span>
+
+
+                <span style="flex:1;">
+
+                    <span
+                        style="
+                            display:block;
+                            font-size:16px;
+                            font-weight:900;
+                            margin-bottom:3px;
+                        "
+                    >
+                        View Current Photo
+                    </span>
+
+                    <span
+                        style="
+                            display:block;
+                            font-size:12px;
+                            color:#8b90a1;
+                            font-weight:600;
+                        "
+                    >
+                        Open your profile photo
+                    </span>
+
+                </span>
+
+
+                <span
+                    style="
+                        font-size:25px;
+                        color:#a1a5b2;
+                    "
+                >
+                    ›
+                </span>
+
             </button>
 
 
+            <!-- =================================================
+                 REMOVE PHOTO
+                 ================================================= -->
+
             <button
-                onclick="removeNexoraProfilePhoto('${escapeHTML(uid)}')"
+                onclick="
+                    closeNexoraProfilePhotoMenu();
+                    removeNexoraProfilePhoto('${escapeHTML(uid)}');
+                "
                 style="
                     width:100%;
-                    padding:15px;
+                    min-height:66px;
+
+                    border:1px solid #ffe0e0;
+                    border-radius:20px;
+
+                    padding:10px 14px;
                     margin-bottom:10px;
-                    border:none;
-                    border-radius:14px;
-                    background:#fff0f0;
-                    color:#e53935;
-                    font-size:16px;
-                    font-weight:800;
+
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    text-align:left;
+
+                    background:#fff7f7;
+                    color:#d83b3b;
+                    cursor:pointer;
                 "
             >
-                🗑️ Remove Profile Photo
+
+                <span
+                    style="
+                        width:44px;
+                        height:44px;
+                        border-radius:15px;
+
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+
+                        background:#ffe8e8;
+
+                        font-size:21px;
+                        flex-shrink:0;
+                    "
+                >
+                    🗑
+                </span>
+
+
+                <span style="flex:1;">
+
+                    <span
+                        style="
+                            display:block;
+                            font-size:16px;
+                            font-weight:900;
+                            margin-bottom:3px;
+                        "
+                    >
+                        Remove Photo
+                    </span>
+
+                    <span
+                        style="
+                            display:block;
+                            font-size:12px;
+                            color:#a56b6b;
+                            font-weight:600;
+                        "
+                    >
+                        Remove your current profile image
+                    </span>
+
+                </span>
+
+
+                <span
+                    style="
+                        font-size:25px;
+                        color:#d88383;
+                    "
+                >
+                    ›
+                </span>
+
             </button>
 
 
+            <!-- =================================================
+                 CANCEL
+                 ================================================= -->
+
             <button
-                onclick="closeNexoraProfilePhotoMenu()"
+                onclick="
+                    closeNexoraProfilePhotoMenu();
+                "
                 style="
                     width:100%;
-                    padding:15px;
+                    height:57px;
+
                     border:none;
-                    border-radius:14px;
-                    background:#eee;
-                    color:#333;
-                    font-size:16px;
-                    font-weight:800;
+                    border-radius:19px;
+
+                    background:#eef0f5;
+
+                    color:#343746;
+
+                    font-size:15px;
+                    font-weight:900;
+
+                    cursor:pointer;
                 "
             >
                 Cancel
@@ -6312,7 +6664,76 @@ function openNexoraProfilePhotoMenu(uid){
 
     `;
 
+
+    /* ================= BACKDROP CLOSE ================= */
+
+    menu.addEventListener(
+        "click",
+        function(event){
+
+            if(event.target === menu){
+
+                closeNexoraProfilePhotoMenu();
+
+            }
+
+        }
+    );
+
+
+    /* ================= ADD MENU ================= */
+
     document.body.appendChild(menu);
+
+
+    /* ================= MENU ANIMATION ================= */
+
+    if(
+        !document.getElementById(
+            "nexoraPhotoMenuAnimation"
+        )
+    ){
+
+        const style =
+            document.createElement("style");
+
+        style.id =
+            "nexoraPhotoMenuAnimation";
+
+        style.innerHTML = `
+
+            @keyframes nexoraPhotoMenuFade{
+
+                from{
+                    opacity:0;
+                }
+
+                to{
+                    opacity:1;
+                }
+
+            }
+
+
+            @keyframes nexoraPhotoMenuUp{
+
+                from{
+                    transform:translateY(40px);
+                    opacity:0;
+                }
+
+                to{
+                    transform:translateY(0);
+                    opacity:1;
+                }
+
+            }
+
+        `;
+
+        document.head.appendChild(style);
+
+    }
 
 }
 
