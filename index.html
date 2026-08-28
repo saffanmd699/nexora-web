@@ -488,6 +488,177 @@ button{
     font-size:30px;
     box-shadow:0 3px 10px rgba(24,119,242,.35);
 }
+/* =====================================================
+   NEXORA PREMIUM PROFILE NAV
+   PHOTO + LIVING RING
+   ===================================================== */
+
+.nx-profile-nav-btn{
+    position:relative;
+
+    border:none;
+    background:transparent;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:2px;
+
+    min-width:55px;
+
+    padding:0;
+
+    color:#555;
+
+    cursor:pointer;
+
+    -webkit-tap-highlight-color:transparent;
+}
+
+
+/* ================= PROFILE RING ================= */
+
+.nx-bottom-profile-ring{
+
+    position:relative;
+
+    width:38px;
+    height:38px;
+
+    padding:3px;
+
+    box-sizing:border-box;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        conic-gradient(
+            from 0deg,
+            #6c63ff,
+            #00c6ff,
+            #7b61ff,
+            #00d9ff,
+            #6c63ff
+        );
+
+    box-shadow:
+        0 3px 12px
+        rgba(92,82,230,.35);
+
+    animation:
+        nxProfileRingRotate
+        5s linear infinite;
+}
+
+
+/* ================= WHITE INNER BORDER ================= */
+
+.nx-bottom-profile-inner{
+
+    width:100%;
+    height:100%;
+
+    padding:2px;
+
+    box-sizing:border-box;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+
+/* ================= PROFILE PHOTO ================= */
+
+.nx-bottom-profile-photo{
+
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #eef0ff,
+            #e4e7f5
+        );
+
+    color:#777d91;
+
+    font-size:17px;
+
+    line-height:1;
+}
+
+
+/* ================= REAL PHOTO ================= */
+
+.nx-bottom-profile-photo img{
+
+    width:100%;
+    height:100%;
+
+    display:block;
+
+    object-fit:cover;
+
+    border-radius:50%;
+}
+
+
+/* ================= PROFILE TEXT ================= */
+
+.nx-profile-nav-btn small{
+
+    font-size:11px;
+
+    font-weight:600;
+
+    color:#555;
+}
+
+
+/* ================= PRESS EFFECT ================= */
+
+.nx-profile-nav-btn:active
+.nx-bottom-profile-ring{
+
+    transform:scale(.88);
+
+}
+
+
+/* ================= RING ANIMATION ================= */
+
+@keyframes nxProfileRingRotate{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
 
 /* ================= MOBILE ================= */
 
@@ -1807,10 +1978,38 @@ button{
             <small>Reels</small>
         </button>
 
-        <button onclick="openMyNexoraProfile()">
-            <span>👤</span>
-            <small>Profile</small>
-        </button>
+        <!-- =====================================================
+     NEXORA PREMIUM PROFILE NAV
+     Dynamic Photo + NEXORA Ring
+     ===================================================== -->
+
+<button
+    class="nx-profile-nav-btn"
+    onclick="openMyNexoraProfile()"
+    type="button"
+>
+
+    <span
+        id="nexoraBottomProfileRing"
+        class="nx-bottom-profile-ring"
+    >
+
+        <span class="nx-bottom-profile-inner">
+
+            <span
+                id="nexoraBottomProfilePhoto"
+                class="nx-bottom-profile-photo"
+            >
+                👤
+            </span>
+
+        </span>
+
+    </span>
+
+    <small>Profile</small>
+
+</button>
 
     </div>
 
@@ -9409,138 +9608,7 @@ function closeNexoraProfile(){
 
 }
 
-/* =====================================================
-   NEXORA PROFILE PHOTO MENU
-   ===================================================== */
 
-function openNexoraProfilePhotoMenu(uid){
-
-    const currentUser =
-        auth.currentUser;
-
-    if(!currentUser){
-
-        alert("আগে NEXORA-তে Login করুন।");
-
-        return;
-    }
-
-    if(currentUser.uid !== uid){
-
-        alert("শুধু নিজের Profile Photo পরিবর্তন করতে পারবেন।");
-
-        return;
-    }
-
-    const old =
-        document.getElementById(
-            "nexoraProfilePhotoMenu"
-        );
-
-    if(old)
-        old.remove();
-
-    const menu =
-        document.createElement("div");
-
-    menu.id =
-        "nexoraProfilePhotoMenu";
-
-    menu.style.cssText = `
-        position:fixed;
-        inset:0;
-        z-index:2000000;
-        background:rgba(0,0,0,.55);
-        display:flex;
-        align-items:flex-end;
-        justify-content:center;
-    `;
-
-    menu.innerHTML = `
-
-        <div style="
-            width:100%;
-            max-width:500px;
-            background:#fff;
-            border-radius:22px 22px 0 0;
-            padding:20px;
-            box-sizing:border-box;
-        ">
-
-            <div style="
-                text-align:center;
-                font-size:19px;
-                font-weight:900;
-                margin-bottom:18px;
-            ">
-                Profile Photo
-            </div>
-
-            <button
-                onclick="selectNexoraProfilePhoto()"
-                style="
-                    width:100%;
-                    padding:15px;
-                    border:none;
-                    border-radius:14px;
-                    background:#1877f2;
-                    color:#fff;
-                    font-size:16px;
-                    font-weight:800;
-                    margin-bottom:10px;
-                "
-            >
-                🖼️ Choose from Gallery
-            </button>
-
-            <button
-                onclick="removeNexoraProfilePhoto('${escapeHTML(uid)}')"
-                style="
-                    width:100%;
-                    padding:15px;
-                    border:none;
-                    border-radius:14px;
-                    background:#f1f3f5;
-                    color:#e53935;
-                    font-size:16px;
-                    font-weight:800;
-                    margin-bottom:10px;
-                "
-            >
-                🗑️ Remove Profile Photo
-            </button>
-
-            <button
-                onclick="closeNexoraProfilePhotoMenu()"
-                style="
-                    width:100%;
-                    padding:15px;
-                    border:none;
-                    border-radius:14px;
-                    background:#eee;
-                    color:#333;
-                    font-size:16px;
-                    font-weight:800;
-                "
-            >
-                Cancel
-            </button>
-
-            <input
-                type="file"
-                id="nexoraProfilePhotoInput"
-                accept="image/*"
-                style="display:none"
-                onchange="handleNexoraProfilePhoto(event)"
-            >
-
-        </div>
-
-    `;
-
-    document.body.appendChild(menu);
-
-}
 
 
 
