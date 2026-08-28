@@ -10692,6 +10692,1002 @@ nxMoreStyle.innerHTML = `
 document.head.appendChild(nxMoreStyle);
 
 /* =====================================================
+   NEXORA PROFILE SETTINGS
+   PREMIUM SETTINGS CENTER
+   ===================================================== */
+
+function openNexoraProfileSettings(uid){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert("আগে NEXORA-তে Login করুন.");
+
+        return;
+    }
+
+    if(currentUser.uid !== uid){
+
+        alert(
+            "শুধু নিজের Profile Settings পরিবর্তন করতে পারবেন।"
+        );
+
+        return;
+    }
+
+
+    /* ================= REMOVE OLD ================= */
+
+    const old =
+        document.getElementById(
+            "nexoraProfileSettings"
+        );
+
+    if(old)
+        old.remove();
+
+
+    /* ================= SETTINGS PAGE ================= */
+
+    const page =
+        document.createElement("div");
+
+    page.id =
+        "nexoraProfileSettings";
+
+
+    page.style.cssText = `
+        position:fixed;
+        inset:0;
+
+        z-index:4000000;
+
+        background:#f5f7fb;
+
+        overflow-y:auto;
+        overflow-x:hidden;
+
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+        animation:nxSettingsFade .22s ease;
+    `;
+
+
+    /* ================= SETTINGS HTML ================= */
+
+    page.innerHTML = `
+
+        <div style="
+            position:sticky;
+            top:0;
+            z-index:5;
+
+            height:64px;
+
+            display:flex;
+            align-items:center;
+
+            padding:0 16px;
+
+            box-sizing:border-box;
+
+            background:rgba(255,255,255,.94);
+
+            backdrop-filter:blur(18px);
+            -webkit-backdrop-filter:blur(18px);
+
+            border-bottom:1px solid #e7e9f0;
+        ">
+
+            <button
+                type="button"
+                onclick="closeNexoraProfileSettings()"
+                style="
+                    width:42px;
+                    height:42px;
+
+                    border:none;
+                    border-radius:50%;
+
+                    background:#eef1f7;
+
+                    color:#202331;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    cursor:pointer;
+                "
+            >
+
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+
+            </button>
+
+
+            <div style="
+                margin-left:14px;
+            ">
+
+                <div style="
+                    font-size:20px;
+                    font-weight:900;
+                    color:#171927;
+                    letter-spacing:-.3px;
+                ">
+                    Settings
+                </div>
+
+                <div style="
+                    margin-top:2px;
+                    font-size:11px;
+                    font-weight:700;
+                    color:#9298a8;
+                ">
+                    NEXORA Control Center
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            width:100%;
+            max-width:620px;
+
+            margin:0 auto;
+
+            padding:18px 15px 35px;
+
+            box-sizing:border-box;
+        ">
+
+
+            <!-- ================= PRIVACY ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('Privacy & Visibility')"
+                style="
+                    display:flex;
+                    align-items:center;
+
+                    gap:14px;
+
+                    padding:17px;
+
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #6c63ff,
+                            #5146d8
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect
+                            x="3"
+                            y="5"
+                            width="18"
+                            height="14"
+                            rx="3"
+                        />
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="3"
+                        />
+                        <path
+                            d="M3 8h18"
+                        />
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                    min-width:0;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        Privacy & Visibility
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                        line-height:1.4;
+                    ">
+                        Control who can see and interact with you
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= INTERACTION ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('Interaction Control')"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    padding:17px;
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #00bfa6,
+                            #008f7d
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M20 11.5a8 8 0 0 1-8 8H7l-4 2 1.5-4A8 8 0 1 1 20 11.5Z"/>
+                        <path d="M8 11h8"/>
+                        <path d="M8 15h5"/>
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        Interaction Control
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                    ">
+                        Comments, reactions, mentions and tags
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= NOTIFICATIONS ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('Notifications')"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    padding:17px;
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ff8a65,
+                            #e85d3f
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                        <path d="M10 21h4"/>
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        Notifications
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                    ">
+                        Manage your NEXORA alerts
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= APPEARANCE ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('Appearance')"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    padding:17px;
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #455a64,
+                            #263238
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="4"
+                        />
+                        <path d="M12 2v2"/>
+                        <path d="M12 20v2"/>
+                        <path d="m4.93 4.93 1.42 1.42"/>
+                        <path d="m17.65 17.65 1.42 1.42"/>
+                        <path d="M2 12h2"/>
+                        <path d="M20 12h2"/>
+                        <path d="m4.93 19.07 1.42-1.42"/>
+                        <path d="m17.65 6.35 1.42-1.42"/>
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        Appearance
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                    ">
+                        Theme, animation and display preferences
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= SAFETY ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('Safety Center')"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    padding:17px;
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ef5350,
+                            #c62828
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M12 3 4 6v5c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-3Z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        Safety Center
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                    ">
+                        Block, report and account security
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= NEXORA SMART ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('NEXORA Smart')"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    padding:17px;
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #7c4dff,
+                            #512da8
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M12 3v3"/>
+                        <path d="M12 18v3"/>
+                        <path d="m4.22 4.22 2.12 2.12"/>
+                        <path d="m17.66 17.66 2.12 2.12"/>
+                        <path d="M3 12h3"/>
+                        <path d="M18 12h3"/>
+                        <path d="m4.22 19.78 2.12-2.12"/>
+                        <path d="m17.66 6.34 2.12-2.12"/>
+                        <circle cx="12" cy="12" r="4"/>
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        NEXORA Smart
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                    ">
+                        Smart privacy and experience tools
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= ACCOUNT ================= -->
+
+            <div
+                onclick="openNexoraSettingNotice('Account Center')"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:14px;
+
+                    padding:17px;
+                    margin-bottom:11px;
+
+                    border:1px solid #e5e8f0;
+                    border-radius:20px;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #f8f9fd
+                        );
+
+                    box-shadow:
+                        0 7px 22px
+                        rgba(24,31,56,.06);
+
+                    cursor:pointer;
+                "
+            >
+
+                <div style="
+                    width:46px;
+                    height:46px;
+                    flex-shrink:0;
+
+                    border-radius:15px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                        linear-gradient(
+                            145deg,
+                            #2196f3,
+                            #1565c0
+                        );
+
+                    color:#fff;
+                ">
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                        />
+                        <path
+                            d="M4 21a8 8 0 0 1 16 0"
+                        />
+                    </svg>
+
+                </div>
+
+
+                <div style="
+                    flex:1;
+                ">
+
+                    <div style="
+                        font-size:15px;
+                        font-weight:850;
+                        color:#191b29;
+                    ">
+                        Account Center
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                    ">
+                        Account information and management
+                    </div>
+
+                </div>
+
+
+                <span style="
+                    color:#a3a8b5;
+                    font-size:22px;
+                ">
+                    ›
+                </span>
+
+            </div>
+
+
+            <!-- ================= FOOTER ================= -->
+
+            <div style="
+                text-align:center;
+
+                margin-top:24px;
+
+                color:#a1a6b3;
+
+                font-size:11px;
+                font-weight:700;
+
+                letter-spacing:.3px;
+            ">
+                NEXORA Settings
+            </div>
+
+
+        </div>
+
+
+        <style>
+
+            @keyframes nxSettingsFade{
+
+                from{
+                    opacity:0;
+                }
+
+                to{
+                    opacity:1;
+                }
+
+            }
+
+        </style>
+
+    `;
+
+
+    document.body.appendChild(page);
+
+}
+
+
+/* =====================================================
+   NEXORA SETTINGS CLOSE
+   ===================================================== */
+
+function closeNexoraProfileSettings(){
+
+    const page =
+        document.getElementById(
+            "nexoraProfileSettings"
+        );
+
+    if(page)
+        page.remove();
+
+}
+
+
+/* =====================================================
+   NEXORA SETTINGS PLACEHOLDER
+   ===================================================== */
+
+function openNexoraSettingNotice(title){
+
+    alert(
+        title +
+        "\n\nএই Settings বিভাগটি NEXORA-এর পরবর্তী Update-এ সম্পূর্ণভাবে চালু করা হবে।"
+    );
+
+}
+
+/* =====================================================
    NEXORA MODERN EDIT PROFILE
    ===================================================== */
 
