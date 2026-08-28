@@ -10274,10 +10274,20 @@ function openNexoraProfileMore(uid){
                 <button
                     type="button"
                     onclick="
-                        copyNexoraProfileLink(
-                            '${escapeHTML(uid)}'
-                        );
-                    "
+    copyNexoraProfileLink(
+        '${escapeHTML(uid)}'
+    );
+"
+
+onmouseenter="
+    this.style.transform='translateY(-3px)';
+    this.style.filter='brightness(1.06)';
+"
+
+onmouseleave="
+    this.style.transform='translateY(0)';
+    this.style.filter='brightness(1)';
+"
                     style="
                         min-height:78px;
  border:1px solid rgba(255,255,255,.35);
@@ -10296,12 +10306,13 @@ color:#fff;
 box-shadow:
     0 8px 25px
     rgba(79,70,229,.28);
-
 transition:
-    transform .18s ease,
-    box-shadow .18s ease;
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    box-shadow .18s ease,
+    filter .18s ease;
 
-                        display:flex;
+-webkit-tap-highlight-color:transparent;
+          display:flex;
                         flex-direction:column;
                         align-items:center;
                         justify-content:center;
@@ -10365,9 +10376,11 @@ box-shadow:
     rgba(255,65,108,.25);
 
 transition:
-    transform .18s ease,
-    box-shadow .18s ease;
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    box-shadow .18s ease,
+    filter .18s ease;
 
+-webkit-tap-highlight-color:transparent;
                         display:flex;
                         flex-direction:column;
                         align-items:center;
@@ -10431,10 +10444,12 @@ color:#fff;
 box-shadow:
     0 8px 25px
     rgba(108,99,255,.28);
-
 transition:
-    transform .18s ease,
-    box-shadow .18s ease; 
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    box-shadow .18s ease,
+    filter .18s ease;
+
+-webkit-tap-highlight-color:transparent;
 
                         display:flex;
                         flex-direction:column;
@@ -10495,16 +10510,18 @@ background:
         #0052cc 100%
     );
 
-color:#fff
+color:#fff;
 
 box-shadow:
     0 8px 25px
     rgba(0,114,255,.28);
 
 transition:
-    transform .18s ease,
-    box-shadow .18s ease;
-                        display:flex;
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    box-shadow .18s ease,
+    filter .18s ease;
+
+-webkit-tap-highlight-color:transparent;           display:flex;
                         flex-direction:column;
                         align-items:center;
                         justify-content:center;
