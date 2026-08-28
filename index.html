@@ -9986,7 +9986,104 @@ function closeNexoraProfile(){
 }
 
 
+/* =====================================================
+   NEXORA SHARE PROFILE
+   Modern Native Share + Copy Link
+   ===================================================== */
 
+function shareNexoraProfile(uid){
+
+    if(!uid){
+        alert("Profile পাওয়া যায়নি।");
+        return;
+    }
+
+    const profileURL =
+        window.location.origin +
+        window.location.pathname +
+        "?profile=" +
+        encodeURIComponent(uid);
+
+    const shareData = {
+
+        title: "NEXORA Profile",
+
+        text: "NEXORA-তে এই Profile দেখুন।",
+
+        url: profileURL
+
+    };
+
+
+    /* ================= NATIVE SHARE ================= */
+
+    if(
+        navigator.share &&
+        typeof navigator.share === "function"
+    ){
+
+        navigator.share(shareData)
+
+        .then(function(){
+
+            console.log(
+                "NEXORA PROFILE SHARED"
+            );
+
+        })
+
+        .catch(function(error){
+
+            console.log(
+                "NEXORA SHARE CANCELLED:",
+                error
+            );
+
+        });
+
+        return;
+    }
+
+
+    /* ================= COPY LINK FALLBACK ================= */
+
+    if(
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+    ){
+
+        navigator.clipboard
+            .writeText(profileURL)
+
+            .then(function(){
+
+                alert(
+                    "Profile Link কপি হয়েছে।"
+                );
+
+            })
+
+            .catch(function(){
+
+                window.prompt(
+                    "Profile Link কপি করুন:",
+                    profileURL
+                );
+
+            });
+
+        return;
+    }
+
+
+    /* ================= OLD BROWSER FALLBACK ================= */
+
+    window.prompt(
+        "Profile Link কপি করুন:",
+        profileURL
+    );
+
+}
 
 
 /* =====================================================
@@ -10004,6 +10101,596 @@ function closeNexoraProfilePhotoMenu(){
         menu.remove();
 
 }
+/* =====================================================
+   NEXORA PROFILE MORE
+   Modern Action Center
+   ===================================================== */
+
+function openNexoraProfileMore(uid){
+
+    if(!uid){
+
+        alert("Profile পাওয়া যায়নি।");
+
+        return;
+    }
+
+
+    /* ================= REMOVE OLD ================= */
+
+    const old =
+        document.getElementById(
+            "nexoraProfileMoreMenu"
+        );
+
+    if(old)
+        old.remove();
+
+
+    /* ================= CREATE MENU ================= */
+
+    const menu =
+        document.createElement("div");
+
+    menu.id =
+        "nexoraProfileMoreMenu";
+
+
+    menu.style.cssText = `
+        position:fixed;
+        inset:0;
+        z-index:4000000;
+
+        display:flex;
+        align-items:flex-end;
+        justify-content:center;
+
+        background:rgba(10,12,24,.68);
+
+        backdrop-filter:blur(18px);
+        -webkit-backdrop-filter:blur(18px);
+
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+    `;
+
+
+    /* ================= MENU HTML ================= */
+
+    menu.innerHTML = `
+
+        <div
+            onclick="event.stopPropagation()"
+            style="
+                width:100%;
+                max-width:560px;
+                max-height:88vh;
+                overflow-y:auto;
+
+                box-sizing:border-box;
+
+                padding:10px 18px 24px;
+
+                border-radius:30px 30px 0 0;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #ffffff,
+                        #f7f8fc
+                    );
+
+                box-shadow:
+                    0 -20px 70px
+                    rgba(0,0,0,.28);
+
+                animation:
+                    nxMoreUp .30s
+                    cubic-bezier(.18,.82,.2,1);
+            "
+        >
+
+            <!-- ================= HANDLE ================= -->
+
+            <div style="
+                width:46px;
+                height:5px;
+                margin:2px auto 20px;
+                border-radius:20px;
+                background:#d7dbe5;
+            "></div>
+
+
+            <!-- ================= TITLE ================= -->
+
+            <div style="
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                margin-bottom:18px;
+            ">
+
+                <div>
+
+                    <div style="
+                        font-size:20px;
+                        font-weight:900;
+                        color:#171927;
+                    ">
+                        More
+                    </div>
+
+                    <div style="
+                        margin-top:4px;
+                        font-size:12px;
+                        color:#9298a8;
+                        font-weight:600;
+                    ">
+                        Profile tools & options
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    onclick="
+                        closeNexoraProfileMore();
+                    "
+                    style="
+                        width:40px;
+                        height:40px;
+                        border:none;
+                        border-radius:50%;
+
+                        background:#eef0f5;
+                        color:#555b6d;
+
+                        font-size:20px;
+                        cursor:pointer;
+                    "
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- ================= OPTIONS ================= -->
+
+            <div style="
+                display:grid;
+                grid-template-columns:
+                    repeat(2,minmax(0,1fr));
+                gap:11px;
+            ">
+
+
+                <!-- ================= COPY PROFILE LINK ================= -->
+
+                <button
+                    type="button"
+                    onclick="
+                        copyNexoraProfileLink(
+                            '${escapeHTML(uid)}'
+                        );
+                    "
+                    style="
+                        min-height:78px;
+                        border:1px solid #e4e7ef;
+                        border-radius:17px;
+                        background:#fff;
+                        color:#171927;
+
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:center;
+                        gap:7px;
+
+                        font-family:inherit;
+                        font-weight:800;
+                        cursor:pointer;
+
+                        box-shadow:
+                            0 4px 15px
+                            rgba(20,24,40,.06);
+                    "
+                >
+
+                    <svg
+                        width="23"
+                        height="23"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M10 13a5 5 0 0 0 7.07.07l2-2a5 5 0 0 0-7.07-7.07l-1.15 1.15"/>
+                        <path d="M14 11a5 5 0 0 0-7.07-.07l-2 2A5 5 0 0 0 12 20l1.15-1.15"/>
+                    </svg>
+
+                    <span style="font-size:13px;">
+                        Copy Link
+                    </span>
+
+                </button>
+
+
+                <!-- ================= REPORT ================= -->
+
+                <button
+                    type="button"
+                    onclick="
+                        reportNexoraProfile(
+                            '${escapeHTML(uid)}'
+                        );
+                    "
+                    style="
+                        min-height:78px;
+                        border:1px solid #e4e7ef;
+                        border-radius:17px;
+                        background:#fff;
+                        color:#171927;
+
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:center;
+                        gap:7px;
+
+                        font-family:inherit;
+                        font-weight:800;
+                        cursor:pointer;
+
+                        box-shadow:
+                            0 4px 15px
+                            rgba(20,24,40,.06);
+                    "
+                >
+
+                    <svg
+                        width="23"
+                        height="23"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M12 3 21 6v6c0 5-3.8 8.5-9 10-5.2-1.5-9-5-9-10V6z"/>
+                        <path d="M12 8v5"/>
+                        <circle cx="12" cy="16.5" r=".8"/>
+                    </svg>
+
+                    <span style="font-size:13px;">
+                        Report
+                    </span>
+
+                </button>
+
+
+                <!-- ================= BLOG ================= -->
+
+                <button
+                    type="button"
+                    onclick="
+                        openNexoraProfileBlog(
+                            '${escapeHTML(uid)}'
+                        );
+                    "
+                    style="
+                        min-height:78px;
+                        border:1px solid #e4e7ef;
+                        border-radius:17px;
+                        background:#fff;
+                        color:#171927;
+
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:center;
+                        gap:7px;
+
+                        font-family:inherit;
+                        font-weight:800;
+                        cursor:pointer;
+
+                        box-shadow:
+                            0 4px 15px
+                            rgba(20,24,40,.06);
+                    "
+                >
+
+                    <svg
+                        width="23"
+                        height="23"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M5 4h14v16H5z"/>
+                        <path d="M8 8h8"/>
+                        <path d="M8 12h8"/>
+                        <path d="M8 16h5"/>
+                    </svg>
+
+                    <span style="font-size:13px;">
+                        Blog
+                    </span>
+
+                </button>
+
+
+                <!-- ================= PROFILE LINK ================= -->
+
+                <button
+                    type="button"
+                    onclick="
+                        shareNexoraProfile(
+                            '${escapeHTML(uid)}'
+                        );
+                    "
+                    style="
+                        min-height:78px;
+                        border:1px solid #e4e7ef;
+                        border-radius:17px;
+                        background:#fff;
+                        color:#171927;
+
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:center;
+                        gap:7px;
+
+                        font-family:inherit;
+                        font-weight:800;
+                        cursor:pointer;
+
+                        box-shadow:
+                            0 4px 15px
+                            rgba(20,24,40,.06);
+                    "
+                >
+
+                    <svg
+                        width="23"
+                        height="23"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M4 12h16"/>
+                        <path d="m14 6 6 6-6 6"/>
+                    </svg>
+
+                    <span style="font-size:13px;">
+                        Share Link
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(menu);
+
+
+    /* ================= OUTSIDE CLOSE ================= */
+
+    menu.addEventListener(
+        "click",
+        function(){
+
+            closeNexoraProfileMore();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE MORE
+   ===================================================== */
+
+function closeNexoraProfileMore(){
+
+    const menu =
+        document.getElementById(
+            "nexoraProfileMoreMenu"
+        );
+
+    if(menu)
+        menu.remove();
+
+}
+
+
+/* =====================================================
+   COPY PROFILE LINK
+   ===================================================== */
+
+function copyNexoraProfileLink(uid){
+
+    const profileURL =
+        window.location.origin +
+        window.location.pathname +
+        "?profile=" +
+        encodeURIComponent(uid);
+
+
+    if(
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+    ){
+
+        navigator.clipboard
+            .writeText(profileURL)
+
+            .then(function(){
+
+                alert(
+                    "Profile Link কপি হয়েছে।"
+                );
+
+            })
+
+            .catch(function(){
+
+                window.prompt(
+                    "Profile Link কপি করুন:",
+                    profileURL
+                );
+
+            });
+
+    }else{
+
+        window.prompt(
+            "Profile Link কপি করুন:",
+            profileURL
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   REPORT PROFILE
+   ===================================================== */
+
+function reportNexoraProfile(uid){
+
+    if(!uid)
+        return;
+
+    const reason =
+        window.prompt(
+            "Profile Report করার কারণ লিখুন:"
+        );
+
+    if(!reason)
+        return;
+
+    const user =
+        auth.currentUser;
+
+    if(!user){
+
+        alert(
+            "আগে NEXORA-তে Login করুন।"
+        );
+
+        return;
+    }
+
+
+    db.collection("ProfileReports")
+      .add({
+
+          reportedUID: uid,
+
+          reporterUID:
+              user.uid,
+
+          reason:
+              reason,
+
+          createdAt:
+              firebase.firestore
+              .FieldValue
+              .serverTimestamp()
+
+      })
+
+      .then(function(){
+
+          closeNexoraProfileMore();
+
+          alert(
+              "Report সফলভাবে পাঠানো হয়েছে।"
+          );
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA PROFILE REPORT ERROR:",
+              error
+          );
+
+          alert(
+              "Report পাঠানো যায়নি।\n\n" +
+              (error.message || "")
+          );
+
+      });
+
+}
+
+
+/* =====================================================
+   BLOG PLACEHOLDER
+   ===================================================== */
+
+function openNexoraProfileBlog(uid){
+
+    closeNexoraProfileMore();
+
+    alert(
+        "NEXORA Blog feature শীঘ্রই আসছে।"
+    );
+
+}
+
+
+/* =====================================================
+   MORE ANIMATION
+   ===================================================== */
+
+const nxMoreStyle =
+    document.createElement("style");
+
+nxMoreStyle.innerHTML = `
+
+@keyframes nxMoreUp{
+
+    from{
+        transform:translateY(100%);
+        opacity:0;
+    }
+
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+
+}
+
+`;
+
+document.head.appendChild(nxMoreStyle);
+
 /* =====================================================
    NEXORA MODERN EDIT PROFILE
    ===================================================== */
