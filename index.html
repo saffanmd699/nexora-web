@@ -4557,6 +4557,98 @@ function logout(){
 
 }
 /* =====================================================
+   NEXORA LOAD BOTTOM PROFILE PHOTO FROM FIRESTORE
+   ===================================================== */
+
+function loadNexoraBottomProfilePhotoFromFirestore(uid){
+
+    if(!uid)
+        return;
+
+
+    const photoElement =
+        document.getElementById(
+            "nexoraBottomProfilePhoto"
+        );
+
+
+    if(!photoElement)
+        return;
+
+
+    db.collection("Users")
+      .doc(uid)
+      .get()
+
+
+      .then(function(doc){
+
+          if(!doc.exists)
+              return;
+
+
+          const userData =
+              doc.data() || {};
+
+
+          const photo =
+              userData.photoURL ||
+              userData.photo ||
+              "";
+
+
+          /* ================= PHOTO FOUND ================= */
+
+          if(photo){
+
+              photoElement.innerHTML = `
+
+                  <img
+                      src="${escapeHTML(photo)}"
+                      alt="NEXORA Profile"
+                      style="
+                          width:100%;
+                          height:100%;
+                          border-radius:50%;
+                          object-fit:cover;
+                          display:block;
+                      "
+                      onerror="
+                          this.style.display='none';
+                          this.parentElement.innerHTML='👤';
+                      "
+                  >
+
+              `;
+
+          }
+
+
+          /* ================= NO PHOTO ================= */
+
+          else{
+
+              photoElement.innerHTML =
+                  "👤";
+
+          }
+
+      })
+
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA BOTTOM PROFILE FIRESTORE ERROR:",
+              error
+          );
+
+      });
+
+}
+
+
+/* =====================================================
    NEXORA AUTH STATE ROUTING — FINAL
    Google Login → Profile Check → Setup / Home
    ===================================================== */
@@ -4626,7 +4718,11 @@ auth.onAuthStateChanged(function(user){
 
         return;
     }
+/* ================= LOAD BOTTOM PROFILE PHOTO ================= */
 
+loadNexoraBottomProfilePhotoFromFirestore(
+    user.uid
+);
 
     /* =====================================================
        CURRENT USER
@@ -6364,7 +6460,97 @@ function openMyNexoraProfile(){
 
 }
 
+/* =====================================================
+   NEXORA BOTTOM PROFILE PHOTO
+   FIRESTORE → BOTTOM PROFILE ICON
+   ===================================================== */
 
+function loadNexoraBottomProfilePhoto(){
+
+    const user =
+        auth.currentUser;
+
+    if(!user)
+        return;
+
+
+    const photoElement =
+        document.getElementById(
+            "nexoraBottomProfilePhoto"
+        );
+
+    if(!photoElement)
+        return;
+
+
+    db.collection("Users")
+      .doc(user.uid)
+      .get()
+
+      .then(function(doc){
+
+          if(!doc.exists)
+              return;
+
+
+          const userData =
+              doc.data() || {};
+
+
+          const photo =
+              userData.photoURL ||
+              userData.photo ||
+              "";
+
+
+          /* ================= PHOTO FOUND ================= */
+
+          if(photo){
+
+              photoElement.innerHTML = `
+
+                  <img
+                      src="${escapeHTML(photo)}"
+                      alt="NEXORA Profile"
+                      style="
+                          width:100%;
+                          height:100%;
+                          display:block;
+                          object-fit:cover;
+                          border-radius:50%;
+                      "
+                      onerror="
+                          this.style.display='none';
+                          this.parentElement.innerHTML='👤';
+                      "
+                  >
+
+              `;
+
+          }
+
+
+          /* ================= NO PHOTO ================= */
+
+          else{
+
+              photoElement.innerHTML =
+                  "👤";
+
+          }
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA BOTTOM PROFILE PHOTO ERROR:",
+              error
+          );
+
+      });
+
+}
 
 /* =====================================================
    NEXORA PROFILE PHOTO ACTIONS
@@ -8018,7 +8204,11 @@ db.enableNetwork()
     console.log(
         "NEXORA: FIRESTORE SAVE SUCCESS"
     );
+/* ================= UPDATE BOTTOM PROFILE PHOTO ================= */
 
+loadNexoraBottomProfilePhoto(
+    downloadURL
+);
 
     URL.revokeObjectURL(
         previewURL
