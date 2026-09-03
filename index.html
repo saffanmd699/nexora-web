@@ -11156,126 +11156,133 @@ function openNexoraProfileSettings(uid){
             box-sizing:border-box;
         ">
 
+<!-- ================= PRIVACY ================= -->
 
-            <!-- ================= PRIVACY ================= -->
+<div
+    onclick="openNexoraPrivacyCenter()"
+    style="
+        display:flex;
+        align-items:center;
 
-            <div
-                onclick="openNexoraSettingNotice('Privacy & Visibility')"
-                style="
-                    display:flex;
-                    align-items:center;
+        gap:14px;
 
-                    gap:14px;
+        padding:17px;
 
-                    padding:17px;
+        margin-bottom:11px;
 
-                    margin-bottom:11px;
+        border:1px solid rgba(255,255,255,.35);
+        border-radius:20px;
 
-                    border:1px solid #e5e8f0;
-                    border-radius:20px;
+        background:
+            linear-gradient(
+                145deg,
+                #7c3aed 0%,
+                #4f46e5 48%,
+                #00c6ff 100%
+            );
 
-                    background:
-                        linear-gradient(
-                            145deg,
-                            #ffffff,
-                            #f8f9fd
-                        );
+        box-shadow:
+            0 9px 28px
+            rgba(79,70,229,.24);
 
-                    box-shadow:
-                        0 7px 22px
-                        rgba(24,31,56,.06);
+        cursor:pointer;
 
-                    cursor:pointer;
-                "
-            >
+        color:#fff;
 
-                <div style="
-                    width:46px;
-                    height:46px;
+        transition:
+            transform .18s ease,
+            box-shadow .18s ease,
+            filter .18s ease;
 
-                    flex-shrink:0;
+        -webkit-tap-highlight-color:transparent;
+    "
 
-                    border-radius:15px;
+    onmouseenter="
+        this.style.transform='translateY(-3px)';
+        this.style.filter='brightness(1.06)';
+    "
 
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
+    onmouseleave="
+        this.style.transform='translateY(0)';
+        this.style.filter='brightness(1)';
+    "
+>
 
-                    background:
-                        linear-gradient(
-                            145deg,
-                            #6c63ff,
-                            #5146d8
-                        );
+    <div style="
+        width:46px;
+        height:46px;
 
-                    color:#fff;
-                ">
+        flex-shrink:0;
 
-                    <svg
-                        width="22"
-                        height="22"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <rect
-                            x="3"
-                            y="5"
-                            width="18"
-                            height="14"
-                            rx="3"
-                        />
-                        <circle
-                            cx="12"
-                            cy="12"
-                            r="3"
-                        />
-                        <path
-                            d="M3 8h18"
-                        />
-                    </svg>
+        border-radius:15px;
 
-                </div>
+        display:flex;
+        align-items:center;
+        justify-content:center;
 
+        background:
+            rgba(255,255,255,.18);
 
-                <div style="
-                    flex:1;
-                    min-width:0;
-                ">
+        border:1px solid rgba(255,255,255,.25);
 
-                    <div style="
-                        font-size:15px;
-                        font-weight:850;
-                        color:#191b29;
-                    ">
-                        Privacy & Visibility
-                    </div>
+        color:#fff;
+    ">
 
-                    <div style="
-                        margin-top:4px;
-                        font-size:12px;
-                        color:#9298a8;
-                        line-height:1.4;
-                    ">
-                        Control who can see and interact with you
-                    </div>
+        <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path
+                d="M12 3l7 3v5c0 4.8-2.9 8.7-7 10-4.1-1.3-7-5.2-7-10V6l7-3Z"
+            />
 
-                </div>
+            <path
+                d="M9.5 12l1.7 1.7 3.6-3.6"
+            />
+        </svg>
+
+    </div>
 
 
-                <span style="
-                    color:#a3a8b5;
-                    font-size:22px;
-                ">
-                    ›
-                </span>
+    <div style="
+        flex:1;
+        min-width:0;
+    ">
 
-            </div>
+        <div style="
+            font-size:15px;
+            font-weight:850;
+            color:#fff;
+        ">
+            Privacy & Visibility
+        </div>
+
+        <div style="
+            margin-top:4px;
+            font-size:12px;
+            color:rgba(255,255,255,.82);
+            line-height:1.4;
+        ">
+            Control who can see and interact with you
+        </div>
+
+    </div>
 
 
+    <span style="
+        color:rgba(255,255,255,.85);
+        font-size:22px;
+    ">
+        ›
+    </span>
+
+</div>
             <!-- ================= INTERACTION ================= -->
 
             <div
@@ -11950,7 +11957,557 @@ function openNexoraProfileSettings(uid){
     document.body.appendChild(page);
 
 }
+/* =====================================================
+   NEXORA PRIVACY CENTER
+   MODERN PRIVACY & VISIBILITY SYSTEM
+   ===================================================== */
 
+function openNexoraPrivacyCenter(){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert(
+            "আগে NEXORA-তে Login করুন।"
+        );
+
+        return;
+    }
+
+
+    /* ================= REMOVE OLD ================= */
+
+    const old =
+        document.getElementById(
+            "nexoraPrivacyCenter"
+        );
+
+    if(old){
+
+        old.remove();
+
+    }
+
+
+    /* ================= PAGE ================= */
+
+    const page =
+        document.createElement("div");
+
+    page.id =
+        "nexoraPrivacyCenter";
+
+
+    page.style.cssText = `
+        position:fixed;
+        inset:0;
+
+        z-index:5000000;
+
+        background:
+            linear-gradient(
+                180deg,
+                #f7f8fc 0%,
+                #eef1f8 100%
+            );
+
+        overflow-y:auto;
+        overflow-x:hidden;
+
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+        animation:nxPrivacyFade .22s ease;
+    `;
+
+
+    /* ================= HEADER ================= */
+
+    page.innerHTML = `
+
+        <div style="
+            position:sticky;
+            top:0;
+            z-index:10;
+
+            display:flex;
+            align-items:center;
+
+            gap:13px;
+
+            padding:
+                15px
+                16px;
+
+            background:
+                rgba(255,255,255,.88);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            border-bottom:
+                1px solid #e5e8f0;
+        ">
+
+            <button
+                type="button"
+                onclick="
+                    document
+                        .getElementById(
+                            'nexoraPrivacyCenter'
+                        )
+                        ?.remove();
+                "
+                style="
+                    width:42px;
+                    height:42px;
+
+                    border:0;
+                    border-radius:14px;
+
+                    background:
+                        #eef1f7;
+
+                    color:#191b29;
+
+                    font-size:25px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    cursor:pointer;
+
+                    -webkit-tap-highlight-color:transparent;
+                "
+            >
+                ‹
+            </button>
+
+
+            <div style="
+                flex:1;
+                min-width:0;
+            ">
+
+                <div style="
+                    font-size:18px;
+                    font-weight:900;
+
+                    color:#171927;
+                ">
+                    Privacy Center
+                </div>
+
+                <div style="
+                    margin-top:2px;
+
+                    font-size:11px;
+
+                    color:#8b91a1;
+                ">
+                    Your privacy, your control
+                </div>
+
+            </div>
+
+
+            <div style="
+                width:42px;
+                height:42px;
+
+                border-radius:14px;
+
+                display:flex;
+                align-items:center;
+                justify-content:center;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #7c3aed,
+                        #4f46e5,
+                        #00c6ff
+                    );
+
+                color:#fff;
+            ">
+
+                🔒
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= INTRO ================= -->
+
+        <div style="
+            margin:16px;
+
+            padding:20px;
+
+            border-radius:22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #7c3aed 0%,
+                    #4f46e5 48%,
+                    #00c6ff 100%
+                );
+
+            color:#fff;
+
+            box-shadow:
+                0 12px 32px
+                rgba(79,70,229,.25);
+        ">
+
+            <div style="
+                font-size:17px;
+                font-weight:900;
+            ">
+                Your Privacy Matters
+            </div>
+
+            <div style="
+                margin-top:7px;
+
+                font-size:12px;
+
+                line-height:1.55;
+
+                color:rgba(255,255,255,.86);
+            ">
+                Choose what people can see,
+                discover and interact with
+                on your NEXORA profile.
+            </div>
+
+        </div>
+
+
+        <!-- ================= SECTION ================= -->
+
+        <div style="
+            padding:
+                0
+                16px
+                8px;
+
+            font-size:12px;
+
+            font-weight:900;
+
+            color:#7b8191;
+
+            letter-spacing:.4px;
+        ">
+            PRIVACY & VISIBILITY
+        </div>
+
+
+        <!-- ================= PROFILE VISIBILITY ================= -->
+
+        <div
+            onclick="
+                openNexoraPrivacyOption(
+                    'Profile Visibility'
+                )
+            "
+            style="
+                margin:
+                    0
+                    16px
+                    11px;
+
+                padding:16px;
+
+                display:flex;
+                align-items:center;
+
+                gap:14px;
+
+                border-radius:19px;
+
+                background:#fff;
+
+                border:
+                    1px solid #e5e8f0;
+
+                box-shadow:
+                    0 6px 20px
+                    rgba(24,31,56,.06);
+
+                cursor:pointer;
+            "
+        >
+
+            <div style="
+                width:45px;
+                height:45px;
+
+                flex-shrink:0;
+
+                border-radius:14px;
+
+                display:flex;
+                align-items:center;
+                justify-content:center;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #7c3aed,
+                        #4f46e5
+                    );
+
+                color:#fff;
+                font-size:20px;
+            ">
+                👤
+            </div>
+
+
+            <div style="
+                flex:1;
+            ">
+
+                <div style="
+                    font-size:14px;
+                    font-weight:850;
+                    color:#191b29;
+                ">
+                    Profile Visibility
+                </div>
+
+                <div style="
+                    margin-top:4px;
+                    font-size:11px;
+                    color:#9298a8;
+                ">
+                    Control who can view your profile
+                </div>
+
+            </div>
+
+            <span style="
+                color:#a3a8b5;
+                font-size:22px;
+            ">
+                ›
+            </span>
+
+        </div>
+
+
+        <!-- ================= POST VISIBILITY ================= -->
+
+        <div
+            onclick="
+                openNexoraPrivacyOption(
+                    'Post Visibility'
+                )
+            "
+            style="
+                margin:
+                    0
+                    16px
+                    11px;
+
+                padding:16px;
+
+                display:flex;
+                align-items:center;
+
+                gap:14px;
+
+                border-radius:19px;
+
+                background:#fff;
+
+                border:
+                    1px solid #e5e8f0;
+
+                box-shadow:
+                    0 6px 20px
+                    rgba(24,31,56,.06);
+
+                cursor:pointer;
+            "
+        >
+
+            <div style="
+                width:45px;
+                height:45px;
+
+                flex-shrink:0;
+
+                border-radius:14px;
+
+                display:flex;
+                align-items:center;
+                justify-content:center;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #00bfa6,
+                        #008f7d
+                    );
+
+                color:#fff;
+                font-size:20px;
+            ">
+                📝
+            </div>
+
+
+            <div style="
+                flex:1;
+            ">
+
+                <div style="
+                    font-size:14px;
+                    font-weight:850;
+                    color:#191b29;
+                ">
+                    Post Visibility
+                </div>
+
+                <div style="
+                    margin-top:4px;
+                    font-size:11px;
+                    color:#9298a8;
+                ">
+                    Choose who can see your posts
+                </div>
+
+            </div>
+
+            <span style="
+                color:#a3a8b5;
+                font-size:22px;
+            ">
+                ›
+            </span>
+
+        </div>
+
+
+        <!-- ================= STORY PRIVACY ================= -->
+
+        <div
+            onclick="
+                openNexoraPrivacyOption(
+                    'Story Privacy'
+                )
+            "
+            style="
+                margin:
+                    0
+                    16px
+                    11px;
+
+                padding:16px;
+
+                display:flex;
+                align-items:center;
+
+                gap:14px;
+
+                border-radius:19px;
+
+                background:#fff;
+
+                border:
+                    1px solid #e5e8f0;
+
+                box-shadow:
+                    0 6px 20px
+                    rgba(24,31,56,.06);
+
+                cursor:pointer;
+            "
+        >
+
+            <div style="
+                width:45px;
+                height:45px;
+
+                flex-shrink:0;
+
+                border-radius:14px;
+
+                display:flex;
+                align-items:center;
+                justify-content:center;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #ff416c,
+                        #8b5cf6
+                    );
+
+                color:#fff;
+                font-size:20px;
+            ">
+                📸
+            </div>
+
+
+            <div style="
+                flex:1;
+            ">
+
+                <div style="
+                    font-size:14px;
+                    font-weight:850;
+                    color:#191b29;
+                ">
+                    Story Privacy
+                </div>
+
+                <div style="
+                    margin-top:4px;
+                    font-size:11px;
+                    color:#9298a8;
+                ">
+                    Control who can view your stories
+                </div>
+
+            </div>
+
+            <span style="
+                color:#a3a8b5;
+                font-size:22px;
+            ">
+                ›
+            </span>
+
+        </div>
+
+
+        <div style="
+            height:30px;
+        "></div>
+
+    `;
+
+
+    document.body.appendChild(page);
+
+}
 
 /* =====================================================
    NEXORA SETTINGS CLOSE
