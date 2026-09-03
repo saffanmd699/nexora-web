@@ -13028,40 +13028,233 @@ function selectNexoraProfileVisibility(visibility){
 
       .then(function(){
 
-          /* ================= SUCCESS ================= */
 
-          let message =
-              "Profile Visibility updated.";
+/* ================= MODERN SUCCESS ================= */
 
-          if(visibility === "public"){
+let title =
+    "Privacy Updated";
 
-              message =
-                  "Your profile is now Public.";
+let message =
+    "Your Profile Visibility has been updated.";
 
-          }
-
-          else if(
-              visibility === "followers"
-          ){
-
-              message =
-                  "Only your Followers can see your profile.";
-
-          }
-
-          else if(
-              visibility === "private"
-          ){
-
-              message =
-                  "Your profile is now Private.";
-
-          }
+let icon =
+    "✓";
 
 
-          alert(message);
+if(visibility === "public"){
+
+    title =
+        "Profile is Public";
+
+    message =
+        "Anyone on NEXORA can see your profile.";
+
+    icon =
+        "🌐";
+
+}
+
+else if(visibility === "followers"){
+
+    title =
+        "Followers Only";
+
+    message =
+        "Only your Followers can see your profile.";
+
+    icon =
+        "👥";
+
+}
+
+else if(visibility === "private"){
+
+    title =
+        "Profile is Private";
+
+    message =
+        "Only you can access your profile.";
+
+    icon =
+        "🔒";
+
+}
 
 
+/* ================= REMOVE OLD TOAST ================= */
+
+const oldToast =
+    document.getElementById(
+        "nexoraPrivacyToast"
+    );
+
+if(oldToast){
+
+    oldToast.remove();
+
+}
+
+
+/* ================= TOAST ================= */
+
+const toast =
+    document.createElement("div");
+
+toast.id =
+    "nexoraPrivacyToast";
+
+
+toast.style.cssText = `
+    position:fixed;
+
+    left:16px;
+    right:16px;
+
+    bottom:24px;
+
+    z-index:99999999;
+
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:15px 16px;
+
+    border-radius:20px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+    border:
+        1px solid rgba(124,58,237,.16);
+
+    box-shadow:
+        0 14px 40px
+        rgba(20,25,50,.18);
+
+    animation:
+        nxPrivacyToastIn .28s ease;
+`;
+
+
+toast.innerHTML = `
+
+    <div style="
+        width:44px;
+        height:44px;
+
+        flex-shrink:0;
+
+        border-radius:14px;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        background:
+            linear-gradient(
+                145deg,
+                #7c3aed,
+                #4f46e5,
+                #00c6ff
+            );
+
+        color:#fff;
+
+        font-size:20px;
+        font-weight:900;
+    ">
+        ${icon}
+    </div>
+
+
+    <div style="
+        flex:1;
+        min-width:0;
+    ">
+
+        <div style="
+            font-size:14px;
+            font-weight:900;
+
+            color:#171927;
+        ">
+            ${title}
+        </div>
+
+        <div style="
+            margin-top:3px;
+
+            font-size:11px;
+            line-height:1.4;
+
+            color:#858b9b;
+        ">
+            ${message}
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        onclick="
+            document
+                .getElementById(
+                    'nexoraPrivacyToast'
+                )
+                ?.remove();
+        "
+        style="
+            width:32px;
+            height:32px;
+
+            border:0;
+            border-radius:10px;
+
+            background:#f0f2f7;
+
+            color:#747a8b;
+
+            font-size:18px;
+
+            cursor:pointer;
+        "
+    >
+        ×
+    </button>
+
+`;
+
+
+document.body.appendChild(toast);
+
+
+/* ================= AUTO REMOVE ================= */
+
+setTimeout(function(){
+
+    if(toast){
+
+        toast.style.animation =
+            "nxPrivacyToastOut .25s ease";
+
+        setTimeout(function(){
+
+            toast.remove();
+
+        },250);
+
+    }
+
+},3000);
           /* ================= CLOSE PANEL ================= */
 
           const panel =
