@@ -12969,6 +12969,128 @@ function openNexoraPrivacyOption(option){
     }
 
 }
+/* =====================================================
+   NEXORA PROFILE VISIBILITY SAVE
+   ===================================================== */
+
+function selectNexoraProfileVisibility(visibility){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert(
+            "আগে NEXORA-তে Login করুন।"
+        );
+
+        return;
+    }
+
+
+    /* ================= VALIDATE ================= */
+
+    const allowed = [
+        "public",
+        "followers",
+        "private"
+    ];
+
+    if(!allowed.includes(visibility)){
+
+        console.error(
+            "Invalid Profile Visibility:",
+            visibility
+        );
+
+        return;
+    }
+
+
+    /* ================= SAVE ================= */
+
+    db.collection("Users")
+      .doc(currentUser.uid)
+      .set({
+
+          privacy: {
+
+              profileVisibility:
+                  visibility
+
+          }
+
+      }, {
+
+          merge:true
+
+      })
+
+      .then(function(){
+
+          /* ================= SUCCESS ================= */
+
+          let message =
+              "Profile Visibility updated.";
+
+          if(visibility === "public"){
+
+              message =
+                  "Your profile is now Public.";
+
+          }
+
+          else if(
+              visibility === "followers"
+          ){
+
+              message =
+                  "Only your Followers can see your profile.";
+
+          }
+
+          else if(
+              visibility === "private"
+          ){
+
+              message =
+                  "Your profile is now Private.";
+
+          }
+
+
+          alert(message);
+
+
+          /* ================= CLOSE PANEL ================= */
+
+          const panel =
+              document.getElementById(
+                  "nexoraPrivacyOptionPanel"
+              );
+
+          if(panel){
+
+              panel.remove();
+
+          }
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA PROFILE VISIBILITY SAVE ERROR:",
+              error
+          );
+
+          alert(
+              "Privacy setting save করা যায়নি। আবার চেষ্টা করুন।"
+          );
+
+      });
+
+}
 
 /* =====================================================
    NEXORA SETTINGS CLOSE
