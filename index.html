@@ -13357,9 +13357,24 @@ setTimeout(function(){
 
     }
 
-},5000);
+        },5000);
+
+    })
+    .catch(function(error){
+
+        console.error(
+            "NEXORA PROFILE VISIBILITY SAVE ERROR:",
+            error
+        );
+
+        alert(
+            "Privacy setting save করা যায়নি। আবার চেষ্টা করুন।"
+        );
+
+    });
 
 }
+
 
 /* =====================================================
    NEXORA SETTINGS CLOSE
