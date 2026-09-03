@@ -13028,262 +13028,336 @@ function selectNexoraProfileVisibility(visibility){
 
       .then(function(){
 
+/* ================= NEXORA PREMIUM PRIVACY SUCCESS ================= */
 
-/* ================= MODERN SUCCESS ================= */
-
-let title =
+let privacyTitle =
     "Privacy Updated";
 
-let message =
-    "Your Profile Visibility has been updated.";
+let privacyMode =
+    "Profile Visibility";
 
-let icon =
-    "✓";
+let privacyLabel =
+    "Public";
+
+let privacyMessage =
+    "Anyone on NEXORA can discover and view your profile.";
+
+let privacyIcon =
+    "🌐";
 
 
-if(visibility === "public"){
+if(visibility === "followers"){
 
-    title =
-        "Profile is Public";
-
-    message =
-        "Anyone on NEXORA can see your profile.";
-
-    icon =
-        "🌐";
-
-}
-
-else if(visibility === "followers"){
-
-    title =
+    privacyLabel =
         "Followers Only";
 
-    message =
-        "Only your Followers can see your profile.";
+    privacyMessage =
+        "Only people who follow you can view your profile.";
 
-    icon =
+    privacyIcon =
         "👥";
 
 }
 
+
 else if(visibility === "private"){
 
-    title =
-        "Profile is Private";
+    privacyLabel =
+        "Private";
 
-    message =
-        "Only you can access your profile.";
+    privacyMessage =
+        "Your profile is visible only to you.";
 
-    icon =
+    privacyIcon =
         "🔒";
 
 }
 
 
-/* ================= REMOVE OLD TOAST ================= */
+/* ================= REMOVE OLD ================= */
 
-const oldToast =
+const oldModal =
     document.getElementById(
-        "nexoraPrivacyToast"
+        "nexoraPrivacySuccessModal"
     );
 
-if(oldToast){
+if(oldModal){
 
-    oldToast.remove();
+    oldModal.remove();
 
 }
 
 
-/* ================= TOAST ================= */
+/* ================= MODAL ================= */
 
-const toast =
+const modal =
     document.createElement("div");
 
-toast.id =
-    "nexoraPrivacyToast";
+modal.id =
+    "nexoraPrivacySuccessModal";
 
 
-toast.style.cssText = `
+modal.style.cssText = `
     position:fixed;
-
-    left:16px;
-    right:16px;
-
-    bottom:24px;
+    inset:0;
 
     z-index:99999999;
 
     display:flex;
     align-items:center;
+    justify-content:center;
 
-    gap:13px;
-
-    padding:15px 16px;
-
-    border-radius:20px;
+    padding:22px;
 
     background:
-        rgba(255,255,255,.96);
+        rgba(10,14,30,.38);
 
     backdrop-filter:
-        blur(20px);
+        blur(12px);
 
     -webkit-backdrop-filter:
-        blur(20px);
-
-    border:
-        1px solid rgba(124,58,237,.16);
-
-    box-shadow:
-        0 14px 40px
-        rgba(20,25,50,.18);
+        blur(12px);
 
     animation:
-        nxPrivacyToastIn .28s ease;
+        nxPrivacyModalIn .25s ease;
 `;
 
 
-toast.innerHTML = `
+modal.innerHTML = `
 
     <div style="
-        width:44px;
-        height:44px;
+        width:100%;
+        max-width:360px;
 
-        flex-shrink:0;
+        padding:24px 20px 20px;
 
-        border-radius:14px;
-
-        display:flex;
-        align-items:center;
-        justify-content:center;
+        border-radius:28px;
 
         background:
-            linear-gradient(
-                145deg,
-                #7c3aed,
-                #4f46e5,
-                #00c6ff
-            );
+            rgba(255,255,255,.97);
 
-        color:#fff;
+        border:
+            1px solid
+            rgba(255,255,255,.8);
 
-        font-size:20px;
-        font-weight:900;
+        box-shadow:
+            0 24px 70px
+            rgba(0,0,0,.22);
+
+        text-align:center;
     ">
-        ${icon}
-    </div>
 
 
-    <div style="
-        flex:1;
-        min-width:0;
-    ">
+        <!-- ================= ICON ================= -->
 
         <div style="
-            font-size:14px;
-            font-weight:900;
+            width:72px;
+            height:72px;
+
+            margin:0 auto;
+
+            border-radius:24px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #7c3aed,
+                    #4f46e5,
+                    #00c6ff
+                );
+
+            color:#fff;
+
+            font-size:30px;
+
+            box-shadow:
+                0 12px 28px
+                rgba(79,70,229,.28);
+
+            animation:
+                nxPrivacyIconPop .35s ease;
+        ">
+            ${privacyIcon}
+        </div>
+
+
+        <!-- ================= TITLE ================= -->
+
+        <div style="
+            margin-top:18px;
+
+            font-size:12px;
+
+            font-weight:800;
+
+            letter-spacing:.6px;
+
+            text-transform:uppercase;
+
+            color:#8b91a1;
+        ">
+            ${privacyTitle}
+        </div>
+
+
+        <div style="
+            margin-top:5px;
+
+            font-size:21px;
+
+            font-weight:950;
 
             color:#171927;
         ">
-            ${title}
+            ${privacyMode}
         </div>
+
+
+        <!-- ================= SELECTED ================= -->
 
         <div style="
-            margin-top:3px;
+            display:inline-flex;
+            align-items:center;
 
-            font-size:11px;
-            line-height:1.4;
+            gap:7px;
 
-            color:#858b9b;
+            margin-top:14px;
+
+            padding:8px 13px;
+
+            border-radius:999px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(124,58,237,.10),
+                    rgba(0,198,255,.10)
+                );
+
+            border:
+                1px solid
+                rgba(124,58,237,.12);
+
+            color:#4f46e5;
+
+            font-size:12px;
+
+            font-weight:900;
         ">
-            ${message}
+
+            <span style="
+                width:7px;
+                height:7px;
+
+                border-radius:50%;
+
+                background:#4f46e5;
+            "></span>
+
+            Selected: ${privacyLabel}
+
         </div>
 
-    </div>
 
+        <!-- ================= MESSAGE ================= -->
 
-    <button
-        type="button"
-        onclick="
-            document
-                .getElementById(
-                    'nexoraPrivacyToast'
-                )
-                ?.remove();
-        "
-        style="
-            width:32px;
-            height:32px;
+        <div style="
+            margin-top:14px;
 
-            border:0;
-            border-radius:10px;
+            font-size:13px;
 
-            background:#f0f2f7;
+            line-height:1.55;
 
             color:#747a8b;
+        ">
+            ${privacyMessage}
+        </div>
 
-            font-size:18px;
 
-            cursor:pointer;
-        "
-    >
-        ×
-    </button>
+        <!-- ================= DONE ================= -->
+
+        <button
+            type="button"
+            onclick="
+                document
+                    .getElementById(
+                        'nexoraPrivacySuccessModal'
+                    )
+                    ?.remove();
+            "
+            style="
+                width:100%;
+
+                margin-top:22px;
+
+                padding:14px;
+
+                border:0;
+
+                border-radius:16px;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #7c3aed,
+                        #4f46e5,
+                        #00c6ff
+                    );
+
+                color:#fff;
+
+                font-size:14px;
+
+                font-weight:900;
+
+                cursor:pointer;
+
+                box-shadow:
+                    0 10px 24px
+                    rgba(79,70,229,.24);
+
+                -webkit-tap-highlight-color:
+                    transparent;
+            "
+        >
+            Done
+        </button>
+
+
+    </div>
 
 `;
 
 
-document.body.appendChild(toast);
+document.body.appendChild(modal);
 
 
-/* ================= AUTO REMOVE ================= */
+/* ================= AUTO CLOSE ================= */
 
 setTimeout(function(){
 
-    if(toast){
+    if(modal){
 
-        toast.style.animation =
-            "nxPrivacyToastOut .25s ease";
+        modal.style.animation =
+            "nxPrivacyModalOut .22s ease";
 
         setTimeout(function(){
 
-            toast.remove();
+            if(modal){
 
-        },250);
+                modal.remove();
+
+            }
+
+        },220);
 
     }
 
-},3000);
-          /* ================= CLOSE PANEL ================= */
-
-          const panel =
-              document.getElementById(
-                  "nexoraPrivacyOptionPanel"
-              );
-
-          if(panel){
-
-              panel.remove();
-
-          }
-
-      })
-
-      .catch(function(error){
-
-          console.error(
-              "NEXORA PROFILE VISIBILITY SAVE ERROR:",
-              error
-          );
-
-          alert(
-              "Privacy setting save করা যায়নি। আবার চেষ্টা করুন।"
-          );
-
-      });
-
-}
+},5000);
 
 /* =====================================================
    NEXORA SETTINGS CLOSE
