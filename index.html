@@ -1664,7 +1664,87 @@ button{
 
 
 }
+/* =====================================================
+   NEXORA PRIVACY PREMIUM MODAL ANIMATIONS
+   ===================================================== */
 
+@keyframes nxPrivacyModalIn {
+
+    0% {
+
+        opacity:0;
+
+        transform:
+            scale(.94);
+
+    }
+
+    100% {
+
+        opacity:1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+@keyframes nxPrivacyIconPop {
+
+    0% {
+
+        opacity:0;
+
+        transform:
+            scale(.65)
+            rotate(-8deg);
+
+    }
+
+    70% {
+
+        transform:
+            scale(1.08)
+            rotate(2deg);
+
+    }
+
+    100% {
+
+        opacity:1;
+
+        transform:
+            scale(1)
+            rotate(0);
+
+    }
+
+}
+
+
+@keyframes nxPrivacyModalOut {
+
+    0% {
+
+        opacity:1;
+
+        transform:
+            scale(1);
+
+    }
+
+    100% {
+
+        opacity:0;
+
+        transform:
+            scale(.94);
+
+    }
+
+}
 </style>
 </head>
 
