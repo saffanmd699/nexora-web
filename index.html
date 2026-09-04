@@ -13251,7 +13251,1137 @@ function openNexoraPrivacyOption(option){
 
     }
 
+    /* ================= POST VISIBILITY ================= */
+
+    if(option === "Post Visibility"){
+
+        const currentUser =
+            auth.currentUser;
+
+        if(!currentUser){
+
+            alert(
+                "আগে NEXORA-তে Login করুন।"
+            );
+
+            return;
+        }
+
+
+        /* ================= LOAD CURRENT POST PRIVACY ================= */
+
+        db.collection("Users")
+          .doc(currentUser.uid)
+          .get()
+
+          .then(function(doc){
+
+              const user =
+                  doc.exists
+                      ? (doc.data() || {})
+                      : {};
+
+              const privacy =
+                  user.privacy || {};
+
+              const currentPostVisibility =
+                  privacy.postVisibility ||
+                  "public";
+
+
+              /* ================= REMOVE OLD PANEL ================= */
+
+              const oldPanel =
+                  document.getElementById(
+                      "nexoraPrivacyOptionPanel"
+                  );
+
+              if(oldPanel){
+
+                  oldPanel.remove();
+
+              }
+
+
+              /* ================= PANEL ================= */
+
+              const panel =
+                  document.createElement("div");
+
+              panel.id =
+                  "nexoraPrivacyOptionPanel";
+
+
+              panel.style.cssText = `
+                  position:fixed;
+                  inset:0;
+
+                  z-index:6000000;
+
+                  background:#f5f7fb;
+
+                  overflow-y:auto;
+
+                  font-family:
+                      -apple-system,
+                      BlinkMacSystemFont,
+                      "Segoe UI",
+                      sans-serif;
+
+                  animation:nxPrivacyFade .22s ease;
+              `;
+
+
+              /* ================= SELECTED BADGE ================= */
+
+              function selectedPostBadge(value){
+
+                  if(
+                      currentPostVisibility !==
+                      value
+                  ){
+
+                      return "";
+
+                  }
+
+                  return `
+                      <span style="
+                          display:inline-flex;
+                          align-items:center;
+                          gap:5px;
+
+                          margin-top:7px;
+
+                          padding:5px 9px;
+
+                          border-radius:999px;
+
+                          background:
+                              linear-gradient(
+                                  145deg,
+                                  rgba(79,70,229,.10),
+                                  rgba(0,198,255,.10)
+                              );
+
+                          border:
+                              1px solid
+                              rgba(79,70,229,.14);
+
+                          color:#4f46e5;
+
+                          font-size:10px;
+
+                          font-weight:900;
+                      ">
+                          ✓ Selected
+                      </span>
+                  `;
+
+              }
+
+
+              /* ================= PANEL HTML ================= */
+
+              panel.innerHTML = `
+
+                  <!-- HEADER -->
+
+                  <div style="
+                      position:sticky;
+                      top:0;
+                      z-index:10;
+
+                      height:64px;
+
+                      display:flex;
+                      align-items:center;
+
+                      padding:0 16px;
+
+                      background:
+                          rgba(255,255,255,.94);
+
+                      backdrop-filter:
+                          blur(18px);
+
+                      -webkit-backdrop-filter:
+                          blur(18px);
+
+                      border-bottom:
+                          1px solid #e7e9f0;
+                  ">
+
+                      <button
+                          type="button"
+                          onclick="
+                              document
+                                  .getElementById(
+                                      'nexoraPrivacyOptionPanel'
+                                  )
+                                  ?.remove();
+                          "
+                          style="
+                              width:42px;
+                              height:42px;
+
+                              border:none;
+                              border-radius:50%;
+
+                              background:#eef1f7;
+
+                              color:#202331;
+
+                              font-size:25px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+                          ‹
+                      </button>
+
+
+                      <div style="
+                          margin-left:14px;
+
+                          font-size:19px;
+                          font-weight:900;
+
+                          color:#171927;
+                      ">
+                          Post Visibility
+                      </div>
+
+                  </div>
+
+
+                  <div style="
+                      max-width:620px;
+
+                      margin:0 auto;
+
+                      padding:20px 15px 35px;
+                  ">
+
+
+                      <!-- PREMIUM HEADER -->
+
+                      <div style="
+                          padding:20px;
+
+                          border-radius:22px;
+
+                          background:
+                              linear-gradient(
+                                  145deg,
+                                  #00bfa6,
+                                  #008f7d,
+                                  #4f46e5
+                              );
+
+                          color:#fff;
+
+                          box-shadow:
+                              0 12px 30px
+                              rgba(0,143,125,.22);
+                      ">
+
+                          <div style="
+                              font-size:17px;
+                              font-weight:900;
+                          ">
+                              Who can see your posts?
+                          </div>
+
+
+                          <div style="
+                              margin-top:6px;
+
+                              font-size:12px;
+
+                              line-height:1.5;
+
+                              color:
+                                  rgba(255,255,255,.84);
+                          ">
+                              Choose who can view your
+                              NEXORA posts.
+                          </div>
+
+                      </div>
+
+
+                      <!-- CURRENT SETTING -->
+
+                      <div style="
+                          margin-top:14px;
+
+                          padding:13px 15px;
+
+                          display:flex;
+                          align-items:center;
+
+                          gap:10px;
+
+                          border-radius:16px;
+
+                          background:#fff;
+
+                          border:
+                              1px solid #e5e8f0;
+
+                          box-shadow:
+                              0 5px 18px
+                              rgba(24,31,56,.05);
+                      ">
+
+                          <span style="
+                              width:9px;
+                              height:9px;
+
+                              border-radius:50%;
+
+                              background:#4f46e5;
+
+                              box-shadow:
+                                  0 0 0 5px
+                                  rgba(79,70,229,.10);
+                          "></span>
+
+
+                          <div style="
+                              flex:1;
+
+                              font-size:12px;
+
+                              font-weight:800;
+
+                              color:#6f7585;
+                          ">
+                              Current setting
+                          </div>
+
+
+                          <div style="
+                              font-size:12px;
+
+                              font-weight:950;
+
+                              color:#4f46e5;
+                          ">
+                              ${
+                                  currentPostVisibility === "followers"
+                                      ? "Followers"
+                                      : currentPostVisibility === "private"
+                                          ? "Only Me"
+                                          : "Public"
+                              }
+                          </div>
+
+                      </div>
+
+
+                      <!-- SECTION -->
+
+                      <div style="
+                          margin-top:18px;
+
+                          font-size:12px;
+
+                          font-weight:900;
+
+                          color:#7b8191;
+
+                          letter-spacing:.4px;
+                      ">
+                          POST VISIBILITY
+                      </div>
+
+
+                      <!-- ================= PUBLIC ================= -->
+
+                      <div
+                          onclick="
+                              selectNexoraPostVisibility(
+                                  'public'
+                              )
+                          "
+                          style="
+                              margin-top:10px;
+
+                              padding:17px;
+
+                              display:flex;
+                              align-items:center;
+
+                              gap:14px;
+
+                              border-radius:19px;
+
+                              background:#fff;
+
+                              border:
+                                  1px solid ${
+                                      currentPostVisibility === "public"
+                                          ? "#4f46e5"
+                                          : "#e5e8f0"
+                                  };
+
+                              box-shadow:
+                                  0 6px 20px
+                                  rgba(24,31,56,.06);
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+
+                          <div style="
+                              width:45px;
+                              height:45px;
+
+                              border-radius:14px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              background:
+                                  linear-gradient(
+                                      145deg,
+                                      #00bfa6,
+                                      #008f7d
+                                  );
+
+                              color:#fff;
+
+                              font-size:20px;
+
+                              flex-shrink:0;
+                          ">
+                              🌐
+                          </div>
+
+
+                          <div style="flex:1;">
+
+                              <div style="
+                                  font-size:14px;
+
+                                  font-weight:850;
+
+                                  color:#191b29;
+                              ">
+                                  Public
+                              </div>
+
+
+                              <div style="
+                                  margin-top:4px;
+
+                                  font-size:11px;
+
+                                  color:#9298a8;
+                              ">
+                                  Anyone on NEXORA can see your posts
+                              </div>
+
+
+                              ${selectedPostBadge("public")}
+
+                          </div>
+
+
+                          <span style="
+                              color:${
+                                  currentPostVisibility === "public"
+                                      ? "#4f46e5"
+                                      : "#a3a8b5"
+                              };
+
+                              font-size:20px;
+
+                              font-weight:900;
+                          ">
+                              ${
+                                  currentPostVisibility === "public"
+                                      ? "✓"
+                                      : "›"
+                              }
+                          </span>
+
+                      </div>
+
+
+                      <!-- ================= FOLLOWERS ================= -->
+
+                      <div
+                          onclick="
+                              selectNexoraPostVisibility(
+                                  'followers'
+                              )
+                          "
+                          style="
+                              margin-top:11px;
+
+                              padding:17px;
+
+                              display:flex;
+                              align-items:center;
+
+                              gap:14px;
+
+                              border-radius:19px;
+
+                              background:#fff;
+
+                              border:
+                                  1px solid ${
+                                      currentPostVisibility === "followers"
+                                          ? "#4f46e5"
+                                          : "#e5e8f0"
+                                  };
+
+                              box-shadow:
+                                  0 6px 20px
+                                  rgba(24,31,56,.06);
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+
+                          <div style="
+                              width:45px;
+                              height:45px;
+
+                              border-radius:14px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              background:
+                                  linear-gradient(
+                                      145deg,
+                                      #7c3aed,
+                                      #4f46e5
+                                  );
+
+                              color:#fff;
+
+                              font-size:20px;
+
+                              flex-shrink:0;
+                          ">
+                              👥
+                          </div>
+
+
+                          <div style="flex:1;">
+
+                              <div style="
+                                  font-size:14px;
+
+                                  font-weight:850;
+
+                                  color:#191b29;
+                              ">
+                                  Followers
+                              </div>
+
+
+                              <div style="
+                                  margin-top:4px;
+
+                                  font-size:11px;
+
+                                  color:#9298a8;
+                              ">
+                                  Only your followers can see your posts
+                              </div>
+
+
+                              ${selectedPostBadge("followers")}
+
+                          </div>
+
+
+                          <span style="
+                              color:${
+                                  currentPostVisibility === "followers"
+                                      ? "#4f46e5"
+                                      : "#a3a8b5"
+                              };
+
+                              font-size:20px;
+
+                              font-weight:900;
+                          ">
+                              ${
+                                  currentPostVisibility === "followers"
+                                      ? "✓"
+                                      : "›"
+                              }
+                          </span>
+
+                      </div>
+
+
+                      <!-- ================= ONLY ME ================= -->
+
+                      <div
+                          onclick="
+                              selectNexoraPostVisibility(
+                                  'private'
+                              )
+                          "
+                          style="
+                              margin-top:11px;
+
+                              padding:17px;
+
+                              display:flex;
+                              align-items:center;
+
+                              gap:14px;
+
+                              border-radius:19px;
+
+                              background:#fff;
+
+                              border:
+                                  1px solid ${
+                                      currentPostVisibility === "private"
+                                          ? "#4f46e5"
+                                          : "#e5e8f0"
+                                  };
+
+                              box-shadow:
+                                  0 6px 20px
+                                  rgba(24,31,56,.06);
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+
+                          <div style="
+                              width:45px;
+                              height:45px;
+
+                              border-radius:14px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              background:
+                                  linear-gradient(
+                                      145deg,
+                                      #ff416c,
+                                      #c026d3
+                                  );
+
+                              color:#fff;
+
+                              font-size:20px;
+
+                              flex-shrink:0;
+                          ">
+                              🔒
+                          </div>
+
+
+                          <div style="flex:1;">
+
+                              <div style="
+                                  font-size:14px;
+
+                                  font-weight:850;
+
+                                  color:#191b29;
+                              ">
+                                  Only Me
+                              </div>
+
+
+                              <div style="
+                                  margin-top:4px;
+
+                                  font-size:11px;
+
+                                  color:#9298a8;
+                              ">
+                                  Keep your posts private
+                              </div>
+
+
+                              ${selectedPostBadge("private")}
+
+                          </div>
+
+
+                          <span style="
+                              color:${
+                                  currentPostVisibility === "private"
+                                      ? "#4f46e5"
+                                      : "#a3a8b5"
+                              };
+
+                              font-size:20px;
+
+                              font-weight:900;
+                          ">
+                              ${
+                                  currentPostVisibility === "private"
+                                      ? "✓"
+                                      : "›"
+                              }
+                          </span>
+
+                      </div>
+
+
+                  </div>
+
+              `;
+
+
+              document.body.appendChild(panel);
+
+          })
+
+          .catch(function(error){
+
+              console.error(
+                  "NEXORA POST VISIBILITY LOAD ERROR:",
+                  error
+              );
+
+              alert(
+                  "Post Visibility load করা যায়নি।"
+              );
+
+          });
+
+    }
 }
+
+/* =====================================================
+   NEXORA POST VISIBILITY SAVE
+   ===================================================== */
+
+function selectNexoraPostVisibility(visibility){
+
+    const currentUser =
+        auth.currentUser;
+
+    if(!currentUser){
+
+        alert(
+            "আগে NEXORA-তে Login করুন।"
+        );
+
+        return;
+    }
+
+
+    /* ================= VALIDATE ================= */
+
+    const allowed = [
+        "public",
+        "followers",
+        "private"
+    ];
+
+    if(!allowed.includes(visibility)){
+
+        console.error(
+            "Invalid Post Visibility:",
+            visibility
+        );
+
+        return;
+    }
+
+
+    /* ================= SAVE ================= */
+
+    db.collection("Users")
+      .doc(currentUser.uid)
+      .set({
+
+          privacy: {
+
+              postVisibility:
+                  visibility
+
+          }
+
+      }, {
+
+          merge:true
+
+      })
+
+      .then(function(){
+
+          let postLabel =
+              "Public";
+
+          let postMessage =
+              "Anyone on NEXORA can discover and view your posts.";
+
+          let postIcon =
+              "🌐";
+
+
+          if(visibility === "followers"){
+
+              postLabel =
+                  "Followers Only";
+
+              postMessage =
+                  "Only people who follow you can view your posts.";
+
+              postIcon =
+                  "👥";
+
+          }
+
+
+          else if(visibility === "private"){
+
+              postLabel =
+                  "Private";
+
+              postMessage =
+                  "Your posts are visible only to you.";
+
+              postIcon =
+                  "🔒";
+
+          }
+
+
+          /* ================= REMOVE OLD MODAL ================= */
+
+          const oldModal =
+              document.getElementById(
+                  "nexoraPostVisibilitySuccessModal"
+              );
+
+          if(oldModal){
+
+              oldModal.remove();
+
+          }
+
+
+          /* ================= MODAL ================= */
+
+          const modal =
+              document.createElement("div");
+
+          modal.id =
+              "nexoraPostVisibilitySuccessModal";
+
+
+          modal.style.cssText = `
+              position:fixed;
+              inset:0;
+
+              z-index:99999999;
+
+              display:flex;
+              align-items:center;
+              justify-content:center;
+
+              padding:22px;
+
+              background:
+                  rgba(10,14,30,.38);
+
+              backdrop-filter:
+                  blur(12px);
+
+              -webkit-backdrop-filter:
+                  blur(12px);
+
+              animation:
+                  nxPrivacyModalIn .25s ease;
+          `;
+
+
+          modal.innerHTML = `
+
+              <div style="
+                  width:100%;
+                  max-width:360px;
+
+                  padding:24px 20px 20px;
+
+                  border-radius:28px;
+
+                  background:
+                      rgba(255,255,255,.97);
+
+                  border:
+                      1px solid
+                      rgba(255,255,255,.8);
+
+                  box-shadow:
+                      0 24px 70px
+                      rgba(0,0,0,.22);
+
+                  text-align:center;
+              ">
+
+
+                  <!-- ICON -->
+
+                  <div style="
+                      width:72px;
+                      height:72px;
+
+                      margin:0 auto;
+
+                      border-radius:24px;
+
+                      display:flex;
+                      align-items:center;
+                      justify-content:center;
+
+                      background:
+                          linear-gradient(
+                              145deg,
+                              #00bfa6,
+                              #008f7d,
+                              #4f46e5
+                          );
+
+                      color:#fff;
+
+                      font-size:30px;
+
+                      box-shadow:
+                          0 12px 28px
+                          rgba(0,143,125,.28);
+
+                      animation:
+                          nxPrivacyIconPop .35s ease;
+                  ">
+                      ${postIcon}
+                  </div>
+
+
+                  <!-- TITLE -->
+
+                  <div style="
+                      margin-top:18px;
+
+                      font-size:12px;
+
+                      font-weight:800;
+
+                      letter-spacing:.6px;
+
+                      text-transform:uppercase;
+
+                      color:#8b91a1;
+                  ">
+                      Privacy Updated
+                  </div>
+
+
+                  <div style="
+                      margin-top:5px;
+
+                      font-size:21px;
+
+                      font-weight:950;
+
+                      color:#171927;
+                  ">
+                      Post Visibility
+                  </div>
+
+
+                  <!-- SELECTED -->
+
+                  <div style="
+                      display:inline-flex;
+                      align-items:center;
+
+                      gap:7px;
+
+                      margin-top:14px;
+
+                      padding:8px 13px;
+
+                      border-radius:999px;
+
+                      background:
+                          linear-gradient(
+                              145deg,
+                              rgba(124,58,237,.10),
+                              rgba(0,198,255,.10)
+                          );
+
+                      border:
+                          1px solid
+                          rgba(124,58,237,.12);
+
+                      color:#4f46e5;
+
+                      font-size:12px;
+
+                      font-weight:900;
+                  ">
+
+                      <span style="
+                          width:7px;
+                          height:7px;
+
+                          border-radius:50%;
+
+                          background:#4f46e5;
+                      "></span>
+
+                      Selected: ${postLabel}
+
+                  </div>
+
+
+                  <!-- MESSAGE -->
+
+                  <div style="
+                      margin-top:14px;
+
+                      font-size:13px;
+
+                      line-height:1.55;
+
+                      color:#747a8b;
+                  ">
+                      ${postMessage}
+                  </div>
+
+
+                  <!-- DONE -->
+
+                  <button
+                      type="button"
+                      onclick="
+                          document
+                              .getElementById(
+                                  'nexoraPostVisibilitySuccessModal'
+                              )
+                              ?.remove();
+                      "
+                      style="
+                          width:100%;
+
+                          margin-top:22px;
+
+                          padding:14px;
+
+                          border:0;
+
+                          border-radius:16px;
+
+                          background:
+                              linear-gradient(
+                                  145deg,
+                                  #00bfa6,
+                                  #008f7d,
+                                  #4f46e5
+                              );
+
+                          color:#fff;
+
+                          font-size:14px;
+
+                          font-weight:900;
+
+                          cursor:pointer;
+
+                          box-shadow:
+                              0 10px 24px
+                              rgba(0,143,125,.24);
+
+                          -webkit-tap-highlight-color:
+                              transparent;
+                      "
+                  >
+                      Done
+                  </button>
+
+
+              </div>
+
+          `;
+
+
+          document.body.appendChild(modal);
+
+
+          /* ================= AUTO CLOSE ================= */
+
+          setTimeout(function(){
+
+              if(modal){
+
+                  modal.style.animation =
+                      "nxPrivacyModalOut .22s ease";
+
+                  setTimeout(function(){
+
+                      if(modal){
+
+                          modal.remove();
+
+                      }
+
+                  },220);
+
+              }
+
+          },5000);
+
+      })
+
+      .catch(function(error){
+
+          console.error(
+              "NEXORA POST VISIBILITY SAVE ERROR:",
+              error
+          );
+
+          alert(
+              "Post Visibility save করা যায়নি। আবার চেষ্টা করুন।"
+          );
+
+      });
+
+    }
+
+
+
 /* =====================================================
    NEXORA PROFILE VISIBILITY SAVE
    ===================================================== */
