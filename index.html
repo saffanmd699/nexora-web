@@ -12528,443 +12528,726 @@ function openNexoraPrivacyOption(option){
 
     if(option === "Profile Visibility"){
 
-        const panel =
-            document.createElement("div");
+        const currentUser =
+            auth.currentUser;
 
-        panel.id =
-            "nexoraPrivacyOptionPanel";
+        if(!currentUser){
 
+            alert(
+                "আগে NEXORA-তে Login করুন।"
+            );
 
-        panel.style.cssText = `
-            position:fixed;
-            inset:0;
+            return;
+        }
 
-            z-index:6000000;
 
-            background:#f5f7fb;
+        /* ================= LOAD CURRENT PRIVACY ================= */
 
-            overflow-y:auto;
+        db.collection("Users")
+          .doc(currentUser.uid)
+          .get()
 
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
+          .then(function(doc){
 
-            animation:nxPrivacyFade .22s ease;
-        `;
+              const user =
+                  doc.exists
+                      ? (doc.data() || {})
+                      : {};
 
+              const privacy =
+                  user.privacy || {};
 
-        panel.innerHTML = `
+              const currentVisibility =
+                  privacy.profileVisibility ||
+                  "public";
 
-            <div style="
-                position:sticky;
-                top:0;
-                z-index:10;
 
-                height:64px;
+              /* ================= REMOVE OLD PANEL ================= */
 
-                display:flex;
-                align-items:center;
+              const oldPanel =
+                  document.getElementById(
+                      "nexoraPrivacyOptionPanel"
+                  );
 
-                padding:0 16px;
+              if(oldPanel){
 
-                background:
-                    rgba(255,255,255,.94);
+                  oldPanel.remove();
 
-                backdrop-filter:
-                    blur(18px);
+              }
 
-                -webkit-backdrop-filter:
-                    blur(18px);
 
-                border-bottom:
-                    1px solid #e7e9f0;
-            ">
+              /* ================= PANEL ================= */
 
-                <button
-                    type="button"
-                    onclick="
-                        document
-                            .getElementById(
-                                'nexoraPrivacyOptionPanel'
-                            )
-                            ?.remove();
-                    "
-                    style="
-                        width:42px;
-                        height:42px;
+              const panel =
+                  document.createElement("div");
 
-                        border:none;
-                        border-radius:50%;
+              panel.id =
+                  "nexoraPrivacyOptionPanel";
 
-                        background:#eef1f7;
 
-                        color:#202331;
+              panel.style.cssText = `
+                  position:fixed;
+                  inset:0;
 
-                        font-size:25px;
+                  z-index:6000000;
 
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
+                  background:#f5f7fb;
 
-                        cursor:pointer;
-                    "
-                >
-                    ‹
-                </button>
+                  overflow-y:auto;
 
+                  font-family:
+                      -apple-system,
+                      BlinkMacSystemFont,
+                      "Segoe UI",
+                      sans-serif;
 
-                <div style="
-                    margin-left:14px;
+                  animation:nxPrivacyFade .22s ease;
+              `;
 
-                    font-size:19px;
-                    font-weight:900;
 
-                    color:#171927;
-                ">
-                    Profile Visibility
-                </div>
+              /* ================= SELECTED BADGE ================= */
 
-            </div>
+              function selectedBadge(value){
 
+                  if(currentVisibility !== value){
 
-            <div style="
-                max-width:620px;
+                      return "";
 
-                margin:0 auto;
+                  }
 
-                padding:20px 15px 35px;
-            ">
+                  return `
+                      <span style="
+                          display:inline-flex;
+                          align-items:center;
+                          gap:5px;
 
-                <div style="
-                    padding:20px;
+                          margin-top:7px;
 
-                    border-radius:22px;
+                          padding:5px 9px;
 
-                    background:
-                        linear-gradient(
-                            145deg,
-                            #7c3aed,
-                            #4f46e5,
-                            #00c6ff
-                        );
+                          border-radius:999px;
 
-                    color:#fff;
+                          background:
+                              linear-gradient(
+                                  145deg,
+                                  rgba(79,70,229,.10),
+                                  rgba(0,198,255,.10)
+                              );
 
-                    box-shadow:
-                        0 12px 30px
-                        rgba(79,70,229,.22);
-                ">
+                          border:
+                              1px solid
+                              rgba(79,70,229,.14);
 
-                    <div style="
-                        font-size:17px;
-                        font-weight:900;
-                    ">
-                        Who can see your profile?
-                    </div>
+                          color:#4f46e5;
 
-                    <div style="
-                        margin-top:6px;
+                          font-size:10px;
 
-                        font-size:12px;
+                          font-weight:900;
+                      ">
+                          ✓ Selected
+                      </span>
+                  `;
 
-                        line-height:1.5;
+              }
 
-                        color:
-                            rgba(255,255,255,.84);
-                    ">
-                        Choose who can access your
-                        NEXORA profile.
-                    </div>
 
-                </div>
+              /* ================= PANEL HTML ================= */
 
+              panel.innerHTML = `
 
-                <div style="
-                    margin-top:18px;
+                  <!-- HEADER -->
 
-                    font-size:12px;
+                  <div style="
+                      position:sticky;
+                      top:0;
+                      z-index:10;
 
-                    font-weight:900;
+                      height:64px;
 
-                    color:#7b8191;
+                      display:flex;
+                      align-items:center;
 
-                    letter-spacing:.4px;
-                ">
-                    VISIBILITY
-                </div>
+                      padding:0 16px;
 
+                      background:
+                          rgba(255,255,255,.94);
 
-                <!-- PUBLIC -->
+                      backdrop-filter:
+                          blur(18px);
 
-                <div
-                    onclick="
-                        selectNexoraProfileVisibility(
-                            'public'
-                        )
-                    "
-                    style="
-                        margin-top:10px;
+                      -webkit-backdrop-filter:
+                          blur(18px);
 
-                        padding:17px;
+                      border-bottom:
+                          1px solid #e7e9f0;
+                  ">
 
-                        display:flex;
-                        align-items:center;
+                      <button
+                          type="button"
+                          onclick="
+                              document
+                                  .getElementById(
+                                      'nexoraPrivacyOptionPanel'
+                                  )
+                                  ?.remove();
+                          "
+                          style="
+                              width:42px;
+                              height:42px;
 
-                        gap:14px;
+                              border:none;
+                              border-radius:50%;
 
-                        border-radius:19px;
+                              background:#eef1f7;
 
-                        background:#fff;
+                              color:#202331;
 
-                        border:
-                            1px solid #e5e8f0;
+                              font-size:25px;
 
-                        box-shadow:
-                            0 6px 20px
-                            rgba(24,31,56,.06);
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
 
-                        cursor:pointer;
-                    "
-                >
+                              cursor:pointer;
 
-                    <div style="
-                        width:45px;
-                        height:45px;
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+                          ‹
+                      </button>
 
-                        border-radius:14px;
 
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
+                      <div style="
+                          margin-left:14px;
 
-                        background:
-                            linear-gradient(
-                                145deg,
-                                #00bfa6,
-                                #008f7d
-                            );
+                          font-size:19px;
+                          font-weight:900;
 
-                        color:#fff;
+                          color:#171927;
+                      ">
+                          Profile Visibility
+                      </div>
 
-                        font-size:20px;
-                    ">
-                        🌐
-                    </div>
+                  </div>
 
 
-                    <div style="flex:1;">
+                  <div style="
+                      max-width:620px;
 
-                        <div style="
-                            font-size:14px;
-                            font-weight:850;
-                            color:#191b29;
-                        ">
-                            Public
-                        </div>
+                      margin:0 auto;
 
-                        <div style="
-                            margin-top:4px;
-                            font-size:11px;
-                            color:#9298a8;
-                        ">
-                            Anyone on NEXORA can see your profile
-                        </div>
+                      padding:20px 15px 35px;
+                  ">
 
-                    </div>
 
-                    <span style="
-                        color:#a3a8b5;
-                        font-size:20px;
-                    ">
-                        ›
-                    </span>
+                      <!-- PREMIUM HEADER CARD -->
 
-                </div>
+                      <div style="
+                          padding:20px;
 
+                          border-radius:22px;
 
-                <!-- FOLLOWERS -->
+                          background:
+                              linear-gradient(
+                                  145deg,
+                                  #7c3aed,
+                                  #4f46e5,
+                                  #00c6ff
+                              );
 
-                <div
-                    onclick="
-                        selectNexoraProfileVisibility(
-                            'followers'
-                        )
-                    "
-                    style="
-                        margin-top:11px;
+                          color:#fff;
 
-                        padding:17px;
+                          box-shadow:
+                              0 12px 30px
+                              rgba(79,70,229,.22);
+                      ">
 
-                        display:flex;
-                        align-items:center;
+                          <div style="
+                              font-size:17px;
+                              font-weight:900;
+                          ">
+                              Who can see your profile?
+                          </div>
 
-                        gap:14px;
 
-                        border-radius:19px;
+                          <div style="
+                              margin-top:6px;
 
-                        background:#fff;
+                              font-size:12px;
 
-                        border:
-                            1px solid #e5e8f0;
+                              line-height:1.5;
 
-                        box-shadow:
-                            0 6px 20px
-                            rgba(24,31,56,.06);
+                              color:
+                                  rgba(255,255,255,.84);
+                          ">
+                              Choose who can access your
+                              NEXORA profile.
+                          </div>
 
-                        cursor:pointer;
-                    "
-                >
+                      </div>
 
-                    <div style="
-                        width:45px;
-                        height:45px;
 
-                        border-radius:14px;
+                      <!-- CURRENT SETTING -->
 
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
+                      <div style="
+                          margin-top:14px;
 
-                        background:
-                            linear-gradient(
-                                145deg,
-                                #7c3aed,
-                                #4f46e5
-                            );
+                          padding:13px 15px;
 
-                        color:#fff;
+                          display:flex;
+                          align-items:center;
 
-                        font-size:20px;
-                    ">
-                        👥
-                    </div>
+                          gap:10px;
 
+                          border-radius:16px;
 
-                    <div style="flex:1;">
+                          background:#fff;
 
-                        <div style="
-                            font-size:14px;
-                            font-weight:850;
-                            color:#191b29;
-                        ">
-                            Followers
-                        </div>
+                          border:
+                              1px solid #e5e8f0;
 
-                        <div style="
-                            margin-top:4px;
-                            font-size:11px;
-                            color:#9298a8;
-                        ">
-                            Only your followers can see your profile
-                        </div>
+                          box-shadow:
+                              0 5px 18px
+                              rgba(24,31,56,.05);
+                      ">
 
-                    </div>
+                          <span style="
+                              width:9px;
+                              height:9px;
 
-                    <span style="
-                        color:#a3a8b5;
-                        font-size:20px;
-                    ">
-                        ›
-                    </span>
+                              border-radius:50%;
 
-                </div>
+                              background:#4f46e5;
 
+                              box-shadow:
+                                  0 0 0 5px
+                                  rgba(79,70,229,.10);
+                          "></span>
 
-                <!-- ONLY ME -->
 
-                <div
-                    onclick="
-                        selectNexoraProfileVisibility(
-                            'private'
-                        )
-                    "
-                    style="
-                        margin-top:11px;
+                          <div style="
+                              flex:1;
 
-                        padding:17px;
+                              font-size:12px;
 
-                        display:flex;
-                        align-items:center;
+                              font-weight:800;
 
-                        gap:14px;
+                              color:#6f7585;
+                          ">
+                              Current setting
+                          </div>
 
-                        border-radius:19px;
 
-                        background:#fff;
+                          <div style="
+                              font-size:12px;
 
-                        border:
-                            1px solid #e5e8f0;
+                              font-weight:950;
 
-                        box-shadow:
-                            0 6px 20px
-                            rgba(24,31,56,.06);
+                              color:#4f46e5;
+                          ">
+                              ${
+                                  currentVisibility === "followers"
+                                      ? "Followers"
+                                      : currentVisibility === "private"
+                                          ? "Only Me"
+                                          : "Public"
+                              }
+                          </div>
 
-                        cursor:pointer;
-                    "
-                >
+                      </div>
 
-                    <div style="
-                        width:45px;
-                        height:45px;
 
-                        border-radius:14px;
+                      <!-- SECTION TITLE -->
 
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
+                      <div style="
+                          margin-top:18px;
 
-                        background:
-                            linear-gradient(
-                                145deg,
-                                #ff416c,
-                                #c026d3
-                            );
+                          font-size:12px;
 
-                        color:#fff;
+                          font-weight:900;
 
-                        font-size:20px;
-                    ">
-                        🔒
-                    </div>
+                          color:#7b8191;
 
+                          letter-spacing:.4px;
+                      ">
+                          VISIBILITY
+                      </div>
 
-                    <div style="flex:1;">
 
-                        <div style="
-                            font-size:14px;
-                            font-weight:850;
-                            color:#191b29;
-                        ">
-                            Only Me
-                        </div>
+                      <!-- ================= PUBLIC ================= -->
 
-                        <div style="
-                            margin-top:4px;
-                            font-size:11px;
-                            color:#9298a8;
-                        ">
-                            Keep your profile private
-                        </div>
+                      <div
+                          onclick="
+                              selectNexoraProfileVisibility(
+                                  'public'
+                              )
+                          "
+                          style="
+                              margin-top:10px;
 
-                    </div>
+                              padding:17px;
 
-                    <span style="
-                        color:#a3a8b5;
-                        font-size:20px;
-                    ">
-                        ›
-                    </span>
+                              display:flex;
+                              align-items:center;
 
-                </div>
+                              gap:14px;
 
-            </div>
+                              border-radius:19px;
 
-        `;
+                              background:#fff;
 
+                              border:
+                                  1px solid ${
+                                      currentVisibility === "public"
+                                          ? "#4f46e5"
+                                          : "#e5e8f0"
+                                  };
 
-        document.body.appendChild(panel);
+                              box-shadow:
+                                  0 6px 20px
+                                  rgba(24,31,56,.06);
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+
+                          <div style="
+                              width:45px;
+                              height:45px;
+
+                              border-radius:14px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              background:
+                                  linear-gradient(
+                                      145deg,
+                                      #00bfa6,
+                                      #008f7d
+                                  );
+
+                              color:#fff;
+
+                              font-size:20px;
+
+                              flex-shrink:0;
+                          ">
+                              🌐
+                          </div>
+
+
+                          <div style="flex:1;">
+
+                              <div style="
+                                  font-size:14px;
+
+                                  font-weight:850;
+
+                                  color:#191b29;
+                              ">
+                                  Public
+                              </div>
+
+
+                              <div style="
+                                  margin-top:4px;
+
+                                  font-size:11px;
+
+                                  color:#9298a8;
+                              ">
+                                  Anyone on NEXORA can see your profile
+                              </div>
+
+
+                              ${selectedBadge("public")}
+
+                          </div>
+
+
+                          <span style="
+                              color:${
+                                  currentVisibility === "public"
+                                      ? "#4f46e5"
+                                      : "#a3a8b5"
+                              };
+
+                              font-size:20px;
+
+                              font-weight:900;
+                          ">
+                              ${
+                                  currentVisibility === "public"
+                                      ? "✓"
+                                      : "›"
+                              }
+                          </span>
+
+                      </div>
+
+
+                      <!-- ================= FOLLOWERS ================= -->
+
+                      <div
+                          onclick="
+                              selectNexoraProfileVisibility(
+                                  'followers'
+                              )
+                          "
+                          style="
+                              margin-top:11px;
+
+                              padding:17px;
+
+                              display:flex;
+                              align-items:center;
+
+                              gap:14px;
+
+                              border-radius:19px;
+
+                              background:#fff;
+
+                              border:
+                                  1px solid ${
+                                      currentVisibility === "followers"
+                                          ? "#4f46e5"
+                                          : "#e5e8f0"
+                                  };
+
+                              box-shadow:
+                                  0 6px 20px
+                                  rgba(24,31,56,.06);
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+
+                          <div style="
+                              width:45px;
+                              height:45px;
+
+                              border-radius:14px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              background:
+                                  linear-gradient(
+                                      145deg,
+                                      #7c3aed,
+                                      #4f46e5
+                                  );
+
+                              color:#fff;
+
+                              font-size:20px;
+
+                              flex-shrink:0;
+                          ">
+                              👥
+                          </div>
+
+
+                          <div style="flex:1;">
+
+                              <div style="
+                                  font-size:14px;
+
+                                  font-weight:850;
+
+                                  color:#191b29;
+                              ">
+                                  Followers
+                              </div>
+
+
+                              <div style="
+                                  margin-top:4px;
+
+                                  font-size:11px;
+
+                                  color:#9298a8;
+                              ">
+                                  Only your followers can see your profile
+                              </div>
+
+
+                              ${selectedBadge("followers")}
+
+                          </div>
+
+
+                          <span style="
+                              color:${
+                                  currentVisibility === "followers"
+                                      ? "#4f46e5"
+                                      : "#a3a8b5"
+                              };
+
+                              font-size:20px;
+
+                              font-weight:900;
+                          ">
+                              ${
+                                  currentVisibility === "followers"
+                                      ? "✓"
+                                      : "›"
+                              }
+                          </span>
+
+                      </div>
+
+
+                      <!-- ================= ONLY ME ================= -->
+
+                      <div
+                          onclick="
+                              selectNexoraProfileVisibility(
+                                  'private'
+                              )
+                          "
+                          style="
+                              margin-top:11px;
+
+                              padding:17px;
+
+                              display:flex;
+                              align-items:center;
+
+                              gap:14px;
+
+                              border-radius:19px;
+
+                              background:#fff;
+
+                              border:
+                                  1px solid ${
+                                      currentVisibility === "private"
+                                          ? "#4f46e5"
+                                          : "#e5e8f0"
+                                  };
+
+                              box-shadow:
+                                  0 6px 20px
+                                  rgba(24,31,56,.06);
+
+                              cursor:pointer;
+
+                              -webkit-tap-highlight-color:
+                                  transparent;
+                          "
+                      >
+
+                          <div style="
+                              width:45px;
+                              height:45px;
+
+                              border-radius:14px;
+
+                              display:flex;
+                              align-items:center;
+                              justify-content:center;
+
+                              background:
+                                  linear-gradient(
+                                      145deg,
+                                      #ff416c,
+                                      #c026d3
+                                  );
+
+                              color:#fff;
+
+                              font-size:20px;
+
+                              flex-shrink:0;
+                          ">
+                              🔒
+                          </div>
+
+
+                          <div style="flex:1;">
+
+                              <div style="
+                                  font-size:14px;
+
+                                  font-weight:850;
+
+                                  color:#191b29;
+                              ">
+                                  Only Me
+                              </div>
+
+
+                              <div style="
+                                  margin-top:4px;
+
+                                  font-size:11px;
+
+                                  color:#9298a8;
+                              ">
+                                  Keep your profile private
+                              </div>
+
+
+                              ${selectedBadge("private")}
+
+                          </div>
+
+
+                          <span style="
+                              color:${
+                                  currentVisibility === "private"
+                                      ? "#4f46e5"
+                                      : "#a3a8b5"
+                              };
+
+                              font-size:20px;
+
+                              font-weight:900;
+                          ">
+                              ${
+                                  currentVisibility === "private"
+                                      ? "✓"
+                                      : "›"
+                              }
+                          </span>
+
+                      </div>
+
+
+                  </div>
+
+              `;
+
+
+              document.body.appendChild(panel);
+
+          })
+
+
+          .catch(function(error){
+
+              console.error(
+                  "NEXORA PRIVACY LOAD ERROR:",
+                  error
+              );
+
+              alert(
+                  "Privacy setting load করা যায়নি।"
+              );
+
+          });
 
     }
 
