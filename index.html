@@ -6469,8 +6469,8 @@ function loadStories(){
 }
 
 /* =====================================================
-   NEXORA PREMIUM SQUIRCLE AVATAR REELS
-   COMPACT + MODERN + 10+ COLOR RING
+   NEXORA PREMIUM STORY-STYLE REELS
+   ROUNDED RECTANGLE + COMPACT CARD
    ===================================================== */
 
 function loadNexoraRoundReels(){
@@ -6507,7 +6507,7 @@ function loadNexoraRoundReels(){
             width:100%;
             display:flex;
             align-items:flex-start;
-            gap:14px;
+            gap:10px;
             padding:6px 3px 10px;
             overflow-x:auto;
             overflow-y:hidden;
@@ -6527,41 +6527,49 @@ function loadNexoraRoundReels(){
             if(!videoURL)
                 return;
 
+            /* ================= CARD ================= */
+
             const item =
                 document.createElement("div");
 
             item.style.cssText = `
-                flex:0 0 135px;
-                width:135px;
-                height:135px;
+                flex:0 0 105px;
+                width:105px;
+                height:140px;
+
                 position:relative;
+
                 padding:3px;
                 box-sizing:border-box;
-                border-radius:30%;
 
-                background:conic-gradient(
-                    #1746FF,
-                    #2457FF,
-                    #3B5BFF,
-                    #5146E5,
-                    #673FD2,
-                    #7C3AED,
-                    #9238C8,
-                    #A63CB8,
-                    #BE459F,
-                    #D65391,
-                    #1746FF
+                border-radius:20px;
+
+                background:linear-gradient(
+                    145deg,
+                    #FF6B6B,
+                    #FF4F81,
+                    #E83E8C,
+                    #C135D5,
+                    #8B5CF6,
+                    #6366F1,
+                    #3B82F6,
+                    #06B6D4,
+                    #14B8A6,
+                    #84CC16,
+                    #F59E0B
                 );
 
                 cursor:pointer;
                 user-select:none;
 
                 box-shadow:
-                    0 6px 18px
-                    rgba(35,30,80,.22);
+                    0 5px 15px
+                    rgba(0,0,0,.18);
 
                 overflow:hidden;
             `;
+
+            /* ================= INNER ================= */
 
             const inner =
                 document.createElement("div");
@@ -6569,11 +6577,17 @@ function loadNexoraRoundReels(){
             inner.style.cssText = `
                 width:100%;
                 height:100%;
+
                 position:relative;
+
                 overflow:hidden;
-                border-radius:27%;
+
+                border-radius:17px;
+
                 background:#111;
             `;
+
+            /* ================= VIDEO ================= */
 
             const video =
                 document.createElement("video");
@@ -6586,11 +6600,17 @@ function loadNexoraRoundReels(){
             video.style.cssText = `
                 width:100%;
                 height:100%;
+
                 object-fit:cover;
+
                 display:block;
+
                 background:#111;
+
                 pointer-events:none;
             `;
+
+            /* ================= PLAY ================= */
 
             const play =
                 document.createElement("div");
@@ -6599,21 +6619,35 @@ function loadNexoraRoundReels(){
 
             play.style.cssText = `
                 position:absolute;
+
                 left:50%;
                 top:50%;
-                transform:translate(-50%,-50%);
-                width:40px;
-                height:40px;
+
+                transform:
+                    translate(-50%,-50%);
+
+                width:36px;
+                height:36px;
+
                 border-radius:50%;
-                background:rgba(0,0,0,.55);
+
+                background:
+                    rgba(0,0,0,.52);
+
                 color:#fff;
+
                 display:flex;
                 align-items:center;
                 justify-content:center;
-                font-size:16px;
+
+                font-size:14px;
+
                 backdrop-filter:blur(5px);
+
                 pointer-events:none;
             `;
+
+            /* ================= NAME ================= */
 
             const name =
                 document.createElement("div");
@@ -6623,21 +6657,33 @@ function loadNexoraRoundReels(){
 
             name.style.cssText = `
                 position:absolute;
+
                 left:6px;
                 right:6px;
-                bottom:5px;
-                padding:15px 6px 5px;
+                bottom:6px;
+
+                padding:
+                    18px 5px 3px;
+
                 box-sizing:border-box;
+
                 background:linear-gradient(
                     transparent,
-                    rgba(0,0,0,.84)
+                    rgba(0,0,0,.88)
                 );
+
                 color:#fff;
-                font-size:11px;
+
+                font-size:10px;
+
                 font-weight:700;
+
                 white-space:nowrap;
+
                 overflow:hidden;
+
                 text-overflow:ellipsis;
+
                 pointer-events:none;
             `;
 
@@ -6646,7 +6692,10 @@ function loadNexoraRoundReels(){
             inner.appendChild(name);
 
             item.appendChild(inner);
+
             container.appendChild(item);
+
+            /* ================= OPEN REEL ================= */
 
             item.onclick = function(){
 
@@ -6656,10 +6705,15 @@ function loadNexoraRoundReels(){
                 viewer.style.cssText = `
                     position:fixed;
                     inset:0;
+
                     z-index:999999;
+
                     background:#000;
+
                     display:flex;
+
                     align-items:center;
+
                     justify-content:center;
                 `;
 
@@ -6667,16 +6721,23 @@ function loadNexoraRoundReels(){
                     document.createElement("video");
 
                 fullVideo.src = videoURL;
+
                 fullVideo.controls = true;
+
                 fullVideo.autoplay = true;
+
                 fullVideo.playsInline = true;
 
                 fullVideo.style.cssText = `
                     width:100%;
                     height:100%;
+
                     object-fit:contain;
+
                     background:#000;
                 `;
+
+                /* ================= CLOSE ================= */
 
                 const close =
                     document.createElement("button");
@@ -6685,27 +6746,39 @@ function loadNexoraRoundReels(){
 
                 close.style.cssText = `
                     position:absolute;
+
                     top:15px;
                     right:15px;
+
                     z-index:2;
+
                     width:44px;
                     height:44px;
+
                     border:0;
+
                     border-radius:50%;
-                    background:rgba(255,255,255,.18);
+
+                    background:
+                        rgba(255,255,255,.18);
+
                     color:#fff;
+
                     font-size:28px;
                 `;
 
                 close.onclick = function(){
 
                     fullVideo.pause();
+
                     viewer.remove();
 
                 };
 
                 viewer.appendChild(fullVideo);
+
                 viewer.appendChild(close);
+
                 document.body.appendChild(viewer);
 
             };
@@ -6715,7 +6788,7 @@ function loadNexoraRoundReels(){
     },function(error){
 
         console.error(
-            "NEXORA PREMIUM SQUIRCLE REELS ERROR:",
+            "NEXORA STORY-STYLE REELS ERROR:",
             error
         );
 
