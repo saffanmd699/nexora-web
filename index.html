@@ -6469,9 +6469,8 @@ function loadStories(){
 }
 
 /* =====================================================
-   NEXORA VERTICAL REELS
-   LARGE PREMIUM STORY-SIZE CARD
-   SEPARATE REELS ABOVE STORIES
+   NEXORA PREMIUM SQUIRCLE AVATAR REELS
+   COMPACT + MODERN + 10+ COLOR RING
    ===================================================== */
 
 function loadNexoraRoundReels(){
@@ -6489,15 +6488,11 @@ function loadNexoraRoundReels(){
     if(!container || !section)
         return;
 
-
     db.collection("Reels")
       .orderBy("createdAt","desc")
       .onSnapshot(function(snapshot){
 
         container.innerHTML = "";
-
-
-        /* ================= EMPTY ================= */
 
         if(snapshot.empty){
 
@@ -6506,27 +6501,20 @@ function loadNexoraRoundReels(){
             return;
         }
 
-
         section.style.display = "block";
-
-
-        /* ================= CONTAINER ================= */
 
         container.style.cssText = `
             width:100%;
             display:flex;
             align-items:flex-start;
             gap:14px;
-            padding:5px 3px 10px;
+            padding:6px 3px 10px;
             overflow-x:auto;
             overflow-y:hidden;
             box-sizing:border-box;
             scrollbar-width:none;
             -webkit-overflow-scrolling:touch;
         `;
-
-
-        /* ================= EACH REEL ================= */
 
         snapshot.forEach(function(doc){
 
@@ -6539,48 +6527,41 @@ function loadNexoraRoundReels(){
             if(!videoURL)
                 return;
 
-
-            /* ================= CARD ================= */
-
             const item =
                 document.createElement("div");
 
             item.style.cssText = `
-                flex:0 0 125px;
-                width:125px;
-                height:190px;
-
+                flex:0 0 135px;
+                width:135px;
+                height:135px;
                 position:relative;
-
                 padding:3px;
-
                 box-sizing:border-box;
-
-                border-radius:18px;
+                border-radius:30%;
 
                 background:conic-gradient(
+                    #1746FF,
                     #2457FF,
-                    #4938D9,
-                    #7138C8,
-                    #9B3FC6,
-                    #C43FA5,
-                    #E06A8D,
-                    #D6A84F,
-                    #2457FF
+                    #3B5BFF,
+                    #5146E5,
+                    #673FD2,
+                    #7C3AED,
+                    #9238C8,
+                    #A63CB8,
+                    #BE459F,
+                    #D65391,
+                    #1746FF
                 );
 
                 cursor:pointer;
                 user-select:none;
 
                 box-shadow:
-                    0 5px 16px
-                    rgba(35,30,80,.20);
+                    0 6px 18px
+                    rgba(35,30,80,.22);
 
                 overflow:hidden;
             `;
-
-
-            /* ================= INNER ================= */
 
             const inner =
                 document.createElement("div");
@@ -6588,49 +6569,28 @@ function loadNexoraRoundReels(){
             inner.style.cssText = `
                 width:100%;
                 height:100%;
-
                 position:relative;
-
                 overflow:hidden;
-
-                border-radius:15px;
-
+                border-radius:27%;
                 background:#111;
             `;
-
-
-            /* ================= VIDEO ================= */
 
             const video =
                 document.createElement("video");
 
-            video.src =
-                videoURL;
-
-            video.muted =
-                true;
-
-            video.playsInline =
-                true;
-
-            video.preload =
-                "metadata";
+            video.src = videoURL;
+            video.muted = true;
+            video.playsInline = true;
+            video.preload = "metadata";
 
             video.style.cssText = `
                 width:100%;
                 height:100%;
-
                 object-fit:cover;
-
                 display:block;
-
                 background:#111;
-
                 pointer-events:none;
             `;
-
-
-            /* ================= PLAY BUTTON ================= */
 
             const play =
                 document.createElement("div");
@@ -6639,212 +6599,123 @@ function loadNexoraRoundReels(){
 
             play.style.cssText = `
                 position:absolute;
-
                 left:50%;
                 top:50%;
-
-                transform:
-                    translate(-50%,-50%);
-
-                width:44px;
-                height:44px;
-
+                transform:translate(-50%,-50%);
+                width:40px;
+                height:40px;
                 border-radius:50%;
-
-                background:
-                    rgba(0,0,0,.55);
-
+                background:rgba(0,0,0,.55);
                 color:#fff;
-
                 display:flex;
-
                 align-items:center;
                 justify-content:center;
-
-                font-size:17px;
-
-                padding-left:2px;
-
-                box-sizing:border-box;
-
+                font-size:16px;
                 backdrop-filter:blur(5px);
-
                 pointer-events:none;
             `;
-
-
-            /* ================= NAME ================= */
 
             const name =
                 document.createElement("div");
 
             name.innerText =
-                reel.name ||
-                "NEXORA User";
+                reel.name || "NEXORA User";
 
             name.style.cssText = `
                 position:absolute;
-
-                left:7px;
-                right:7px;
-                bottom:7px;
-
-                padding:18px 7px 6px;
-
+                left:6px;
+                right:6px;
+                bottom:5px;
+                padding:15px 6px 5px;
                 box-sizing:border-box;
-
-                border-radius:9px;
-
-                background:
-                    linear-gradient(
-                        transparent,
-                        rgba(0,0,0,.82)
-                    );
-
+                background:linear-gradient(
+                    transparent,
+                    rgba(0,0,0,.84)
+                );
                 color:#fff;
-
-                font-size:12px;
-
+                font-size:11px;
                 font-weight:700;
-
-                line-height:15px;
-
                 white-space:nowrap;
-
                 overflow:hidden;
-
                 text-overflow:ellipsis;
-
                 pointer-events:none;
             `;
 
-
-            /* ================= BUILD ================= */
-
             inner.appendChild(video);
-
             inner.appendChild(play);
-
             inner.appendChild(name);
 
             item.appendChild(inner);
-
             container.appendChild(item);
 
+            item.onclick = function(){
 
-            /* ================= OPEN REEL ================= */
+                const viewer =
+                    document.createElement("div");
 
-            item.onclick =
-                function(){
+                viewer.style.cssText = `
+                    position:fixed;
+                    inset:0;
+                    z-index:999999;
+                    background:#000;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                `;
 
-                    const viewer =
-                        document.createElement("div");
+                const fullVideo =
+                    document.createElement("video");
 
-                    viewer.style.cssText = `
-                        position:fixed;
+                fullVideo.src = videoURL;
+                fullVideo.controls = true;
+                fullVideo.autoplay = true;
+                fullVideo.playsInline = true;
 
-                        inset:0;
+                fullVideo.style.cssText = `
+                    width:100%;
+                    height:100%;
+                    object-fit:contain;
+                    background:#000;
+                `;
 
-                        z-index:999999;
+                const close =
+                    document.createElement("button");
 
-                        background:#000;
+                close.innerText = "×";
 
-                        display:flex;
+                close.style.cssText = `
+                    position:absolute;
+                    top:15px;
+                    right:15px;
+                    z-index:2;
+                    width:44px;
+                    height:44px;
+                    border:0;
+                    border-radius:50%;
+                    background:rgba(255,255,255,.18);
+                    color:#fff;
+                    font-size:28px;
+                `;
 
-                        align-items:center;
+                close.onclick = function(){
 
-                        justify-content:center;
-                    `;
-
-
-                    const fullVideo =
-                        document.createElement("video");
-
-                    fullVideo.src =
-                        videoURL;
-
-                    fullVideo.controls =
-                        true;
-
-                    fullVideo.autoplay =
-                        true;
-
-                    fullVideo.playsInline =
-                        true;
-
-                    fullVideo.style.cssText = `
-                        width:100%;
-                        height:100%;
-
-                        object-fit:contain;
-
-                        background:#000;
-                    `;
-
-
-                    /* ================= CLOSE ================= */
-
-                    const close =
-                        document.createElement("button");
-
-                    close.innerText = "×";
-
-                    close.style.cssText = `
-                        position:absolute;
-
-                        top:15px;
-                        right:15px;
-
-                        z-index:2;
-
-                        width:44px;
-                        height:44px;
-
-                        border:0;
-
-                        border-radius:50%;
-
-                        background:
-                            rgba(255,255,255,.18);
-
-                        color:#fff;
-
-                        font-size:28px;
-
-                        cursor:pointer;
-                    `;
-
-
-                    close.onclick =
-                        function(){
-
-                            fullVideo.pause();
-
-                            viewer.remove();
-
-                        };
-
-
-                    viewer.appendChild(
-                        fullVideo
-                    );
-
-                    viewer.appendChild(
-                        close
-                    );
-
-                    document.body.appendChild(
-                        viewer
-                    );
+                    fullVideo.pause();
+                    viewer.remove();
 
                 };
+
+                viewer.appendChild(fullVideo);
+                viewer.appendChild(close);
+                document.body.appendChild(viewer);
+
+            };
 
         });
 
     },function(error){
 
         console.error(
-            "NEXORA VERTICAL REELS ERROR:",
+            "NEXORA PREMIUM SQUIRCLE REELS ERROR:",
             error
         );
 
