@@ -6475,7 +6475,6 @@ function loadStories(){
    RADIUS: 50%
    COLORFUL RING + CREATE REELS
    ================================================== */
-
 function loadNexoraRoundReels(){
 
     const container =
@@ -6487,8 +6486,6 @@ function loadNexoraRoundReels(){
     if(!container || !section) return;
 
 
-    /* REMOVE OLD HEADER */
-
     document
         .querySelectorAll("#nexoraPremiumReelsHeader")
         .forEach(function(oldHeader){
@@ -6496,148 +6493,157 @@ function loadNexoraRoundReels(){
         });
 
 
-/* HEADER */
+    const header =
+        document.createElement("div");
 
-const header =
-    document.createElement("div");
+    header.id =
+        "nexoraPremiumReelsHeader";
 
-header.id =
-    "nexoraPremiumReelsHeader";
+    header.style.cssText = `
+        width:100%;
+        height:44px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:4px 10px 6px;
+        box-sizing:border-box;
+    `;
 
-header.style.cssText = `
-    width:100%;
-    height:44px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:4px 10px 6px;
-    box-sizing:border-box;
-`;
 
-const left =
-    document.createElement("div");
+    const left =
+        document.createElement("div");
 
-left.style.cssText = `
-    display:flex;
-    align-items:center;
-    gap:9px;
-    height:100%;
-`;
+    left.style.cssText = `
+        display:flex;
+        align-items:center;
+        gap:9px;
+        height:100%;
+    `;
 
-const nOuter =
-    document.createElement("div");
 
-nOuter.style.cssText = `
-    width:32px;
-    height:32px;
-    flex:0 0 32px;
-    padding:2px;
-    box-sizing:border-box;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(
-        135deg,
-        #FF416C,
-        #C135D5,
-        #6366F1,
-        #06B6D4,
-        #14B8A6,
-        #F59E0B
-    );
-`;
+    const nOuter =
+        document.createElement("div");
 
-const nInner =
-    document.createElement("div");
+    nOuter.style.cssText = `
+        width:32px;
+        height:32px;
+        flex:0 0 32px;
+        padding:2px;
+        box-sizing:border-box;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:linear-gradient(
+            135deg,
+            #FF416C,
+            #C135D5,
+            #6366F1,
+            #06B6D4,
+            #14B8A6,
+            #F59E0B
+        );
+    `;
 
-nInner.style.cssText = `
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#111;
-`;
 
-const n =
-    document.createElement("span");
+    const nInner =
+        document.createElement("div");
 
-n.innerText = "N";
+    nInner.style.cssText = `
+        width:100%;
+        height:100%;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#111;
+    `;
 
-n.style.cssText = `
-    font-size:18px;
-    font-weight:900;
-    line-height:1;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(
-        135deg,
-        #FF416C,
-        #C135D5,
-        #6366F1,
-        #06B6D4,
-        #14B8A6,
-        #F59E0B
-    );
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
-`;
 
-nInner.appendChild(n);
-nOuter.appendChild(nInner);
+    const n =
+        document.createElement("span");
 
-const reelsText =
-    document.createElement("div");
+    n.innerText = "N";
 
-reelsText.innerText =
-    "Reels";
+    n.style.cssText = `
+        font-size:18px;
+        font-weight:900;
+        line-height:1;
+        font-family:Arial,sans-serif;
+        background:linear-gradient(
+            135deg,
+            #FF416C,
+            #C135D5,
+            #6366F1,
+            #06B6D4,
+            #14B8A6,
+            #F59E0B
+        );
+        -webkit-background-clip:text;
+        background-clip:text;
+        -webkit-text-fill-color:transparent;
+    `;
 
-reelsText.style.cssText = `
-    font-size:20px;
-    font-weight:900;
-    color:#111;
-    line-height:1;
-    white-space:nowrap;
-`;
 
-left.appendChild(nOuter);
-left.appendChild(reelsText);
+    nInner.appendChild(n);
+    nOuter.appendChild(nInner);
 
-const seeAll =
-    document.createElement("div");
 
-seeAll.innerText =
-    "See All";
+    const reelsText =
+        document.createElement("div");
 
-seeAll.style.cssText = `
-    font-size:14px;
-    font-weight:800;
-    color:#1877F2;
-    line-height:1;
-    white-space:nowrap;
-    cursor:pointer;
-    padding:8px 2px;
-`;
+    reelsText.innerText =
+        "Reels";
 
-seeAll.onclick =
-    function() {
-        
+    reelsText.style.cssText = `
+        font-size:20px;
+        font-weight:900;
+        color:#111;
+        line-height:1;
+        white-space:nowrap;
+    `;
+
+
+    left.appendChild(nOuter);
+    left.appendChild(reelsText);
+
+
+    const seeAll =
+        document.createElement("div");
+
+    seeAll.innerText =
+        "See All";
+
+    seeAll.style.cssText = `
+        font-size:14px;
+        font-weight:800;
+        color:#1877F2;
+        line-height:1;
+        white-space:nowrap;
+        cursor:pointer;
+        padding:8px 2px;
+    `;
+
+
+    seeAll.onclick =
+    function(){
+
         console.log(
             "NEXORA See All Reels"
         );
-        
+
     };
 
-header.appendChild(left);
-header.appendChild(seeAll);
 
-section.insertBefore(
-    header,
-    container
-);
-    /* FIRESTORE */
+    header.appendChild(left);
+    header.appendChild(seeAll);
+
+
+    section.insertBefore(
+        header,
+        container
+    );
+
 
     db.collection("Reels")
       .orderBy("createdAt","desc")
@@ -6662,8 +6668,6 @@ section.insertBefore(
                 "block";
 
 
-            /* REEL CONTAINER */
-
             container.style.cssText = `
                 width:100%;
                 display:flex;
@@ -6677,8 +6681,6 @@ section.insertBefore(
                 -webkit-overflow-scrolling:touch;
             `;
 
-
-            /* CREATE REELS */
 
             const create =
                 document.createElement("div");
@@ -6753,7 +6755,6 @@ section.insertBefore(
                 font-size:29px;
                 font-weight:400;
                 line-height:1;
-                box-shadow:0 4px 12px rgba(99,102,241,.30);
             `;
 
 
@@ -6775,9 +6776,7 @@ section.insertBefore(
 
             createInner.appendChild(plus);
             createInner.appendChild(createText);
-
             create.appendChild(createInner);
-
             container.appendChild(create);
 
 
@@ -6791,18 +6790,10 @@ section.insertBefore(
 
                     openCreateReel();
 
-                }else{
-
-                    console.log(
-                        "NEXORA Create Reel function পাওয়া যায়নি।"
-                    );
-
                 }
 
             };
 
-
-            /* LOAD REELS */
 
             snapshot.forEach(
             function(doc){
@@ -6861,8 +6852,6 @@ section.insertBefore(
                 `;
 
 
-                /* VIDEO */
-
                 const video =
                     document.createElement("video");
 
@@ -6888,8 +6877,6 @@ section.insertBefore(
                 `;
 
 
-                /* OVERLAY */
-
                 const overlay =
                     document.createElement("div");
 
@@ -6905,8 +6892,6 @@ section.insertBefore(
                     pointer-events:none;
                 `;
 
-
-                /* NAME */
 
                 const name =
                     document.createElement("div");
@@ -6942,19 +6927,14 @@ section.insertBefore(
                 inner.appendChild(name);
 
                 item.appendChild(inner);
-
                 container.appendChild(item);
 
-
-                /* TOUCH */
 
                 item.addEventListener(
                     "touchstart",
                     function(){
-
                         item.style.transform =
                             "scale(.94)";
-
                     },
                     {passive:true}
                 );
@@ -6963,16 +6943,12 @@ section.insertBefore(
                 item.addEventListener(
                     "touchend",
                     function(){
-
                         item.style.transform =
                             "scale(1)";
-
                     },
                     {passive:true}
                 );
 
-
-                /* FULLSCREEN */
 
                 item.onclick =
                 function(){
@@ -7049,17 +7025,9 @@ section.insertBefore(
                     };
 
 
-                    viewer.appendChild(
-                        fullVideo
-                    );
-
-                    viewer.appendChild(
-                        close
-                    );
-
-                    document.body.appendChild(
-                        viewer
-                    );
+                    viewer.appendChild(fullVideo);
+                    viewer.appendChild(close);
+                    document.body.appendChild(viewer);
 
                 };
 
@@ -7079,8 +7047,6 @@ section.insertBefore(
     );
 
 }
-
-
 /* ================= OPEN NEXORA PROFILE ================= */
 
 function openNexoraProfile(uid){
