@@ -6470,13 +6470,16 @@ function loadStories(){
 
 /* =====================================================
    NEXORA PREMIUM STORY-STYLE REELS
-   SQUIRCLE SHAPE (EXACT MATCH TO STORY CARD)
+   ROUNDED RECTANGLE + MODERN STORY CARD
    ===================================================== */
 
 function loadNexoraRoundReels(){
 
-    const container = document.getElementById("nexoraRoundReels");
-    const section = document.getElementById("nexoraRoundReelsSection");
+    const container =
+        document.getElementById("nexoraRoundReels");
+
+    const section =
+        document.getElementById("nexoraRoundReelsSection");
 
     if(!container || !section) return;
 
@@ -6487,7 +6490,9 @@ function loadNexoraRoundReels(){
         container.innerHTML = "";
 
         if(snapshot.empty){
+
             section.style.display = "none";
+
             return;
         }
 
@@ -6497,7 +6502,7 @@ function loadNexoraRoundReels(){
             width:100%;
             display:flex;
             align-items:flex-start;
-            gap:12px;
+            gap:10px;
             padding:6px 3px 10px;
             overflow-x:auto;
             overflow-y:hidden;
@@ -6509,151 +6514,179 @@ function loadNexoraRoundReels(){
         snapshot.forEach(function(doc){
 
             const reel = doc.data() || {};
-            const videoURL = reel.videoUrl || "";
+
+            const videoURL =
+                reel.videoUrl || "";
 
             if(!videoURL) return;
 
-            /* ================= CARD (SQUIRCLE) ================= */
+            /* ================= STORY CARD ================= */
 
-            const item = document.createElement("div");
+            const item =
+                document.createElement("div");
 
             item.style.cssText = `
-                flex: 0 0 68px;
-                width: 68px;
-                height: 68px;
+                flex:0 0 108px;
+                width:108px;
+                height:145px;
 
-                position: relative;
+                position:relative;
 
-                padding: 3px;
-                box-sizing: border-box;
+                padding:3px;
 
-                border-radius: 22px;
+                box-sizing:border-box;
 
-                background: linear-gradient(
-                    135deg,
-                    #A855F7,
-                    #EC4899,
-                    #EF4444
+                border-radius:18px;
+
+                background:linear-gradient(
+                    145deg,
+                    #FF6B6B 0%,
+                    #FF4D8D 10%,
+                    #E83E8C 20%,
+                    #C135D5 30%,
+                    #8B5CF6 40%,
+                    #6366F1 50%,
+                    #3B82F6 60%,
+                    #06B6D4 70%,
+                    #14B8A6 80%,
+                    #84CC16 90%,
+                    #F59E0B 100%
                 );
 
-                cursor: pointer;
-                user-select: none;
+                cursor:pointer;
 
-                box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+                user-select:none;
 
-                overflow: hidden;
+                overflow:hidden;
+
+                box-shadow:
+                    0 4px 14px
+                    rgba(0,0,0,.16);
             `;
 
             /* ================= INNER ================= */
 
-            const inner = document.createElement("div");
+            const inner =
+                document.createElement("div");
 
             inner.style.cssText = `
-                width: 100%;
-                height: 100%;
+                width:100%;
+                height:100%;
 
-                position: relative;
+                position:relative;
 
-                overflow: hidden;
+                overflow:hidden;
 
-                border-radius: 19px;
+                border-radius:15px;
 
-                background: #111;
+                background:#111;
             `;
 
             /* ================= VIDEO ================= */
 
-            const video = document.createElement("video");
+            const video =
+                document.createElement("video");
 
             video.src = videoURL;
+
             video.muted = true;
+
             video.playsInline = true;
+
             video.preload = "metadata";
 
             video.style.cssText = `
-                width: 100%;
-                height: 100%;
+                width:100%;
+                height:100%;
 
-                object-fit: cover;
+                object-fit:cover;
 
-                display: block;
+                display:block;
 
-                background: #111;
+                background:#111;
 
-                pointer-events: none;
+                pointer-events:none;
             `;
 
             /* ================= PLAY ================= */
 
-            const play = document.createElement("div");
+            const play =
+                document.createElement("div");
 
             play.innerText = "▶";
 
             play.style.cssText = `
-                position: absolute;
+                position:absolute;
 
-                left: 50%;
-                top: 50%;
+                left:50%;
+                top:50%;
 
-                transform: translate(-50%, -50%);
+                transform:
+                    translate(-50%,-50%);
 
-                width: 24px;
-                height: 24px;
+                width:30px;
+                height:30px;
 
-                border-radius: 50%;
+                border-radius:50%;
 
-                background: rgba(0, 0, 0, 0.4);
+                background:
+                    rgba(0,0,0,.48);
 
-                color: #fff;
+                color:#fff;
 
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                display:flex;
 
-                font-size: 10px;
+                align-items:center;
 
-                backdrop-filter: blur(4px);
+                justify-content:center;
 
-                pointer-events: none;
+                font-size:11px;
+
+                backdrop-filter:blur(5px);
+
+                pointer-events:none;
             `;
 
             /* ================= NAME ================= */
 
-            const name = document.createElement("div");
+            const name =
+                document.createElement("div");
 
-            name.innerText = reel.name || "NEXORA User";
+            name.innerText =
+                reel.name || "NEXORA User";
 
             name.style.cssText = `
-                position: absolute;
+                position:absolute;
 
-                left: 2px;
-                right: 2px;
-                bottom: 2px;
+                left:5px;
+                right:5px;
+                bottom:5px;
 
-                padding: 10px 3px 2px;
+                padding:
+                    20px 5px 4px;
 
-                box-sizing: border-box;
+                box-sizing:border-box;
 
-                background: linear-gradient(
+                background:linear-gradient(
                     transparent,
-                    rgba(0,0,0,0.88)
+                    rgba(0,0,0,.88)
                 );
 
-                color: #fff;
+                color:#fff;
 
-                font-size: 8px;
+                font-size:10px;
 
-                font-weight: 600;
+                font-weight:700;
 
-                white-space: nowrap;
+                white-space:nowrap;
 
-                overflow: hidden;
+                overflow:hidden;
 
-                text-overflow: ellipsis;
+                text-overflow:ellipsis;
 
-                text-align: center;
+                text-align:center;
 
-                pointer-events: none;
+                pointer-events:none;
             `;
 
             inner.appendChild(video);
@@ -6668,24 +6701,26 @@ function loadNexoraRoundReels(){
 
             item.onclick = function(){
 
-                const viewer = document.createElement("div");
+                const viewer =
+                    document.createElement("div");
 
                 viewer.style.cssText = `
-                    position: fixed;
-                    inset: 0;
+                    position:fixed;
+                    inset:0;
 
-                    z-index: 999999;
+                    z-index:999999;
 
-                    background: #000;
+                    background:#000;
 
-                    display: flex;
+                    display:flex;
 
-                    align-items: center;
+                    align-items:center;
 
-                    justify-content: center;
+                    justify-content:center;
                 `;
 
-                const fullVideo = document.createElement("video");
+                const fullVideo =
+                    document.createElement("video");
 
                 fullVideo.src = videoURL;
 
@@ -6696,42 +6731,42 @@ function loadNexoraRoundReels(){
                 fullVideo.playsInline = true;
 
                 fullVideo.style.cssText = `
-                    width: 100%;
-                    height: 100%;
+                    width:100%;
+                    height:100%;
 
-                    object-fit: contain;
+                    object-fit:contain;
 
-                    background: #000;
+                    background:#000;
                 `;
 
-                /* ================= CLOSE ================= */
-
-                const close = document.createElement("button");
+                const close =
+                    document.createElement("button");
 
                 close.innerText = "×";
 
                 close.style.cssText = `
-                    position: absolute;
+                    position:absolute;
 
-                    top: 15px;
-                    right: 15px;
+                    top:15px;
+                    right:15px;
 
-                    z-index: 2;
+                    z-index:2;
 
-                    width: 44px;
-                    height: 44px;
+                    width:44px;
+                    height:44px;
 
-                    border: 0;
+                    border:0;
 
-                    border-radius: 50%;
+                    border-radius:50%;
 
-                    background: rgba(255,255,255,0.18);
+                    background:
+                        rgba(255,255,255,.18);
 
-                    color: #fff;
+                    color:#fff;
 
-                    font-size: 28px;
+                    font-size:28px;
 
-                    cursor: pointer;
+                    cursor:pointer;
                 `;
 
                 close.onclick = function(){
@@ -6762,7 +6797,6 @@ function loadNexoraRoundReels(){
     });
 
 }
-
 
 /* ================= OPEN NEXORA PROFILE ================= */
 
